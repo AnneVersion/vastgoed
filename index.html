@@ -61,16 +61,22 @@ nav {
 /* HERO */
 .hero {
   text-align: center;
-  padding: 5rem 2rem 3rem;
-  background: radial-gradient(ellipse at center top, rgba(57,255,20,0.06) 0%, transparent 60%);
+  padding: 6rem 2rem 4rem;
+  background:
+    radial-gradient(ellipse at 30% 0%, rgba(26,58,92,0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 0%, rgba(45,27,78,0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at center bottom, rgba(57,255,20,0.04) 0%, transparent 60%);
 }
 .hero h1 {
-  font-family: 'Space Mono', monospace;
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  color: var(--accent);
-  margin-bottom: .5rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: .75rem;
+  letter-spacing: -.02em;
 }
-.hero p { color: var(--text-dim); font-size: 1.15rem; max-width: 500px; margin: 0 auto 2rem; }
+.hero h1 span { color: var(--accent); }
+.hero p { color: var(--text-dim); font-size: 1.1rem; max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.7; }
 
 /* FILTERS */
 .filters {
@@ -129,17 +135,32 @@ nav {
   transition: transform .2s, border-color .2s, box-shadow .2s;
 }
 .pand-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent);
-  box-shadow: 0 12px 40px rgba(57,255,20,0.08);
+  transform: translateY(-6px);
+  border-color: rgba(57,255,20,0.3);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(57,255,20,0.1);
 }
 .pand-photo {
-  height: 180px;
-  background: linear-gradient(135deg, var(--bg3), var(--bg));
+  height: 200px;
   display: flex; align-items: center; justify-content: center;
   position: relative;
+  overflow: hidden;
 }
-.pand-photo svg { width: 48px; height: 48px; opacity: .25; }
+.pand-photo::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(10,15,26,0.9) 100%);
+  z-index: 1;
+}
+.pand-photo.appartement { background: linear-gradient(135deg, #1a3a5c, #0d2137, #1a2a4a); }
+.pand-photo.studio { background: linear-gradient(135deg, #2d1b4e, #1a1040, #2a1845); }
+.pand-photo.woonhuis { background: linear-gradient(135deg, #1a4a3a, #0d2e22, #1a3a30); }
+.pand-photo svg { width: 64px; height: 64px; opacity: .15; z-index: 0; }
+.pand-price-overlay {
+  position: absolute; bottom: 12px; left: 16px; z-index: 2;
+  font-family: 'Space Mono', monospace;
+  font-size: 1.4rem; font-weight: 700; color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.pand-price-overlay small { font-size: .75rem; font-weight: 400; opacity: .8; }
 .pand-badge {
   position: absolute; top: 12px; right: 12px;
   padding: .25rem .7rem; border-radius: 20px;
@@ -149,8 +170,9 @@ nav {
 .pand-badge.beschikbaar { background: rgba(57,255,20,0.15); color: var(--accent); border: 1px solid rgba(57,255,20,0.3); }
 .pand-badge.verhuurd { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
 .pand-info { padding: 1.2rem; }
-.pand-info h3 { font-size: 1.05rem; margin-bottom: .25rem; color: var(--text); }
-.pand-info .pand-adres { font-size: .85rem; color: var(--text-dim); margin-bottom: .75rem; }
+.pand-info h3 { font-size: 1.1rem; margin-bottom: .2rem; color: #fff; font-weight: 600; }
+.pand-info .pand-adres { font-size: .85rem; color: var(--text-dim); margin-bottom: .65rem; display: flex; align-items: center; gap: .3rem; }
+.pand-info .pand-adres::before { content: '\1F4CD'; font-size: .75rem; }
 .pand-meta {
   display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .75rem;
 }
@@ -265,8 +287,8 @@ footer .brand { color: var(--accent); font-family: 'Space Mono', monospace; font
 </nav>
 
 <section class="hero">
-  <h1>Uw volgende woning</h1>
-  <p>Ontdek ons aanbod van kwalitatieve huurwoningen in heel Nederland</p>
+  <h1>Vind uw <span>volgende woning</span></h1>
+  <p>Kwalitatieve huurwoningen op toplocaties in heel Nederland. Professioneel beheerd door DataConsultants.</p>
 </section>
 
 <section class="filters" id="woningen">
@@ -370,11 +392,12 @@ function renderGrid(panden) {
   }
   grid.innerHTML = panden.map(p => `
     <div class="pand-card" onclick="openModal('${p.id}')">
-      <div class="pand-photo">
+      <div class="pand-photo ${p.type}">
         ${HOUSE_SVG}
         <span class="pand-badge ${p.beschikbaar ? 'beschikbaar' : 'verhuurd'}">
           ${p.beschikbaar ? 'Beschikbaar' : 'Verhuurd'}
         </span>
+        <div class="pand-price-overlay">&euro;${p.huurprijs.toLocaleString('nl-NL')} <small>/mnd</small></div>
       </div>
       <div class="pand-info">
         <h3>${esc(p.naam)}</h3>
@@ -382,11 +405,9 @@ function renderGrid(panden) {
         <div class="pand-meta">
           <span>${p.oppervlakte_m2} m&sup2;</span>
           <span>${p.kamers} kamers</span>
-          <span>${p.slaapkamers} slaapkamers</span>
+          <span>${p.slaapkamers} slaapk.</span>
           <span>Label ${p.energielabel}</span>
-          <span>${capitalize(p.type)}</span>
         </div>
-        <div class="pand-prijs">&euro;${p.huurprijs.toLocaleString('nl-NL')} <small>/maand</small></div>
       </div>
     </div>
   `).join('');
