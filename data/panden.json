@@ -1,0 +1,262 @@
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567801",
+    "naam": "Appartement Centrum",
+    "adres": "Keizersgracht 274",
+    "stad": "Amsterdam",
+    "postcode": "1016 EV",
+    "type": "appartement",
+    "huurprijs": 1850,
+    "oppervlakte_m2": 92,
+    "kamers": 4,
+    "slaapkamers": 2,
+    "energielabel": "A",
+    "beschikbaar": false,
+    "beschikbaar_vanaf": "2026-01-01",
+    "foto_urls": [],
+    "kenmerken": ["balkon", "lift", "CV", "vaatwasser", "parketvloer"],
+    "huurder": {
+      "naam": "Jan de Vries",
+      "email": "jan.devries@email.nl",
+      "telefoon": "06-12345678",
+      "huurstart": "2025-06-01"
+    },
+    "onderhoud": [
+      {
+        "id": "m001",
+        "datum": "2025-11-15",
+        "beschrijving": "CV-ketel jaarlijks onderhoud",
+        "kosten": 185.00,
+        "status": "afgerond"
+      }
+    ],
+    "notities": "Hoekwoning aan de gracht, populaire locatie"
+  },
+  {
+    "id": "b2c3d4e5-f6a7-8901-bcde-f12345678902",
+    "naam": "Studio Lombok",
+    "adres": "Kanaalstraat 87",
+    "stad": "Utrecht",
+    "postcode": "3531 CJ",
+    "type": "studio",
+    "huurprijs": 895,
+    "oppervlakte_m2": 38,
+    "kamers": 1,
+    "slaapkamers": 0,
+    "energielabel": "C",
+    "beschikbaar": true,
+    "beschikbaar_vanaf": "2026-04-01",
+    "foto_urls": [],
+    "kenmerken": ["open keuken", "laminaat", "gemeenschappelijke tuin"],
+    "huurder": null,
+    "onderhoud": [],
+    "notities": "Geschikt voor starters, dichtbij station"
+  },
+  {
+    "id": "c3d4e5f6-a7b8-9012-cdef-123456789003",
+    "naam": "Herenhuis Statenkwartier",
+    "adres": "Frankenslag 42",
+    "stad": "Den Haag",
+    "postcode": "2582 HZ",
+    "type": "woonhuis",
+    "huurprijs": 2200,
+    "oppervlakte_m2": 145,
+    "kamers": 6,
+    "slaapkamers": 4,
+    "energielabel": "B",
+    "beschikbaar": false,
+    "beschikbaar_vanaf": "2025-09-01",
+    "foto_urls": [],
+    "kenmerken": ["tuin", "garage", "CV", "open haard", "kelder", "zolder"],
+    "huurder": {
+      "naam": "Familie Bakker",
+      "email": "bakker.fam@email.nl",
+      "telefoon": "06-98765432",
+      "huurstart": "2025-09-01"
+    },
+    "onderhoud": [
+      {
+        "id": "m002",
+        "datum": "2026-01-20",
+        "beschrijving": "Dakgoot reparatie",
+        "kosten": 340.00,
+        "status": "afgerond"
+      },
+      {
+        "id": "m003",
+        "datum": "2026-03-10",
+        "beschrijving": "Lekkage badkamer verhelpen",
+        "kosten": 275.00,
+        "status": "in_behandeling"
+      }
+    ],
+    "notities": "Monumentaal pand, extra aandacht voor onderhoud"
+  },
+  {
+    "id": "d4e5f6a7-b8c9-0123-defa-234567890104",
+    "naam": "Appartement Kralingen",
+    "adres": "Oudedijk 158",
+    "stad": "Rotterdam",
+    "postcode": "3062 AP",
+    "type": "appartement",
+    "huurprijs": 1350,
+    "oppervlakte_m2": 68,
+    "kamers": 3,
+    "slaapkamers": 2,
+    "energielabel": "A",
+    "beschikbaar": true,
+    "beschikbaar_vanaf": "2026-05-01",
+    "foto_urls": [],
+    "kenmerken": ["balkon", "lift", "CV", "inbouwkeuken"],
+    "huurder": null,
+    "onderhoud": [
+      {
+        "id": "m004",
+        "datum": "2026-02-28",
+        "beschrijving": "Schilderwerk trappenhuis",
+        "kosten": 450.00,
+        "status": "gepland"
+      }
+    ],
+    "notities": "Rustige buurt nabij Kralingse Plas"
+  },
+  {
+    "id": "e5f6a7b8-c9d0-1234-efab-345678901205",
+    "naam": "Studio Schalkwijk",
+    "adres": "Engelandlaan 200",
+    "stad": "Haarlem",
+    "postcode": "2034 NA",
+    "type": "studio",
+    "huurprijs": 825,
+    "oppervlakte_m2": 32,
+    "kamers": 1,
+    "slaapkamers": 0,
+    "energielabel": "D",
+    "beschikbaar": true,
+    "beschikbaar_vanaf": "2026-04-15",
+    "foto_urls": [],
+    "kenmerken": ["gemeubileerd", "laminaat", "berging"],
+    "huurder": null,
+    "onderhoud": [],
+    "notities": "Volledig gemeubileerd, ideaal voor expats"
+  },
+  {
+    "id": "f6a7b8c9-d0e1-2345-fabc-456789012306",
+    "naam": "Woning Oud-Zuid",
+    "adres": "Beethovenstraat 55",
+    "stad": "Amsterdam",
+    "postcode": "1077 HN",
+    "type": "woonhuis",
+    "huurprijs": 2100,
+    "oppervlakte_m2": 120,
+    "kamers": 5,
+    "slaapkamers": 3,
+    "energielabel": "B",
+    "beschikbaar": false,
+    "beschikbaar_vanaf": "2025-03-01",
+    "foto_urls": [],
+    "kenmerken": ["tuin", "CV", "vaatwasser", "wasmachine aansluiting", "parketvloer"],
+    "huurder": {
+      "naam": "Sophie van den Berg",
+      "email": "s.vandenberg@email.nl",
+      "telefoon": "06-55443322",
+      "huurstart": "2025-03-01"
+    },
+    "onderhoud": [
+      {
+        "id": "m005",
+        "datum": "2025-08-12",
+        "beschrijving": "Tuinonderhoud jaarlijks",
+        "kosten": 150.00,
+        "status": "afgerond"
+      }
+    ],
+    "notities": ""
+  },
+  {
+    "id": "a7b8c9d0-e1f2-3456-abcd-567890123407",
+    "naam": "Penthouse Wilhelminapier",
+    "adres": "Wilhelminakade 68",
+    "stad": "Rotterdam",
+    "postcode": "3072 AR",
+    "type": "appartement",
+    "huurprijs": 1950,
+    "oppervlakte_m2": 105,
+    "kamers": 4,
+    "slaapkamers": 2,
+    "energielabel": "A",
+    "beschikbaar": false,
+    "beschikbaar_vanaf": "2025-11-01",
+    "foto_urls": [],
+    "kenmerken": ["dakterras", "lift", "CV", "panoramisch uitzicht", "inbouwkeuken", "parkeergelegenheid"],
+    "huurder": {
+      "naam": "Mark Jansen",
+      "email": "m.jansen@email.nl",
+      "telefoon": "06-11223344",
+      "huurstart": "2025-11-01"
+    },
+    "onderhoud": [],
+    "notities": "Premium locatie met uitzicht over de Maas"
+  },
+  {
+    "id": "b8c9d0e1-f2a3-4567-bcde-678901234508",
+    "naam": "Appartement Wittevrouwen",
+    "adres": "Wittevrouwenstraat 12",
+    "stad": "Utrecht",
+    "postcode": "3512 CS",
+    "type": "appartement",
+    "huurprijs": 1275,
+    "oppervlakte_m2": 62,
+    "kamers": 3,
+    "slaapkamers": 1,
+    "energielabel": "C",
+    "beschikbaar": true,
+    "beschikbaar_vanaf": "2026-06-01",
+    "foto_urls": [],
+    "kenmerken": ["balkon", "CV", "laminaat", "fietsenstalling"],
+    "huurder": null,
+    "onderhoud": [
+      {
+        "id": "m006",
+        "datum": "2026-03-01",
+        "beschrijving": "Keukenblad vervangen",
+        "kosten": 620.00,
+        "status": "in_behandeling"
+      }
+    ],
+    "notities": "Centrum locatie, loopafstand naar Domtoren"
+  },
+  {
+    "id": "c9d0e1f2-a3b4-5678-cdef-789012345609",
+    "naam": "Woning Zandvoort",
+    "adres": "Boulevard Barnaart 15",
+    "stad": "Haarlem",
+    "postcode": "2041 JA",
+    "type": "woonhuis",
+    "huurprijs": 1650,
+    "oppervlakte_m2": 98,
+    "kamers": 4,
+    "slaapkamers": 3,
+    "energielabel": "B",
+    "beschikbaar": false,
+    "beschikbaar_vanaf": "2025-07-01",
+    "foto_urls": [],
+    "kenmerken": ["tuin", "berging", "CV", "dubbel glas", "zonnepanelen"],
+    "huurder": {
+      "naam": "Lisa en Tom Mulder",
+      "email": "mulders@email.nl",
+      "telefoon": "06-77889900",
+      "huurstart": "2025-07-01"
+    },
+    "onderhoud": [
+      {
+        "id": "m007",
+        "datum": "2025-12-05",
+        "beschrijving": "Zonnepanelen inspectie",
+        "kosten": 95.00,
+        "status": "afgerond"
+      }
+    ],
+    "notities": "Nabij strand, zeer gewild bij gezinnen"
+  }
+]

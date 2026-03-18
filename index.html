@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataConsultants Vastgoed</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='none' stroke='%2339ff14' stroke-width='1.5'/><circle cx='16' cy='16' r='3' fill='%2339ff14' opacity='.4'/><ellipse cx='16' cy='16' rx='14' ry='5' fill='none' stroke='%2339ff14' stroke-width='.7' opacity='.4' transform='rotate(-8 16 16)'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0f1a;
+  --bg2: #111827;
+  --bg3: #1a2235;
+  --accent: #39ff14;
+  --accent-dim: rgba(57, 255, 20, 0.15);
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --border: rgba(57, 255, 20, 0.12);
+  --glass: rgba(17, 24, 39, 0.75);
+  --radius: 12px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.nav-brand {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+  display: flex; align-items: center; gap: .5rem;
+}
+.nav-brand svg { width: 28px; height: 28px; }
+.nav-links { display: flex; gap: 1.5rem; align-items: center; }
+.nav-links a {
+  color: var(--text-dim); text-decoration: none; font-size: .9rem;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--accent); }
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 5rem 2rem 3rem;
+  background: radial-gradient(ellipse at center top, rgba(57,255,20,0.06) 0%, transparent 60%);
+}
+.hero h1 {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: var(--accent);
+  margin-bottom: .5rem;
+}
+.hero p { color: var(--text-dim); font-size: 1.15rem; max-width: 500px; margin: 0 auto 2rem; }
+
+/* FILTERS */
+.filters {
+  max-width: 1200px; margin: 0 auto 2rem; padding: 0 2rem;
+  display: flex; flex-wrap: wrap; gap: 1rem; align-items: end;
+}
+.filter-group { display: flex; flex-direction: column; gap: .35rem; flex: 1; min-width: 180px; }
+.filter-group label { font-size: .75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: .05em; font-family: 'Space Mono', monospace; }
+.filter-group input,
+.filter-group select {
+  background: var(--bg2); color: var(--text); border: 1px solid var(--border);
+  border-radius: 8px; padding: .6rem .8rem; font-size: .9rem;
+  font-family: 'DM Sans', sans-serif;
+  outline: none; transition: border-color .2s;
+}
+.filter-group input:focus,
+.filter-group select:focus { border-color: var(--accent); }
+.filter-group select option { background: var(--bg2); }
+.filter-range { display: flex; align-items: center; gap: .5rem; }
+.filter-range input { flex: 1; }
+.filter-range span { font-size: .85rem; color: var(--text-dim); white-space: nowrap; min-width: 70px; text-align: center; }
+.filter-toggle {
+  display: flex; align-items: center; gap: .5rem;
+  cursor: pointer; user-select: none; padding-top: 1.2rem;
+}
+.filter-toggle input[type="checkbox"] {
+  appearance: none; width: 40px; height: 22px;
+  background: var(--bg3); border-radius: 11px; position: relative;
+  cursor: pointer; border: 1px solid var(--border); transition: background .2s;
+}
+.filter-toggle input[type="checkbox"]::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--text-dim); transition: .2s;
+}
+.filter-toggle input[type="checkbox"]:checked { background: var(--accent-dim); border-color: var(--accent); }
+.filter-toggle input[type="checkbox"]:checked::after { left: 20px; background: var(--accent); }
+
+/* GRID */
+.panden-count {
+  max-width: 1200px; margin: 0 auto; padding: 0 2rem 1rem;
+  font-size: .85rem; color: var(--text-dim);
+  font-family: 'Space Mono', monospace;
+}
+.panden-grid {
+  max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+.pand-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden; cursor: pointer;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+.pand-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 12px 40px rgba(57,255,20,0.08);
+}
+.pand-photo {
+  height: 180px;
+  background: linear-gradient(135deg, var(--bg3), var(--bg));
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.pand-photo svg { width: 48px; height: 48px; opacity: .25; }
+.pand-badge {
+  position: absolute; top: 12px; right: 12px;
+  padding: .25rem .7rem; border-radius: 20px;
+  font-size: .72rem; font-weight: 600; text-transform: uppercase;
+  font-family: 'Space Mono', monospace; letter-spacing: .03em;
+}
+.pand-badge.beschikbaar { background: rgba(57,255,20,0.15); color: var(--accent); border: 1px solid rgba(57,255,20,0.3); }
+.pand-badge.verhuurd { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+.pand-info { padding: 1.2rem; }
+.pand-info h3 { font-size: 1.05rem; margin-bottom: .25rem; color: var(--text); }
+.pand-info .pand-adres { font-size: .85rem; color: var(--text-dim); margin-bottom: .75rem; }
+.pand-meta {
+  display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .75rem;
+}
+.pand-meta span {
+  background: var(--bg3); padding: .2rem .55rem; border-radius: 6px;
+  font-size: .78rem; color: var(--text-dim);
+  font-family: 'Space Mono', monospace;
+}
+.pand-prijs {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.2rem; font-weight: 700; color: var(--accent);
+}
+.pand-prijs small { font-size: .7rem; font-weight: 400; color: var(--text-dim); }
+
+/* MODAL */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+  align-items: center; justify-content: center; padding: 2rem;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); max-width: 700px; width: 100%;
+  max-height: 85vh; overflow-y: auto; box-shadow: var(--shadow);
+}
+.modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.5rem; border-bottom: 1px solid var(--border);
+}
+.modal-header h2 { font-size: 1.3rem; }
+.modal-close {
+  background: none; border: none; color: var(--text-dim);
+  font-size: 1.5rem; cursor: pointer; line-height: 1;
+  transition: color .2s;
+}
+.modal-close:hover { color: var(--accent); }
+.modal-body { padding: 1.5rem; }
+.modal-photo {
+  height: 220px; border-radius: 8px; margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--bg3), var(--bg));
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-photo svg { width: 64px; height: 64px; opacity: .2; }
+.modal-details { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem 2rem; margin-bottom: 1.5rem; }
+.modal-detail { display: flex; flex-direction: column; }
+.modal-detail .label { font-size: .72rem; text-transform: uppercase; color: var(--text-dim); font-family: 'Space Mono', monospace; letter-spacing: .04em; }
+.modal-detail .value { font-size: .95rem; }
+.modal-kenmerken { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
+.modal-kenmerken span {
+  background: var(--accent-dim); color: var(--accent);
+  padding: .3rem .7rem; border-radius: 20px; font-size: .8rem;
+  border: 1px solid rgba(57,255,20,0.2);
+}
+.modal-actions { display: flex; gap: 1rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .7rem 1.5rem; border-radius: 8px; font-size: .9rem;
+  font-family: 'DM Sans', sans-serif; font-weight: 600;
+  cursor: pointer; text-decoration: none; transition: .2s; border: none;
+}
+.btn-primary { background: var(--accent); color: var(--bg); }
+.btn-primary:hover { background: #2de00f; transform: translateY(-1px); }
+.btn-secondary { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--accent); }
+
+/* FOOTER */
+footer {
+  text-align: center; padding: 2.5rem 2rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim); font-size: .85rem;
+}
+footer .brand { color: var(--accent); font-family: 'Space Mono', monospace; font-weight: 700; }
+
+/* NO RESULTS */
+.no-results {
+  grid-column: 1 / -1; text-align: center; padding: 4rem 2rem;
+  color: var(--text-dim);
+}
+.no-results svg { width: 64px; height: 64px; opacity: .3; margin-bottom: 1rem; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  nav { padding: 0 1rem; }
+  .hero { padding: 3rem 1rem 2rem; }
+  .filters { padding: 0 1rem; }
+  .panden-grid { padding: 0 1rem 3rem; grid-template-columns: 1fr; }
+  .panden-count { padding: 0 1rem 1rem; }
+  .modal-details { grid-template-columns: 1fr; }
+  .modal-overlay { padding: 1rem; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-brand">
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#39ff14" stroke-width="1.5"/><circle cx="16" cy="16" r="3" fill="#39ff14" opacity=".4"/><ellipse cx="16" cy="16" rx="14" ry="5" fill="none" stroke="#39ff14" stroke-width=".7" opacity=".4" transform="rotate(-8 16 16)"/></svg>
+    DataConsultants Vastgoed
+  </a>
+  <div class="nav-links">
+    <a href="#woningen">Woningen</a>
+    <a href="#contact">Contact</a>
+    <a href="admin.html">Admin</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1>Uw volgende woning</h1>
+  <p>Ontdek ons aanbod van kwalitatieve huurwoningen in heel Nederland</p>
+</section>
+
+<section class="filters" id="woningen">
+  <div class="filter-group">
+    <label>Zoeken</label>
+    <input type="text" id="filterSearch" placeholder="Naam, adres of stad...">
+  </div>
+  <div class="filter-group">
+    <label>Max. huurprijs</label>
+    <div class="filter-range">
+      <input type="range" id="filterPrice" min="500" max="2500" step="50" value="2500">
+      <span id="filterPriceLabel">&le; &euro;2500</span>
+    </div>
+  </div>
+  <div class="filter-group">
+    <label>Min. kamers</label>
+    <select id="filterRooms">
+      <option value="0">Alle</option>
+      <option value="1">1+</option>
+      <option value="2">2+</option>
+      <option value="3">3+</option>
+      <option value="4">4+</option>
+      <option value="5">5+</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Type</label>
+    <select id="filterType">
+      <option value="">Alle</option>
+      <option value="appartement">Appartement</option>
+      <option value="studio">Studio</option>
+      <option value="woonhuis">Woonhuis</option>
+    </select>
+  </div>
+  <div class="filter-toggle">
+    <input type="checkbox" id="filterBeschikbaar">
+    <label for="filterBeschikbaar" style="font-size:.85rem; cursor:pointer;">Alleen beschikbaar</label>
+  </div>
+</section>
+
+<div class="panden-count" id="pandenCount"></div>
+<section class="panden-grid" id="pandenGrid"></section>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle"></h2>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<footer id="contact">
+  <p><span class="brand">DataConsultants</span> Vastgoed &mdash; Professioneel woningbeheer</p>
+  <p style="margin-top:.5rem;">info@dataconsultants.nl &middot; 020-1234567</p>
+</footer>
+
+<script>
+const HOUSE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>`;
+
+let allPanden = [];
+
+async function loadPanden() {
+  try {
+    const res = await fetch('/api/panden');
+    allPanden = await res.json();
+    applyFilters();
+  } catch (e) {
+    document.getElementById('pandenGrid').innerHTML =
+      `<div class="no-results">${HOUSE_SVG}<p>Kan woningen niet laden. Start de server.</p></div>`;
+  }
+}
+
+function applyFilters() {
+  const search = document.getElementById('filterSearch').value.toLowerCase();
+  const maxPrice = parseInt(document.getElementById('filterPrice').value);
+  const minRooms = parseInt(document.getElementById('filterRooms').value);
+  const type = document.getElementById('filterType').value;
+  const onlyAvailable = document.getElementById('filterBeschikbaar').checked;
+
+  const filtered = allPanden.filter(p => {
+    if (search && !(p.naam + p.adres + p.stad + p.postcode).toLowerCase().includes(search)) return false;
+    if (p.huurprijs > maxPrice) return false;
+    if (p.kamers < minRooms) return false;
+    if (type && p.type !== type) return false;
+    if (onlyAvailable && !p.beschikbaar) return false;
+    return true;
+  });
+
+  document.getElementById('pandenCount').textContent = `${filtered.length} ${filtered.length === 1 ? 'woning' : 'woningen'} gevonden`;
+  renderGrid(filtered);
+}
+
+function renderGrid(panden) {
+  const grid = document.getElementById('pandenGrid');
+  if (panden.length === 0) {
+    grid.innerHTML = `<div class="no-results">${HOUSE_SVG}<p>Geen woningen gevonden met deze filters</p></div>`;
+    return;
+  }
+  grid.innerHTML = panden.map(p => `
+    <div class="pand-card" onclick="openModal('${p.id}')">
+      <div class="pand-photo">
+        ${HOUSE_SVG}
+        <span class="pand-badge ${p.beschikbaar ? 'beschikbaar' : 'verhuurd'}">
+          ${p.beschikbaar ? 'Beschikbaar' : 'Verhuurd'}
+        </span>
+      </div>
+      <div class="pand-info">
+        <h3>${esc(p.naam)}</h3>
+        <div class="pand-adres">${esc(p.adres)}, ${esc(p.stad)}</div>
+        <div class="pand-meta">
+          <span>${p.oppervlakte_m2} m&sup2;</span>
+          <span>${p.kamers} kamers</span>
+          <span>${p.slaapkamers} slaapkamers</span>
+          <span>Label ${p.energielabel}</span>
+          <span>${capitalize(p.type)}</span>
+        </div>
+        <div class="pand-prijs">&euro;${p.huurprijs.toLocaleString('nl-NL')} <small>/maand</small></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openModal(id) {
+  const p = allPanden.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('modalTitle').textContent = p.naam;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-photo">${HOUSE_SVG}</div>
+    <div class="modal-details">
+      <div class="modal-detail"><span class="label">Adres</span><span class="value">${esc(p.adres)}, ${esc(p.postcode)} ${esc(p.stad)}</span></div>
+      <div class="modal-detail"><span class="label">Type</span><span class="value">${capitalize(p.type)}</span></div>
+      <div class="modal-detail"><span class="label">Huurprijs</span><span class="value" style="color:var(--accent);font-weight:700">&euro;${p.huurprijs.toLocaleString('nl-NL')} /maand</span></div>
+      <div class="modal-detail"><span class="label">Oppervlakte</span><span class="value">${p.oppervlakte_m2} m&sup2;</span></div>
+      <div class="modal-detail"><span class="label">Kamers</span><span class="value">${p.kamers} (${p.slaapkamers} slaapkamers)</span></div>
+      <div class="modal-detail"><span class="label">Energielabel</span><span class="value">${p.energielabel}</span></div>
+      <div class="modal-detail"><span class="label">Status</span><span class="value">${p.beschikbaar ? 'Beschikbaar' : 'Verhuurd'}</span></div>
+      <div class="modal-detail"><span class="label">Beschikbaar vanaf</span><span class="value">${formatDate(p.beschikbaar_vanaf)}</span></div>
+    </div>
+    ${p.kenmerken.length ? `
+      <h4 style="font-size:.85rem; color:var(--text-dim); margin-bottom:.5rem; font-family:'Space Mono',monospace; text-transform:uppercase; letter-spacing:.04em;">Kenmerken</h4>
+      <div class="modal-kenmerken">${p.kenmerken.map(k => `<span>${esc(capitalize(k))}</span>`).join('')}</div>
+    ` : ''}
+    <div class="modal-actions">
+      ${p.beschikbaar ? `<a href="mailto:info@dataconsultants.nl?subject=Interesse%20in%20${encodeURIComponent(p.naam)}" class="btn btn-primary">Contact opnemen</a>` : ''}
+      <button class="btn btn-secondary" onclick="closeModal()">Sluiten</button>
+    </div>
+  `;
+  document.getElementById('modalOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// Filter listeners
+['filterSearch', 'filterPrice', 'filterRooms', 'filterType', 'filterBeschikbaar'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener(el.type === 'range' ? 'input' : 'change', applyFilters);
+  if (el.type === 'text') el.addEventListener('input', applyFilters);
+});
+document.getElementById('filterPrice').addEventListener('input', e => {
+  document.getElementById('filterPriceLabel').innerHTML = `&le; &euro;${parseInt(e.target.value).toLocaleString('nl-NL')}`;
+});
+
+// Helpers
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+function formatDate(d) {
+  if (!d) return '-';
+  const [y, m, day] = d.split('-');
+  return `${day}-${m}-${y}`;
+}
+
+// Init
+loadPanden();
+</script>
+</body>
+</html>
