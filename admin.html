@@ -858,6 +858,7 @@ tbody tr:last-child td { border-bottom: none; }
 let panden = [];
 let reserveringen = [];
 let betalingen = [];
+let dashStats = {};
 let calendarMonth = new Date().getMonth() + 1;
 let calendarYear = new Date().getFullYear();
 
@@ -904,12 +905,17 @@ function switchTab(tab) {
 // ── DATA LOADING ──
 async function loadAllData() {
   try {
-    const [pRes, rRes, bRes] = await Promise.all([
-      fetch('/api/panden'), fetch('/api/reserveringen'), fetch('/api/betalingen')
+    const [pRes, rRes, bRes, sRes] = await Promise.all([
+      fetch('/api/panden'), fetch('/api/reserveringen'), fetch('/api/betalingen'), fetch('/api/stats')
     ]);
-    panden = await pRes.json();
-    reserveringen = await rRes.json();
-    betalingen = await bRes.json();
+    const pData = await pRes.json();
+    const rData = await rRes.json();
+    const bData = await bRes.json();
+    // Handle both paginated {data:[...]} and plain array responses
+    panden = Array.isArray(pData) ? pData : (pData.data || []);
+    reserveringen = Array.isArray(rData) ? rData : (rData.data || []);
+    betalingen = Array.isArray(bData) ? bData : (bData.data || []);
+    if (sRes.ok) dashStats = await sRes.json();
   } catch (e) {
     console.error('Data laden mislukt:', e);
   }
@@ -969,24 +975,33 @@ function renderDashboard() {
   const now = new Date();
   const monthKey = now.toISOString().slice(0, 7);
 
-  const totalProps = panden.length;
-  const activeRes = reserveringen.filter(r => r.status === 'bevestigd' || r.status === 'pending').length;
+  // Use server stats if available, fallback to client-side calculation
+  const totalProps = dashStats.totaal_woningen != null ? dashStats.totaal_woningen : panden.length;
+  const activeRes = dashStats.actieve_reserveringen != null ? dashStats.actieve_reserveringen :
+    reserveringen.filter(r => r.status === 'bevestigd' || r.status === 'pending').length;
 
   // Bezettingsgraad
   let bezet = 0;
-  panden.forEach(p => {
-    const has = reserveringen.some(r =>
-      r.pand_id === p.id && r.status === 'bevestigd' &&
-      r.check_in <= today && r.check_out > today
-    );
-    if (has) bezet++;
-  });
-  const bezettingsgraad = totalProps ? Math.round(bezet / totalProps * 100) : 0;
+  let bezettingsgraad = 0;
+  if (dashStats.bezettingsgraad != null) {
+    bezettingsgraad = dashStats.bezettingsgraad;
+    bezet = Math.round(totalProps * bezettingsgraad / 100);
+  } else {
+    panden.forEach(p => {
+      const has = reserveringen.some(r =>
+        r.pand_id === p.id && r.status === 'bevestigd' &&
+        r.check_in <= today && r.check_out > today
+      );
+      if (has) bezet++;
+    });
+    bezettingsgraad = totalProps ? Math.round(bezet / totalProps * 100) : 0;
+  }
 
   // Omzet deze maand
-  const omzetMaand = betalingen
-    .filter(b => b.status === 'voltooid' && (b.datum || '').slice(0, 7) === monthKey)
-    .reduce((s, b) => s + (b.bedrag || 0), 0);
+  const omzetMaand = dashStats.omzet_maand != null ? dashStats.omzet_maand :
+    betalingen
+      .filter(b => b.status === 'voltooid' && (b.datum || '').slice(0, 7) === monthKey)
+      .reduce((s, b) => s + (b.bedrag || 0), 0);
 
   document.getElementById('dashStats').innerHTML = `
     <div class="stat-card">
@@ -1090,7 +1105,7 @@ function renderWoningen() {
   const typeFilter = document.getElementById('woningenTypeFilter').value;
 
   let filtered = panden.filter(p => {
-    if (search && !p.naam.toLowerCase().includes(search) && !p.adres.toLowerCase().includes(search)) return false;
+    if (search && !(p.naam||'').toLowerCase().includes(search) && !(p.adres||'').toLowerCase().includes(search)) return false;
     if (typeFilter && p.type !== typeFilter) return false;
     return true;
   });
@@ -1115,7 +1130,7 @@ function renderWoningen() {
       </div>
       <div class="property-info">
         <div class="property-name">${p.naam}</div>
-        <div class="property-address"><span class="material-icons-outlined" style="font-size:14px">place</span> ${p.adres}, ${p.stad}</div>
+        <div class="property-address"><span class="material-icons-outlined" style="font-size:14px">place</span> ${p.adres || ''}, ${p.stad || ''}</div>
         <div class="property-meta">
           <span><span class="material-icons-outlined" style="font-size:14px">bed</span> ${p.slaapkamers || 0}</span>
           <span><span class="material-icons-outlined" style="font-size:14px">groups</span> ${p.max_gasten || 0}</span>
@@ -1151,6 +1166,15 @@ function getPropertyFormHTML(p = {}) {
           <option value="penthouse" ${p.type==='penthouse'?'selected':''}>Penthouse</option>
         </select>
       </div>
+    </div>
+    <div class="form-group"><label>Categorie</label>
+      <select id="propCategorie">
+        <option value="" ${!p.categorie?'selected':''}>Selecteer...</option>
+        <option value="kort_verblijf" ${p.categorie==='kort_verblijf'?'selected':''}>Kort verblijf</option>
+        <option value="vakantie" ${p.categorie==='vakantie'?'selected':''}>Vakantie</option>
+        <option value="zakelijk" ${p.categorie==='zakelijk'?'selected':''}>Zakelijk</option>
+        <option value="long_stay" ${p.categorie==='long_stay'?'selected':''}>Long stay</option>
+      </select>
     </div>
     <div class="form-group"><label>Beschrijving</label><textarea id="propBeschrijving">${p.beschrijving || ''}</textarea></div>
     <div class="form-row-3">
@@ -1199,13 +1223,19 @@ function getPropertyFormHTML(p = {}) {
         </label>
       `).join('')}
     </div>
+    <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Kenmerken</h4>
+    <div class="form-group"><label>Kenmerken (kommagescheiden)</label><input type="text" id="propKenmerken" value="${(p.kenmerken||[]).join(', ')}" placeholder="bijv. rustige buurt, nabij centrum, balkon op zuiden"></div>
+    <div class="form-group"><label>Notities</label><textarea id="propNotities" placeholder="Interne notities over deze woning...">${p.notities || ''}</textarea></div>
   `;
 }
 
 function collectPropertyData() {
+  const kenmerkenRaw = document.getElementById('propKenmerken').value.trim();
+  const kenmerken = kenmerkenRaw ? kenmerkenRaw.split(',').map(k => k.trim()).filter(k => k) : [];
   return {
     naam: document.getElementById('propNaam').value,
     type: document.getElementById('propType').value,
+    categorie: document.getElementById('propCategorie').value,
     beschrijving: document.getElementById('propBeschrijving').value,
     adres: document.getElementById('propAdres').value,
     stad: document.getElementById('propStad').value,
@@ -1225,12 +1255,12 @@ function collectPropertyData() {
     energielabel: document.getElementById('propEnergielabel').value,
     beschikbaar: document.getElementById('propStatus').value === 'true',
     amenities: [...document.querySelectorAll('.amenity-cb:checked')].map(cb => cb.value),
+    kenmerken: kenmerken,
+    notities: document.getElementById('propNotities').value,
     huurprijs: parseFloat(document.getElementById('propNachtprijs').value) * 30 || 0,
     foto_urls: [],
-    kenmerken: [],
     huurder: null,
-    onderhoud: [],
-    notities: ''
+    onderhoud: []
   };
 }
 
@@ -1307,6 +1337,7 @@ function openPropertyDetail(id) {
     <div style="margin-bottom:1.5rem">
       <div class="detail-grid">
         <div class="detail-item"><label>Type</label><p>${p.type}</p></div>
+        <div class="detail-item"><label>Categorie</label><p>${p.categorie || '-'}</p></div>
         <div class="detail-item"><label>Stad</label><p>${p.stad}</p></div>
         <div class="detail-item"><label>Energielabel</label><p>${p.energielabel || '-'}</p></div>
         <div class="detail-item"><label>Oppervlakte</label><p>${p.oppervlakte_m2}m&sup2;</p></div>
@@ -1324,6 +1355,16 @@ function openPropertyDetail(id) {
     <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem">
       ${(p.amenities||[]).map(a => `<span class="badge badge-info">${a.replace('_',' ')}</span>`).join('')}
     </div>
+    ${(p.kenmerken||[]).length ? `
+      <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Kenmerken</h4>
+      <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem">
+        ${(p.kenmerken||[]).map(k => `<span class="badge badge-neutral">${k}</span>`).join('')}
+      </div>
+    ` : ''}
+    ${p.notities ? `
+      <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Notities</h4>
+      <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:1rem">${p.notities}</p>
+    ` : ''}
     <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Beschikbaarheid deze maand</h4>
     ${renderMiniCalendar(id)}
     ${propRes.length ? `
@@ -1394,7 +1435,7 @@ function renderReserveringen() {
   const dateTo = document.getElementById('resDateTo').value;
 
   let filtered = reserveringen.filter(r => {
-    if (search && !r.gast_naam.toLowerCase().includes(search) && !r.id.toLowerCase().includes(search)) return false;
+    if (search && !(r.gast_naam||'').toLowerCase().includes(search) && !(r.id||'').toLowerCase().includes(search)) return false;
     if (statusF && r.status !== statusF) return false;
     if (betaalF && r.betaalstatus !== betaalF) return false;
     if (dateFrom && r.check_in < dateFrom) return false;
