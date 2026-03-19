@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DataConsultants Stays - Booking Engine & Admin Server (port 8088)
+"""Data Consultants Stays - Booking Engine & Admin Server (port 8088)
    PostgreSQL backend with connection pooling, logging, and input validation.
 """
 
@@ -1134,7 +1134,7 @@ def main():
         return
 
     server = ThreadingHTTPServer(("0.0.0.0", port), VastgoedHandler)
-    logger.info(f"DataConsultants Stays server running on http://localhost:{port}")
+    logger.info(f"Data Consultants Stays server running on http://localhost:{port}")
     logger.info(f"Booking engine:  http://localhost:{port}/index.html")
     logger.info(f"Admin panel:     http://localhost:{port}/admin.html")
     logger.info(f"Health check:    http://localhost:{port}/api/health")

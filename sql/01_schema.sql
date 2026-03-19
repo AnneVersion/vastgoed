@@ -1,5 +1,5 @@
 -- ============================================================
--- DataConsultants Stays - Database Schema
+-- Data Consultants Stays - Database Schema
 -- Database: vastgoed
 -- ============================================================
 

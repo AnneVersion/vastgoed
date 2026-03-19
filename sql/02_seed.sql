@@ -1,5 +1,5 @@
 -- ============================================================
--- DataConsultants Stays - Seed Data
+-- Data Consultants Stays - Seed Data
 -- Run after 01_schema.sql
 -- ============================================================
 
