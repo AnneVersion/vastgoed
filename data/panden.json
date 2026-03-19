@@ -1,26 +1,36 @@
 [
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567801",
-    "naam": "Appartement Centrum",
+    "naam": "Grachtenpand Deluxe",
     "adres": "Keizersgracht 274",
     "stad": "Amsterdam",
     "postcode": "1016 EV",
     "type": "appartement",
+    "categorie": "Luxe Appartement",
     "huurprijs": 1850,
+    "nachtprijs": 185,
     "oppervlakte_m2": 92,
     "kamers": 4,
     "slaapkamers": 2,
+    "max_gasten": 4,
     "energielabel": "A",
-    "beschikbaar": false,
+    "beschikbaar": true,
     "beschikbaar_vanaf": "2026-01-01",
-    "foto_urls": [],
+    "beschrijving": "Luxueus appartement aan de iconische Keizersgracht met originele details, hoge plafonds en uitzicht op het water. Volledig uitgerust voor een comfortabel verblijf in het hart van Amsterdam.",
+    "foto_urls": [
+      "gradient-luxury-1",
+      "gradient-luxury-2",
+      "gradient-luxury-3"
+    ],
     "kenmerken": ["balkon", "lift", "CV", "vaatwasser", "parketvloer"],
-    "huurder": {
-      "naam": "Jan de Vries",
-      "email": "jan.devries@email.nl",
-      "telefoon": "06-12345678",
-      "huurstart": "2025-06-01"
+    "amenities": ["wifi", "keuken", "wasmachine", "vaatwasser", "airco", "TV", "handdoeken", "beddengoed", "lift"],
+    "tarieven": {
+      "flexibel": 210,
+      "standaard": 185,
+      "niet_restitueerbaar": 160
     },
+    "schoonmaakkosten": 85,
+    "huurder": null,
     "onderhoud": [
       {
         "id": "m001",
@@ -30,7 +40,9 @@
         "status": "afgerond"
       }
     ],
-    "notities": "Hoekwoning aan de gracht, populaire locatie"
+    "notities": "Hoekwoning aan de gracht, populaire locatie",
+    "lat": 52.3676,
+    "lng": 4.8846
   },
   {
     "id": "b2c3d4e5-f6a7-8901-bcde-f12345678902",
@@ -39,18 +51,34 @@
     "stad": "Utrecht",
     "postcode": "3531 CJ",
     "type": "studio",
+    "categorie": "Gezellige Studio",
     "huurprijs": 895,
+    "nachtprijs": 95,
     "oppervlakte_m2": 38,
     "kamers": 1,
     "slaapkamers": 0,
+    "max_gasten": 2,
     "energielabel": "C",
     "beschikbaar": true,
     "beschikbaar_vanaf": "2026-04-01",
-    "foto_urls": [],
+    "beschrijving": "Compacte en sfeervolle studio in de levendige wijk Lombok. Ideaal voor stellen of solo-reizigers die Utrecht willen ontdekken. Op loopafstand van het centrum.",
+    "foto_urls": [
+      "gradient-cozy-1",
+      "gradient-cozy-2"
+    ],
     "kenmerken": ["open keuken", "laminaat", "gemeenschappelijke tuin"],
+    "amenities": ["wifi", "keuken", "wasmachine", "TV", "handdoeken", "beddengoed"],
+    "tarieven": {
+      "flexibel": 115,
+      "standaard": 95,
+      "niet_restitueerbaar": 79
+    },
+    "schoonmaakkosten": 45,
     "huurder": null,
     "onderhoud": [],
-    "notities": "Geschikt voor starters, dichtbij station"
+    "notities": "Geschikt voor starters, dichtbij station",
+    "lat": 52.0938,
+    "lng": 5.1003
   },
   {
     "id": "c3d4e5f6-a7b8-9012-cdef-123456789003",
@@ -59,21 +87,31 @@
     "stad": "Den Haag",
     "postcode": "2582 HZ",
     "type": "woonhuis",
+    "categorie": "Stadsvilla",
     "huurprijs": 2200,
+    "nachtprijs": 275,
     "oppervlakte_m2": 145,
     "kamers": 6,
     "slaapkamers": 4,
+    "max_gasten": 8,
     "energielabel": "B",
-    "beschikbaar": false,
-    "beschikbaar_vanaf": "2025-09-01",
-    "foto_urls": [],
+    "beschikbaar": true,
+    "beschikbaar_vanaf": "2026-01-01",
+    "beschrijving": "Ruim en stijlvol herenhuis in het gewilde Statenkwartier. Met 4 slaapkamers, tuin en garage is dit de perfecte keuze voor families of groepen die Den Haag willen verkennen.",
+    "foto_urls": [
+      "gradient-villa-1",
+      "gradient-villa-2",
+      "gradient-villa-3"
+    ],
     "kenmerken": ["tuin", "garage", "CV", "open haard", "kelder", "zolder"],
-    "huurder": {
-      "naam": "Familie Bakker",
-      "email": "bakker.fam@email.nl",
-      "telefoon": "06-98765432",
-      "huurstart": "2025-09-01"
+    "amenities": ["wifi", "keuken", "wasmachine", "droger", "vaatwasser", "TV", "handdoeken", "beddengoed", "parkeren", "tuin", "open_haard"],
+    "tarieven": {
+      "flexibel": 315,
+      "standaard": 275,
+      "niet_restitueerbaar": 235
     },
+    "schoonmaakkosten": 120,
+    "huurder": null,
     "onderhoud": [
       {
         "id": "m002",
@@ -81,16 +119,11 @@
         "beschrijving": "Dakgoot reparatie",
         "kosten": 340.00,
         "status": "afgerond"
-      },
-      {
-        "id": "m003",
-        "datum": "2026-03-10",
-        "beschrijving": "Lekkage badkamer verhelpen",
-        "kosten": 275.00,
-        "status": "in_behandeling"
       }
     ],
-    "notities": "Monumentaal pand, extra aandacht voor onderhoud"
+    "notities": "Monumentaal pand, extra aandacht voor onderhoud",
+    "lat": 52.0924,
+    "lng": 4.2878
   },
   {
     "id": "d4e5f6a7-b8c9-0123-defa-234567890104",
@@ -99,46 +132,69 @@
     "stad": "Rotterdam",
     "postcode": "3062 AP",
     "type": "appartement",
+    "categorie": "Modern Appartement",
     "huurprijs": 1350,
+    "nachtprijs": 135,
     "oppervlakte_m2": 68,
     "kamers": 3,
     "slaapkamers": 2,
+    "max_gasten": 4,
     "energielabel": "A",
     "beschikbaar": true,
     "beschikbaar_vanaf": "2026-05-01",
-    "foto_urls": [],
-    "kenmerken": ["balkon", "lift", "CV", "inbouwkeuken"],
-    "huurder": null,
-    "onderhoud": [
-      {
-        "id": "m004",
-        "datum": "2026-02-28",
-        "beschrijving": "Schilderwerk trappenhuis",
-        "kosten": 450.00,
-        "status": "gepland"
-      }
+    "beschrijving": "Modern ingericht appartement nabij de Kralingse Plas. Licht en ruim met twee comfortabele slaapkamers. Perfecte uitvalsbasis voor het ontdekken van Rotterdam.",
+    "foto_urls": [
+      "gradient-modern-1",
+      "gradient-modern-2"
     ],
-    "notities": "Rustige buurt nabij Kralingse Plas"
+    "kenmerken": ["balkon", "lift", "CV", "inbouwkeuken"],
+    "amenities": ["wifi", "keuken", "wasmachine", "vaatwasser", "TV", "handdoeken", "beddengoed", "balkon", "lift"],
+    "tarieven": {
+      "flexibel": 159,
+      "standaard": 135,
+      "niet_restitueerbaar": 115
+    },
+    "schoonmaakkosten": 65,
+    "huurder": null,
+    "onderhoud": [],
+    "notities": "Rustige buurt nabij Kralingse Plas",
+    "lat": 51.9270,
+    "lng": 4.5103
   },
   {
     "id": "e5f6a7b8-c9d0-1234-efab-345678901205",
-    "naam": "Studio Schalkwijk",
+    "naam": "Studio Haarlem",
     "adres": "Engelandlaan 200",
     "stad": "Haarlem",
     "postcode": "2034 NA",
     "type": "studio",
+    "categorie": "Gezellige Studio",
     "huurprijs": 825,
+    "nachtprijs": 85,
     "oppervlakte_m2": 32,
     "kamers": 1,
     "slaapkamers": 0,
+    "max_gasten": 2,
     "energielabel": "D",
     "beschikbaar": true,
     "beschikbaar_vanaf": "2026-04-15",
-    "foto_urls": [],
+    "beschrijving": "Volledig gemeubileerde studio, ideaal voor korte en langere verblijven. Alles wat je nodig hebt is aanwezig. Uitstekende bereikbaarheid met OV.",
+    "foto_urls": [
+      "gradient-cozy-3"
+    ],
     "kenmerken": ["gemeubileerd", "laminaat", "berging"],
+    "amenities": ["wifi", "keuken", "wasmachine", "TV", "handdoeken", "beddengoed"],
+    "tarieven": {
+      "flexibel": 105,
+      "standaard": 85,
+      "niet_restitueerbaar": 69
+    },
+    "schoonmaakkosten": 40,
     "huurder": null,
     "onderhoud": [],
-    "notities": "Volledig gemeubileerd, ideaal voor expats"
+    "notities": "Volledig gemeubileerd, ideaal voor expats",
+    "lat": 52.3728,
+    "lng": 4.6422
   },
   {
     "id": "f6a7b8c9-d0e1-2345-fabc-456789012306",
@@ -147,31 +203,34 @@
     "stad": "Amsterdam",
     "postcode": "1077 HN",
     "type": "woonhuis",
+    "categorie": "Luxe Appartement",
     "huurprijs": 2100,
+    "nachtprijs": 225,
     "oppervlakte_m2": 120,
     "kamers": 5,
     "slaapkamers": 3,
+    "max_gasten": 6,
     "energielabel": "B",
-    "beschikbaar": false,
-    "beschikbaar_vanaf": "2025-03-01",
-    "foto_urls": [],
-    "kenmerken": ["tuin", "CV", "vaatwasser", "wasmachine aansluiting", "parketvloer"],
-    "huurder": {
-      "naam": "Sophie van den Berg",
-      "email": "s.vandenberg@email.nl",
-      "telefoon": "06-55443322",
-      "huurstart": "2025-03-01"
-    },
-    "onderhoud": [
-      {
-        "id": "m005",
-        "datum": "2025-08-12",
-        "beschrijving": "Tuinonderhoud jaarlijks",
-        "kosten": 150.00,
-        "status": "afgerond"
-      }
+    "beschikbaar": true,
+    "beschikbaar_vanaf": "2026-01-01",
+    "beschrijving": "Prachtige woning in het prestigieuze Oud-Zuid. Met 3 ruime slaapkamers, een mooie tuin en parketvloeren. Dichtbij het Vondelpark en de museumstrip.",
+    "foto_urls": [
+      "gradient-luxury-4",
+      "gradient-luxury-5"
     ],
-    "notities": ""
+    "kenmerken": ["tuin", "CV", "vaatwasser", "wasmachine aansluiting", "parketvloer"],
+    "amenities": ["wifi", "keuken", "wasmachine", "vaatwasser", "TV", "handdoeken", "beddengoed", "tuin", "parkeren"],
+    "tarieven": {
+      "flexibel": 259,
+      "standaard": 225,
+      "niet_restitueerbaar": 195
+    },
+    "schoonmaakkosten": 95,
+    "huurder": null,
+    "onderhoud": [],
+    "notities": "Premium locatie bij Vondelpark",
+    "lat": 52.3505,
+    "lng": 4.8782
   },
   {
     "id": "a7b8c9d0-e1f2-3456-abcd-567890123407",
@@ -180,83 +239,105 @@
     "stad": "Rotterdam",
     "postcode": "3072 AR",
     "type": "appartement",
+    "categorie": "Premium Penthouse",
     "huurprijs": 1950,
+    "nachtprijs": 245,
     "oppervlakte_m2": 105,
     "kamers": 4,
     "slaapkamers": 2,
+    "max_gasten": 4,
     "energielabel": "A",
-    "beschikbaar": false,
-    "beschikbaar_vanaf": "2025-11-01",
-    "foto_urls": [],
+    "beschikbaar": true,
+    "beschikbaar_vanaf": "2026-01-01",
+    "beschrijving": "Spectaculair penthouse met panoramisch uitzicht over de Maas en de skyline van Rotterdam. Voorzien van een ruim dakterras en luxe afwerking.",
+    "foto_urls": [
+      "gradient-penthouse-1",
+      "gradient-penthouse-2",
+      "gradient-penthouse-3"
+    ],
     "kenmerken": ["dakterras", "lift", "CV", "panoramisch uitzicht", "inbouwkeuken", "parkeergelegenheid"],
-    "huurder": {
-      "naam": "Mark Jansen",
-      "email": "m.jansen@email.nl",
-      "telefoon": "06-11223344",
-      "huurstart": "2025-11-01"
+    "amenities": ["wifi", "keuken", "wasmachine", "droger", "vaatwasser", "airco", "TV", "handdoeken", "beddengoed", "lift", "parkeren", "balkon"],
+    "tarieven": {
+      "flexibel": 285,
+      "standaard": 245,
+      "niet_restitueerbaar": 210
     },
+    "schoonmaakkosten": 95,
+    "huurder": null,
     "onderhoud": [],
-    "notities": "Premium locatie met uitzicht over de Maas"
+    "notities": "Premium locatie met uitzicht over de Maas",
+    "lat": 51.9055,
+    "lng": 4.4870
   },
   {
     "id": "b8c9d0e1-f2a3-4567-bcde-678901234508",
-    "naam": "Appartement Wittevrouwen",
+    "naam": "Appartement Domtoren",
     "adres": "Wittevrouwenstraat 12",
     "stad": "Utrecht",
     "postcode": "3512 CS",
     "type": "appartement",
+    "categorie": "Modern Appartement",
     "huurprijs": 1275,
+    "nachtprijs": 125,
     "oppervlakte_m2": 62,
     "kamers": 3,
     "slaapkamers": 1,
+    "max_gasten": 3,
     "energielabel": "C",
     "beschikbaar": true,
     "beschikbaar_vanaf": "2026-06-01",
-    "foto_urls": [],
-    "kenmerken": ["balkon", "CV", "laminaat", "fietsenstalling"],
-    "huurder": null,
-    "onderhoud": [
-      {
-        "id": "m006",
-        "datum": "2026-03-01",
-        "beschrijving": "Keukenblad vervangen",
-        "kosten": 620.00,
-        "status": "in_behandeling"
-      }
+    "beschrijving": "Charmant appartement op loopafstand van de Domtoren en het stadscentrum van Utrecht. Ideaal voor citytrips en zakenreizen.",
+    "foto_urls": [
+      "gradient-modern-3"
     ],
-    "notities": "Centrum locatie, loopafstand naar Domtoren"
+    "kenmerken": ["balkon", "CV", "laminaat", "fietsenstalling"],
+    "amenities": ["wifi", "keuken", "wasmachine", "TV", "handdoeken", "beddengoed", "balkon", "fiets"],
+    "tarieven": {
+      "flexibel": 149,
+      "standaard": 125,
+      "niet_restitueerbaar": 105
+    },
+    "schoonmaakkosten": 55,
+    "huurder": null,
+    "onderhoud": [],
+    "notities": "Centrum locatie, loopafstand naar Domtoren",
+    "lat": 52.0944,
+    "lng": 5.1266
   },
   {
     "id": "c9d0e1f2-a3b4-5678-cdef-789012345609",
-    "naam": "Woning Zandvoort",
+    "naam": "Strandwoning Zandvoort",
     "adres": "Boulevard Barnaart 15",
-    "stad": "Haarlem",
+    "stad": "Zandvoort",
     "postcode": "2041 JA",
     "type": "woonhuis",
+    "categorie": "Stadsvilla",
     "huurprijs": 1650,
+    "nachtprijs": 195,
     "oppervlakte_m2": 98,
     "kamers": 4,
     "slaapkamers": 3,
+    "max_gasten": 6,
     "energielabel": "B",
-    "beschikbaar": false,
-    "beschikbaar_vanaf": "2025-07-01",
-    "foto_urls": [],
-    "kenmerken": ["tuin", "berging", "CV", "dubbel glas", "zonnepanelen"],
-    "huurder": {
-      "naam": "Lisa en Tom Mulder",
-      "email": "mulders@email.nl",
-      "telefoon": "06-77889900",
-      "huurstart": "2025-07-01"
-    },
-    "onderhoud": [
-      {
-        "id": "m007",
-        "datum": "2025-12-05",
-        "beschrijving": "Zonnepanelen inspectie",
-        "kosten": 95.00,
-        "status": "afgerond"
-      }
+    "beschikbaar": true,
+    "beschikbaar_vanaf": "2026-01-01",
+    "beschrijving": "Sfeervolle woning op steenworp afstand van het strand van Zandvoort. Met 3 slaapkamers en een zonnige tuin. Ideaal voor een ontspannen vakantie aan zee.",
+    "foto_urls": [
+      "gradient-beach-1",
+      "gradient-beach-2"
     ],
-    "notities": "Nabij strand, zeer gewild bij gezinnen"
+    "kenmerken": ["tuin", "berging", "CV", "dubbel glas", "zonnepanelen"],
+    "amenities": ["wifi", "keuken", "wasmachine", "droger", "TV", "handdoeken", "beddengoed", "tuin", "parkeren", "fiets"],
+    "tarieven": {
+      "flexibel": 229,
+      "standaard": 195,
+      "niet_restitueerbaar": 169
+    },
+    "schoonmaakkosten": 85,
+    "huurder": null,
+    "onderhoud": [],
+    "notities": "Nabij strand, zeer gewild bij gezinnen",
+    "lat": 52.3745,
+    "lng": 4.5330
   }
 ]

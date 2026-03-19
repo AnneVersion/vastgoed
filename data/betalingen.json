@@ -1,0 +1,79 @@
+[
+  {
+    "id": "PAY-2026-001",
+    "reservering_id": "RES-2026-001",
+    "gast_naam": "Jan de Vries",
+    "bedrag": 1010.00,
+    "methode": "iDEAL",
+    "bank": "ING",
+    "status": "voltooid",
+    "datum": "2026-03-01T10:35:00",
+    "beschrijving": "Betaling Grachtenpand Deluxe - 5 nachten"
+  },
+  {
+    "id": "PAY-2026-002",
+    "reservering_id": "RES-2026-002",
+    "gast_naam": "Sophie van Dijk",
+    "bedrag": 2325.00,
+    "methode": "iDEAL",
+    "bank": "Rabobank",
+    "status": "voltooid",
+    "datum": "2026-03-05T14:28:00",
+    "beschrijving": "Betaling Herenhuis Statenkwartier - 7 nachten"
+  },
+  {
+    "id": "PAY-2026-003",
+    "reservering_id": "RES-2026-004",
+    "gast_naam": "Emma Jansen",
+    "bedrag": 1320.00,
+    "methode": "iDEAL",
+    "bank": "ABN AMRO",
+    "status": "voltooid",
+    "datum": "2026-03-10T16:52:00",
+    "beschrijving": "Betaling Penthouse Wilhelminapier - 5 nachten"
+  },
+  {
+    "id": "PAY-2026-004",
+    "reservering_id": "RES-2026-006",
+    "gast_naam": "Lisa Vermeer",
+    "bedrag": 855.00,
+    "methode": "iDEAL",
+    "bank": "ING",
+    "status": "terugbetaald",
+    "datum": "2026-02-28T08:35:00",
+    "beschrijving": "Betaling Strandwoning Zandvoort - 4 nachten (terugbetaald)"
+  },
+  {
+    "id": "PAY-2026-005",
+    "reservering_id": "RES-2026-007",
+    "gast_naam": "Mark van den Berg",
+    "bedrag": 760.00,
+    "methode": "iDEAL",
+    "bank": "Rabobank",
+    "status": "voltooid",
+    "datum": "2026-03-14T13:28:00",
+    "beschrijving": "Betaling Woning Oud-Zuid - 3 nachten"
+  },
+  {
+    "id": "PAY-2026-006",
+    "reservering_id": "RES-2026-003",
+    "gast_naam": "Thomas Bakker",
+    "bedrag": 282.00,
+    "methode": "iDEAL",
+    "bank": "",
+    "status": "pending",
+    "datum": "2026-03-18T09:15:00",
+    "beschrijving": "Betaling Studio Lombok - 3 nachten (wacht op betaling)"
+  },
+  {
+    "id": "PAY-2026-007",
+    "reservering_id": "RES-2026-005",
+    "gast_naam": "Pieter Mol",
+    "bedrag": 685.00,
+    "methode": "iDEAL",
+    "bank": "",
+    "status": "pending",
+    "datum": "2026-03-12T11:05:00",
+    "beschrijving": "Betaling Appartement Kralingen - 4 nachten (wacht op betaling)"
+  }
+]
