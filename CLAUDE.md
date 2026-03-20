@@ -5,6 +5,7 @@ Luxury Short-Stay Rental Platform met booking engine, contracten, facturen en ad
 Target: expats, zakelijke reizigers, relocating professionals.
 3 luxury properties, verblijf van 1 week tot 2 jaar.
 Locatie: `E:\scripts\webscraper\CBSbuurt\vastgoed\`
+GitHub: AnneVersion/vastgoed
 
 ## Starten
 ```bash
@@ -37,12 +38,13 @@ Setup volgorde:
 - Single-file frontend (index.html en admin.html)
 - `serve.py` is een ThreadingHTTPServer met psycopg2 connection pool
 - Geen Flask - gebruikt standaard http.server
-- iDEAL betaling is een simulatie (Mollie-style UI, geen echte PSP)
+- iDEAL betaling is een simulatie (Mollie-style UI met 9 banken, geen echte PSP)
 - Contract generatie: HTML huurovereenkomst naar Nederlands recht
-- Factuur generatie: HTML factuur met BTW berekening (21%)
-- Design: luxury cream/gold theme, Verdana font
+- Factuur generatie: HTML factuur met BTW berekening (21%), factuurnummer DC-2026-XXXX
+- iCal: Airbnb kalender sync (import/export/sync endpoints)
+- Design: luxury cream/gold theme (#B8860B), Verdana font
 
-## API Endpoints (nieuw)
+## API Endpoints
 - `POST /api/contract/generate` - Genereer huurovereenkomst
 - `GET  /api/contract/<id>` - Bekijk contract als HTML
 - `GET  /api/contracten` - Lijst alle contracten
@@ -63,6 +65,7 @@ Setup volgorde:
 - Servicekosten per maand
 - Borg = 1x maandprijs (terugbetaling bij vertrek)
 - BTW: 21% over huur + servicekosten
+- Short-stay regels: Amsterdam geen nieuwe vergunningen (sinds 2014), Arnhem soepeler
 
 ## Let op
 - Port 8088
