@@ -3,1898 +3,1670 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data Consultants Stays - Serviced Apartments</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='8' width='24' height='18' rx='3' fill='%234F46E5'/><rect x='8' y='12' width='6' height='5' rx='1' fill='white' opacity='.8'/><rect x='18' y='12' width='6' height='5' rx='1' fill='white' opacity='.8'/><rect x='13' y='20' width='6' height='6' rx='1' fill='white'/></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Data Consultants Stays - Luxe Short-Stay Appartementen</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='8' width='24' height='18' rx='3' fill='%23B8860B'/><rect x='8' y='12' width='6' height='5' rx='1' fill='white' opacity='.8'/><rect x='18' y='12' width='6' height='5' rx='1' fill='white' opacity='.8'/><rect x='13' y='20' width='6' height='6' rx='1' fill='white'/></svg>">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --primary: #4F46E5;
-  --primary-dark: #3730A3;
-  --primary-light: #818CF8;
-  --primary-50: #EEF2FF;
-  --primary-100: #E0E7FF;
-  --bg: #FFFFFF;
-  --bg-subtle: #F9FAFB;
-  --bg-muted: #F3F4F6;
-  --text: #111827;
-  --text-secondary: #6B7280;
-  --text-muted: #9CA3AF;
-  --border: #E5E7EB;
-  --border-focus: #4F46E5;
-  --success: #059669;
-  --success-bg: #ECFDF5;
-  --warning: #D97706;
-  --warning-bg: #FFFBEB;
-  --error: #DC2626;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-  --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
-  --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
-  --shadow-xl: 0 25px 50px -12px rgba(0,0,0,0.25);
-  --radius: 12px;
-  --radius-sm: 8px;
+  --gold: #B8860B;
+  --gold-light: #D4A843;
+  --gold-dark: #8B6508;
+  --gold-bg: rgba(184,134,11,0.06);
+  --gold-bg2: rgba(184,134,11,0.12);
+  --cream: #FDFBF7;
+  --cream-dark: #F5F0E8;
+  --white: #FFFFFF;
+  --text: #1A1A1A;
+  --text-secondary: #5A5A5A;
+  --text-muted: #8A8A8A;
+  --border: #E8E4DC;
+  --border-light: #F0ECE4;
+  --success: #2D8B4E;
+  --success-bg: #EDF7F0;
+  --error: #C0392B;
+  --error-bg: #FDEDEB;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.1);
+  --shadow-xl: 0 24px 60px rgba(0,0,0,0.12);
+  --radius: 8px;
   --radius-lg: 16px;
   --radius-xl: 24px;
 }
 
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg);
+  font-family: Verdana, Geneva, sans-serif;
+  background: var(--cream);
   color: var(--text);
-  line-height: 1.6;
-  min-height: 100vh;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
 
-/* ==================== HEADER ==================== */
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  transition: box-shadow 0.3s;
-}
-.header.scrolled { box-shadow: var(--shadow); }
-.header-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 24px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: var(--text);
-}
-.logo-icon {
-  width: 36px;
-  height: 36px;
-  background: var(--primary);
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 800;
-  font-size: 18px;
-}
-.logo-text {
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: -0.02em;
-}
-.logo-text span { color: var(--primary); }
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.header-select {
-  appearance: none;
-  background: var(--bg-muted);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 6px 28px 6px 10px;
-  font-size: 13px;
-  font-family: inherit;
-  color: var(--text-secondary);
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-}
-.header-phone {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  font-weight: 500;
-}
-@media (max-width: 640px) {
-  .header-phone, .header-select { display: none; }
-}
+/* ── ANIMATIONS ── */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .6; } }
 
-/* ==================== HERO ==================== */
+.animate-in { animation: fadeInUp 0.8s ease forwards; opacity: 0; }
+.animate-delay-1 { animation-delay: 0.1s; }
+.animate-delay-2 { animation-delay: 0.2s; }
+.animate-delay-3 { animation-delay: 0.3s; }
+.animate-delay-4 { animation-delay: 0.4s; }
+
+/* ── NAVIGATION ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(253,251,247,0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-light);
+  transition: all 0.3s ease;
+}
+.nav.scrolled {
+  background: rgba(255,255,255,0.98);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 0.75rem;
+  text-decoration: none; color: var(--text);
+}
+.nav-brand-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: bold; font-size: 1.1rem;
+}
+.nav-brand-text { font-size: 0.95rem; font-weight: bold; letter-spacing: 0.02em; }
+.nav-brand-sub { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.nav-links { display: flex; gap: 2rem; align-items: center; }
+.nav-links a {
+  text-decoration: none; color: var(--text-secondary);
+  font-size: 0.8rem; font-weight: bold;
+  letter-spacing: 0.03em; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--gold); }
+.nav-cta {
+  background: var(--gold) !important; color: white !important;
+  padding: 0.6rem 1.5rem; border-radius: 6px;
+  transition: all 0.2s !important;
+}
+.nav-cta:hover { background: var(--gold-dark) !important; transform: translateY(-1px); }
+
+/* ── HERO ── */
 .hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 25%, #4338ca 50%, #6366f1 75%, #818cf8 100%);
-  overflow: hidden;
-  padding: 100px 24px 60px;
+  min-height: 100vh; display: flex; align-items: center;
+  background: linear-gradient(170deg, var(--cream) 0%, var(--cream-dark) 40%, #EDE8DE 100%);
+  position: relative; overflow: hidden;
+  padding: 8rem 2rem 4rem;
 }
 .hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 80%, rgba(0,0,0,0.2) 0%, transparent 50%);
+  content: ''; position: absolute; top: -50%; right: -20%;
+  width: 60%; height: 200%;
+  background: linear-gradient(135deg, rgba(184,134,11,0.03), rgba(184,134,11,0.08));
+  border-radius: 50%; transform: rotate(-15deg);
 }
-.hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  opacity: 0.5;
+.hero-inner {
+  max-width: 1200px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+  align-items: center; position: relative; z-index: 1;
 }
-.hero-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  max-width: 700px;
-  margin-bottom: 48px;
-}
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 100px;
-  padding: 6px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.9);
-  margin-bottom: 24px;
+.hero-content { max-width: 560px; }
+.hero-eyebrow {
+  display: inline-block; font-size: 0.7rem; font-weight: bold;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.5rem;
+  padding: 0.4rem 1rem; background: var(--gold-bg);
+  border-radius: 4px; border: 1px solid rgba(184,134,11,0.15);
 }
 .hero h1 {
-  font-size: clamp(32px, 5vw, 56px);
-  font-weight: 800;
-  color: white;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  margin-bottom: 16px;
+  font-size: 3rem; line-height: 1.15; font-weight: bold;
+  color: var(--text); margin-bottom: 1.5rem;
+  letter-spacing: -0.01em;
 }
-.hero p {
-  font-size: clamp(16px, 2vw, 20px);
-  color: rgba(255,255,255,0.75);
-  font-weight: 400;
-  line-height: 1.6;
+.hero h1 span { color: var(--gold); }
+.hero-subtitle {
+  font-size: 1rem; color: var(--text-secondary);
+  line-height: 1.8; margin-bottom: 2.5rem; max-width: 480px;
 }
-
-/* ==================== BOOKING CARD ==================== */
-.booking-card {
-  position: relative;
-  z-index: 2;
-  background: white;
-  border-radius: var(--radius-xl);
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+.hero-visual {
+  display: flex; justify-content: center; align-items: center;
+}
+.hero-card {
+  width: 100%; max-width: 480px;
+  background: white; border-radius: var(--radius-xl);
   box-shadow: var(--shadow-xl);
-  width: 100%;
-  max-width: 880px;
-  overflow: hidden;
+  overflow: hidden; position: relative;
 }
-
-/* Progress Bar */
-.progress-bar {
-  display: flex;
-  padding: 24px 32px 0;
-  gap: 8px;
-}
-.progress-step {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
+.hero-card-image {
+  height: 280px;
+  background: linear-gradient(135deg, #D4A843 0%, #8B6508 50%, #B8860B 100%);
   position: relative;
 }
-.progress-step-line {
-  height: 4px;
-  width: 100%;
-  background: var(--bg-muted);
-  border-radius: 4px;
-  overflow: hidden;
-  transition: all 0.3s;
+.hero-card-image::after {
+  content: 'PREMIUM RESIDENCES'; position: absolute;
+  bottom: 1.5rem; left: 1.5rem; color: rgba(255,255,255,0.7);
+  font-size: 0.7rem; letter-spacing: 0.2em; font-weight: bold;
 }
-.progress-step.active .progress-step-line,
-.progress-step.completed .progress-step-line {
-  background: var(--primary);
+.hero-card-body { padding: 1.5rem; }
+.hero-card-body h3 { font-size: 1.1rem; margin-bottom: 0.3rem; }
+.hero-card-body p { font-size: 0.8rem; color: var(--text-muted); }
+.hero-card-price {
+  margin-top: 1rem; display: flex; align-items: baseline; gap: 0.3rem;
 }
-.progress-step-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  transition: color 0.3s;
-  white-space: nowrap;
-}
-.progress-step.active .progress-step-label { color: var(--primary); }
-.progress-step.completed .progress-step-label { color: var(--success); }
+.hero-card-price strong { font-size: 1.4rem; color: var(--gold); }
+.hero-card-price span { font-size: 0.75rem; color: var(--text-muted); }
 
-/* Step content */
-.step-content {
-  padding: 32px;
-}
-.step-panel {
-  display: none;
-  animation: fadeIn 0.4s ease;
-}
-.step-panel.active { display: block; }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.step-title {
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 4px;
-}
-.step-subtitle {
-  font-size: 15px;
-  color: var(--text-secondary);
-  margin-bottom: 28px;
-}
-
-/* ==================== FORM ELEMENTS ==================== */
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-@media (max-width: 600px) {
-  .form-grid { grid-template-columns: 1fr; }
-}
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.form-group.full { grid-column: 1 / -1; }
-.form-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.form-label .icon { font-size: 14px; }
-.form-input {
-  height: 48px;
-  padding: 0 14px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-family: inherit;
-  font-size: 15px;
-  color: var(--text);
-  background: white;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  outline: none;
-}
-.form-input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
-}
-.form-input::placeholder { color: var(--text-muted); }
-textarea.form-input {
-  height: auto;
-  padding: 12px 14px;
-  resize: vertical;
-  min-height: 80px;
-}
-
-/* Guest counter */
-.guest-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border);
-}
-.guest-row:last-child { border-bottom: none; }
-.guest-info h4 { font-size: 15px; font-weight: 600; }
-.guest-info p { font-size: 13px; color: var(--text-secondary); }
-.guest-counter {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.guest-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1.5px solid var(--border);
-  background: white;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--text);
-  transition: all 0.2s;
-  user-select: none;
-}
-.guest-btn:hover:not(:disabled) {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-.guest-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-.guest-count {
-  font-size: 18px;
-  font-weight: 600;
-  min-width: 24px;
-  text-align: center;
-}
-
-/* Promo */
-.promo-row {
-  margin-top: 20px;
-  display: flex;
-  gap: 12px;
-}
-.promo-row .form-input { flex: 1; }
-.promo-btn {
-  padding: 0 20px;
-  background: var(--bg-muted);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.promo-btn:hover {
-  background: var(--primary-50);
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-/* ==================== BUTTONS ==================== */
-.btn-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 28px;
-  gap: 12px;
-}
+/* ── BUTTONS ── */
 .btn {
-  height: 48px;
-  padding: 0 32px;
-  border-radius: var(--radius-sm);
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.85rem 2rem; border-radius: 6px;
+  font-size: 0.85rem; font-family: inherit; font-weight: bold;
+  cursor: pointer; border: none; transition: all 0.3s;
+  text-decoration: none; letter-spacing: 0.02em;
 }
 .btn-primary {
-  background: var(--primary);
-  color: white;
-  box-shadow: 0 2px 4px rgba(79,70,229,0.3);
+  background: var(--gold); color: white;
+  box-shadow: 0 4px 15px rgba(184,134,11,0.3);
 }
 .btn-primary:hover {
-  background: var(--primary-dark);
-  box-shadow: 0 4px 12px rgba(79,70,229,0.4);
-  transform: translateY(-1px);
+  background: var(--gold-dark); transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(184,134,11,0.4);
 }
-.btn-secondary {
-  background: transparent;
-  color: var(--text-secondary);
-  border: 1.5px solid var(--border);
+.btn-outline {
+  background: transparent; color: var(--text);
+  border: 2px solid var(--border);
 }
-.btn-secondary:hover {
-  background: var(--bg-muted);
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+.btn-white { background: white; color: var(--text); box-shadow: var(--shadow); }
+.btn-white:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.btn-lg { padding: 1rem 2.5rem; font-size: 0.9rem; }
+.btn-sm { padding: 0.5rem 1rem; font-size: 0.75rem; }
+.btn-block { width: 100%; justify-content: center; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+/* ── SECTIONS ── */
+.section {
+  padding: 6rem 2rem;
+  max-width: 1200px; margin: 0 auto;
+}
+.section-header {
+  text-align: center; margin-bottom: 4rem;
+}
+.section-eyebrow {
+  font-size: 0.7rem; font-weight: bold;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1rem;
+}
+.section-title {
+  font-size: 2.2rem; font-weight: bold;
+  color: var(--text); margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+.section-subtitle {
+  font-size: 0.95rem; color: var(--text-secondary);
+  max-width: 600px; margin: 0 auto; line-height: 1.8;
+}
+
+/* ── PROPERTY CARDS ── */
+.properties-grid {
+  display: flex; flex-direction: column; gap: 3rem;
+}
+.property-card {
+  background: white; border-radius: var(--radius-xl);
+  overflow: hidden; box-shadow: var(--shadow);
+  transition: all 0.4s ease;
+  display: grid; grid-template-columns: 1fr 1fr;
+}
+.property-card:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-4px);
+}
+.property-card:nth-child(even) { direction: rtl; }
+.property-card:nth-child(even) > * { direction: ltr; }
+.property-image {
+  min-height: 400px; position: relative; overflow: hidden;
+}
+.property-image-gradient {
+  width: 100%; height: 100%; position: absolute; top: 0; left: 0;
+}
+.property-image-gradient.gold {
+  background: linear-gradient(135deg, #D4A843 0%, #8B6508 40%, #A67B0B 70%, #D4A843 100%);
+}
+.property-image-gradient.bronze {
+  background: linear-gradient(135deg, #CD7F32 0%, #8B5E3C 40%, #A0522D 70%, #CD7F32 100%);
+}
+.property-image-gradient.platinum {
+  background: linear-gradient(135deg, #3A3A3A 0%, #1A1A1A 40%, #2C2C2C 70%, #4A4A4A 100%);
+}
+.property-badge {
+  position: absolute; top: 1.5rem; left: 1.5rem;
+  background: rgba(255,255,255,0.95); color: var(--text);
+  padding: 0.4rem 1rem; border-radius: 4px;
+  font-size: 0.7rem; font-weight: bold;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  backdrop-filter: blur(10px);
+}
+.property-content {
+  padding: 2.5rem; display: flex; flex-direction: column; justify-content: center;
+}
+.property-category {
+  font-size: 0.7rem; font-weight: bold; color: var(--gold);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+.property-name {
+  font-size: 1.6rem; font-weight: bold; margin-bottom: 0.5rem;
   color: var(--text);
 }
-.btn-select {
-  background: white;
-  color: var(--primary);
-  border: 2px solid var(--primary);
-  height: 42px;
-  padding: 0 24px;
-  font-size: 14px;
+.property-location {
+  font-size: 0.8rem; color: var(--text-muted);
+  margin-bottom: 1rem; display: flex; align-items: center; gap: 0.3rem;
 }
-.btn-select:hover {
-  background: var(--primary);
-  color: white;
+.property-desc {
+  font-size: 0.85rem; color: var(--text-secondary);
+  line-height: 1.8; margin-bottom: 1.5rem;
 }
-.btn-select.selected {
-  background: var(--primary);
-  color: white;
+.property-features {
+  display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;
 }
-
-/* ==================== STEP 2: APARTMENTS ==================== */
-.filter-bar {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
+.property-feature {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-size: 0.75rem; color: var(--text-secondary);
 }
-.filter-chip {
-  padding: 8px 16px;
-  border-radius: 100px;
-  border: 1.5px solid var(--border);
-  background: white;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.filter-chip:hover, .filter-chip.active {
-  background: var(--primary-50);
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-.apartment-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-  max-height: 520px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-.apartment-grid::-webkit-scrollbar { width: 4px; }
-.apartment-grid::-webkit-scrollbar-track { background: transparent; }
-.apartment-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-.apt-card {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  transition: all 0.3s;
-  cursor: pointer;
-}
-.apt-card:hover {
-  border-color: var(--primary-light);
-  box-shadow: var(--shadow);
-  transform: translateY(-2px);
-}
-.apt-card.selected {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
-}
-@media (max-width: 600px) {
-  .apt-card { grid-template-columns: 1fr; }
-}
-.apt-photo {
-  min-height: 180px;
-  position: relative;
-  overflow: hidden;
-}
-.apt-photo .gradient-placeholder {
-  position: absolute;
-  inset: 0;
-}
-.apt-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(8px);
-  color: white;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 100px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.apt-body { padding: 20px; display: flex; flex-direction: column; }
-.apt-location {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--primary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
-}
-.apt-name {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 6px;
-}
-.apt-desc {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin-bottom: 12px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.apt-amenities {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 16px;
+.property-feature strong { color: var(--text); }
+.property-amenities {
+  display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem;
 }
 .amenity-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  background: var(--bg-muted);
-  padding: 4px 8px;
-  border-radius: 4px;
+  font-size: 0.65rem; padding: 0.3rem 0.7rem;
+  background: var(--cream); border-radius: 4px;
+  color: var(--text-secondary); font-weight: bold;
 }
-.amenity-tag .icon { font-size: 12px; }
-.apt-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
+.property-pricing {
+  display: flex; align-items: baseline; gap: 0.5rem;
+  margin-bottom: 1.5rem; padding-top: 1.5rem;
+  border-top: 1px solid var(--border-light);
 }
-.apt-price {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--text);
-  letter-spacing: -0.02em;
+.property-price { font-size: 1.8rem; font-weight: bold; color: var(--gold); }
+.property-price-label { font-size: 0.8rem; color: var(--text-muted); }
+.property-actions { display: flex; gap: 0.75rem; }
+
+/* ── HOW IT WORKS ── */
+.steps-section { background: white; padding: 6rem 2rem; }
+.steps-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem;
+  max-width: 1200px; margin: 0 auto;
 }
-.apt-price span {
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--text-muted);
+.step-card { text-align: center; padding: 2rem 1.5rem; }
+.step-number {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: var(--gold-bg); color: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; font-weight: bold;
+  margin: 0 auto 1.5rem;
+  border: 2px solid rgba(184,134,11,0.15);
 }
-.apt-capacity {
-  font-size: 12px;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.step-card h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+.step-card p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.7; }
+
+/* ── WHY CHOOSE US ── */
+.benefits-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem;
+}
+.benefit-card {
+  background: white; padding: 2.5rem; border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
+  transition: all 0.3s;
+}
+.benefit-card:hover {
+  box-shadow: var(--shadow); border-color: rgba(184,134,11,0.2);
+}
+.benefit-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: var(--gold-bg); color: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; margin-bottom: 1.25rem;
+}
+.benefit-card h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+.benefit-card p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.7; }
+
+/* ── FAQ ── */
+.faq-list {
+  max-width: 800px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 0.75rem;
+}
+.faq-item {
+  background: white; border-radius: var(--radius);
+  border: 1px solid var(--border-light); overflow: hidden;
+  transition: border-color 0.2s;
+}
+.faq-item.open { border-color: rgba(184,134,11,0.3); }
+.faq-question {
+  padding: 1.25rem 1.5rem; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.9rem; font-weight: bold;
+  user-select: none; transition: color 0.2s;
+}
+.faq-question:hover { color: var(--gold); }
+.faq-arrow { transition: transform 0.3s; font-size: 1.2rem; color: var(--text-muted); }
+.faq-item.open .faq-arrow { transform: rotate(180deg); color: var(--gold); }
+.faq-answer {
+  max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+}
+.faq-answer-inner {
+  padding: 0 1.5rem 1.25rem;
+  font-size: 0.85rem; color: var(--text-secondary); line-height: 1.8;
 }
 
-/* ==================== STEP 3: RATES ==================== */
-.selected-summary {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px;
-  background: var(--bg-subtle);
-  border-radius: var(--radius);
-  margin-bottom: 24px;
-}
-.selected-summary-photo {
-  width: 80px;
-  height: 60px;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  flex-shrink: 0;
-}
-.selected-summary-info h4 { font-size: 16px; font-weight: 700; }
-.selected-summary-info p { font-size: 13px; color: var(--text-secondary); }
-
-.rate-card {
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.rate-card:hover {
-  border-color: var(--primary-light);
-  background: var(--primary-50);
-}
-.rate-card.selected {
-  border-color: var(--primary);
-  background: var(--primary-50);
-}
-.rate-info { flex: 1; }
-.rate-name {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.rate-tag {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 2px 8px;
-  border-radius: 4px;
-}
-.rate-tag.best { background: var(--success-bg); color: var(--success); }
-.rate-tag.popular { background: var(--warning-bg); color: var(--warning); }
-.rate-desc {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-.rate-price {
-  text-align: right;
-  flex-shrink: 0;
-  margin-left: 24px;
-}
-.rate-price .amount {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--text);
-}
-.rate-price .per {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-.rate-radio {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid var(--border);
-  margin-right: 16px;
-  flex-shrink: 0;
-  position: relative;
-  transition: all 0.2s;
-}
-.rate-card.selected .rate-radio {
-  border-color: var(--primary);
-}
-.rate-card.selected .rate-radio::after {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  background: var(--primary);
-  border-radius: 50%;
-}
-
-.price-calc {
-  margin-top: 24px;
-  background: var(--bg-subtle);
-  border-radius: var(--radius);
-  padding: 20px;
-}
-.price-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-.price-row.total {
-  border-top: 2px solid var(--border);
-  margin-top: 8px;
-  padding-top: 12px;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text);
-}
-
-/* ==================== STEP 4: SUMMARY ==================== */
-.summary-card {
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.summary-header {
-  background: var(--primary);
-  color: white;
-  padding: 20px 24px;
-}
-.summary-header h3 {
-  font-size: 18px;
-  font-weight: 700;
-}
-.summary-header p {
-  font-size: 13px;
-  opacity: 0.8;
-}
-.summary-body { padding: 24px; }
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-}
-.summary-row:last-child { border-bottom: none; }
-.summary-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-.summary-value {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  text-align: right;
-}
-.summary-total {
-  background: var(--bg-subtle);
-  padding: 16px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.summary-total .label {
-  font-size: 16px;
-  font-weight: 600;
-}
-.summary-total .amount {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--primary);
-}
-
-/* ==================== STEP 5: GUEST FORM ==================== */
-.terms-check {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-top: 20px;
-  padding: 16px;
-  background: var(--bg-subtle);
-  border-radius: var(--radius-sm);
-}
-.terms-check input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  margin-top: 2px;
-  accent-color: var(--primary);
-  flex-shrink: 0;
-}
-.terms-check label {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-.terms-check label a {
-  color: var(--primary);
-  text-decoration: none;
-}
-
-/* ==================== CONFIRMATION ==================== */
-.confirmation {
-  text-align: center;
-  padding: 40px 20px;
-}
-.confirmation-icon {
-  width: 80px;
-  height: 80px;
-  background: var(--success-bg);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 24px;
-  font-size: 40px;
-}
-.confirmation h2 {
-  font-size: 28px;
-  font-weight: 800;
-  margin-bottom: 8px;
-}
-.confirmation p {
-  color: var(--text-secondary);
-  font-size: 15px;
-  margin-bottom: 4px;
-}
-.booking-number {
-  display: inline-block;
-  background: var(--primary-50);
-  border: 2px solid var(--primary-100);
-  border-radius: var(--radius-sm);
-  padding: 12px 24px;
-  margin: 20px 0;
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  color: var(--primary);
-}
-.confirmation-details {
-  max-width: 400px;
-  margin: 24px auto 0;
-  text-align: left;
-  background: var(--bg-subtle);
-  border-radius: var(--radius);
-  padding: 20px;
-}
-.confirmation-details .summary-row {
-  padding: 8px 0;
-}
-
-/* ==================== GRADIENTS ==================== */
-.grad-luxury { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-.grad-cozy { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-.grad-villa { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-.grad-modern { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-.grad-penthouse { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-.grad-beach { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
-
-/* ==================== FOOTER ==================== */
+/* ── FOOTER ── */
 .footer {
-  background: var(--bg-subtle);
-  border-top: 1px solid var(--border);
-  padding: 40px 24px;
-  margin-top: 60px;
+  background: #1A1A1A; color: rgba(255,255,255,0.6);
+  padding: 4rem 2rem 2rem;
 }
 .footer-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem;
 }
-.footer-copy {
-  font-size: 13px;
-  color: var(--text-muted);
+.footer-brand h3 { color: white; font-size: 1.1rem; margin-bottom: 0.75rem; }
+.footer-brand p { font-size: 0.8rem; line-height: 1.7; max-width: 300px; }
+.footer-col h4 {
+  color: white; font-size: 0.75rem; text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 1rem;
 }
-.footer-links {
-  display: flex;
-  gap: 24px;
+.footer-col a {
+  display: block; color: rgba(255,255,255,0.5); text-decoration: none;
+  font-size: 0.8rem; margin-bottom: 0.5rem; transition: color 0.2s;
 }
-.footer-links a {
-  font-size: 13px;
-  color: var(--text-secondary);
-  text-decoration: none;
+.footer-col a:hover { color: var(--gold-light); }
+.footer-bottom {
+  max-width: 1200px; margin: 3rem auto 0; padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  font-size: 0.75rem; text-align: center;
 }
-.footer-links a:hover { color: var(--primary); }
 
-/* ==================== LOADING ==================== */
+/* ── BOOKING MODAL ── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease;
+}
+.modal-overlay.active { display: flex; align-items: center; justify-content: center; }
+.modal {
+  background: white; border-radius: var(--radius-xl);
+  max-width: 680px; width: 95%; max-height: 90vh;
+  overflow-y: auto; box-shadow: var(--shadow-xl);
+  animation: slideUp 0.4s ease;
+}
+.modal-header {
+  padding: 2rem 2rem 1rem;
+  border-bottom: 1px solid var(--border-light);
+  display: flex; justify-content: space-between; align-items: flex-start;
+}
+.modal-header h2 { font-size: 1.3rem; }
+.modal-close {
+  width: 36px; height: 36px; border-radius: 8px;
+  border: 1px solid var(--border); background: none;
+  cursor: pointer; font-size: 1.2rem; color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.modal-close:hover { background: var(--cream); color: var(--text); }
+.modal-body { padding: 2rem; }
+
+/* ── BOOKING WIZARD ── */
+.wizard-steps {
+  display: flex; gap: 0.5rem; margin-bottom: 2rem;
+  padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light);
+}
+.wizard-step {
+  flex: 1; text-align: center; position: relative;
+}
+.wizard-step-number {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--cream); color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: bold;
+  margin: 0 auto 0.4rem;
+  border: 2px solid var(--border);
+  transition: all 0.3s;
+}
+.wizard-step.active .wizard-step-number {
+  background: var(--gold); color: white; border-color: var(--gold);
+}
+.wizard-step.completed .wizard-step-number {
+  background: var(--success); color: white; border-color: var(--success);
+}
+.wizard-step-label {
+  font-size: 0.65rem; color: var(--text-muted);
+  font-weight: bold; text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.wizard-step.active .wizard-step-label { color: var(--gold); }
+.wizard-step.completed .wizard-step-label { color: var(--success); }
+.wizard-panel { display: none; animation: fadeIn 0.3s ease; }
+.wizard-panel.active { display: block; }
+
+/* ── FORM ELEMENTS ── */
+.form-group { margin-bottom: 1.25rem; }
+.form-label {
+  display: block; font-size: 0.75rem; font-weight: bold;
+  color: var(--text); margin-bottom: 0.4rem;
+  letter-spacing: 0.02em;
+}
+.form-input, .form-select {
+  width: 100%; padding: 0.75rem 1rem;
+  border: 2px solid var(--border); border-radius: 6px;
+  font-size: 0.85rem; font-family: inherit;
+  background: white; color: var(--text);
+  transition: border-color 0.2s;
+}
+.form-input:focus, .form-select:focus {
+  outline: none; border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(184,134,11,0.1);
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-hint { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.3rem; }
+
+/* ── DURATION SELECTOR ── */
+.duration-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.duration-option {
+  padding: 0.75rem; border: 2px solid var(--border);
+  border-radius: 6px; text-align: center; cursor: pointer;
+  transition: all 0.2s; background: white;
+}
+.duration-option:hover { border-color: var(--gold-light); }
+.duration-option.selected {
+  border-color: var(--gold); background: var(--gold-bg);
+  color: var(--gold-dark);
+}
+.duration-option .dur-label { font-size: 0.8rem; font-weight: bold; display: block; }
+.duration-option .dur-discount {
+  font-size: 0.65rem; color: var(--success); font-weight: bold;
+  margin-top: 0.2rem; display: block;
+}
+
+/* ── PRICE SUMMARY ── */
+.price-summary {
+  background: var(--cream); border-radius: var(--radius);
+  padding: 1.5rem; margin-top: 1.5rem;
+  border: 1px solid var(--border-light);
+}
+.price-line {
+  display: flex; justify-content: space-between;
+  font-size: 0.85rem; padding: 0.4rem 0;
+}
+.price-line.discount { color: var(--success); }
+.price-line.total {
+  border-top: 2px solid var(--border);
+  margin-top: 0.5rem; padding-top: 0.75rem;
+  font-weight: bold; font-size: 1rem;
+}
+
+/* ── CONTRACT PREVIEW ── */
+.contract-preview {
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 2rem;
+  max-height: 400px; overflow-y: auto;
+  font-size: 0.8rem; line-height: 1.8;
+}
+.contract-preview h3 { font-size: 1rem; margin-bottom: 1rem; text-align: center; }
+.contract-preview h4 { font-size: 0.85rem; margin: 1rem 0 0.5rem; color: var(--gold-dark); }
+.contract-section { margin-bottom: 1rem; }
+.contract-check {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  margin-top: 1.5rem; padding: 1rem;
+  background: var(--gold-bg); border-radius: 6px;
+}
+.contract-check input[type="checkbox"] {
+  width: 18px; height: 18px; margin-top: 2px;
+  accent-color: var(--gold);
+}
+.contract-check label { font-size: 0.8rem; cursor: pointer; }
+
+/* ── IDEAL PAYMENT ── */
+.ideal-container {
+  background: white; border: 2px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden;
+}
+.ideal-header {
+  background: linear-gradient(135deg, #CC0066, #990052);
+  padding: 1.5rem; text-align: center; color: white;
+}
+.ideal-header h3 { font-size: 1.1rem; margin-bottom: 0.3rem; }
+.ideal-header p { font-size: 0.8rem; opacity: 0.8; }
+.ideal-body { padding: 1.5rem; }
+.ideal-amount {
+  text-align: center; padding: 1rem;
+  background: var(--cream); border-radius: var(--radius);
+  margin-bottom: 1.5rem;
+}
+.ideal-amount .amount { font-size: 2rem; font-weight: bold; color: var(--text); }
+.ideal-amount .ref { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem; }
+.bank-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.bank-option {
+  padding: 0.75rem; border: 2px solid var(--border);
+  border-radius: 6px; text-align: center; cursor: pointer;
+  transition: all 0.2s; background: white;
+  font-size: 0.75rem; font-weight: bold;
+}
+.bank-option:hover { border-color: #CC0066; }
+.bank-option.selected { border-color: #CC0066; background: rgba(204,0,102,0.05); }
+.bank-option .bank-icon {
+  font-size: 1.3rem; margin-bottom: 0.3rem; display: block;
+}
+
+/* ── CONFIRMATION ── */
+.confirmation {
+  text-align: center; padding: 2rem 0;
+}
+.confirmation-icon {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: var(--success-bg); color: var(--success);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem; margin: 0 auto 1.5rem;
+  border: 3px solid var(--success);
+}
+.confirmation h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.confirmation p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 2rem; }
+.confirmation-details {
+  background: var(--cream); border-radius: var(--radius);
+  padding: 1.5rem; text-align: left; margin-bottom: 2rem;
+}
+.confirmation-details .detail-row {
+  display: flex; justify-content: space-between;
+  padding: 0.4rem 0; font-size: 0.85rem;
+}
+.confirmation-details .detail-row span:first-child { color: var(--text-muted); }
+.confirmation-actions {
+  display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;
+}
+.notice-box {
+  background: var(--gold-bg); border: 1px solid rgba(184,134,11,0.2);
+  border-radius: 6px; padding: 1rem; margin-top: 1.5rem;
+  font-size: 0.8rem; color: var(--gold-dark);
+}
+
+/* ── LOADING ── */
 .loading-spinner {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  display: inline-block; width: 20px; height: 20px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: white; border-radius: 50%;
+  animation: spin 0.6s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+.loading-overlay {
+  position: absolute; inset: 0; background: rgba(255,255,255,0.8);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10; border-radius: inherit;
+}
 
-/* ==================== TRUST BADGES ==================== */
-.trust-bar {
-  display: flex;
-  justify-content: center;
-  gap: 32px;
-  margin-top: 40px;
-  flex-wrap: wrap;
-}
-.trust-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: rgba(255,255,255,0.7);
-  font-size: 13px;
-  font-weight: 500;
-}
-.trust-icon {
-  width: 32px;
-  height: 32px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
+/* ── RESPONSIVE ── */
+@media (max-width: 968px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-visual { display: none; }
+  .hero h1 { font-size: 2.2rem; }
+  .property-card { grid-template-columns: 1fr; }
+  .property-card:nth-child(even) { direction: ltr; }
+  .property-image { min-height: 250px; }
+  .steps-grid { grid-template-columns: repeat(2, 1fr); }
+  .benefits-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .duration-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 600px) {
-  .trust-bar { gap: 16px; }
-  .trust-item { font-size: 11px; }
+  .nav-links { display: none; }
+  .hero { padding: 6rem 1.5rem 3rem; }
+  .hero h1 { font-size: 1.8rem; }
+  .section { padding: 4rem 1.5rem; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .bank-grid { grid-template-columns: repeat(2, 1fr); }
+  .wizard-step-label { display: none; }
 }
-
-/* ==================== VALIDATION ==================== */
-.form-input.error {
-  border-color: var(--error);
-  box-shadow: 0 0 0 3px rgba(220,38,38,0.1);
-}
-.form-error {
-  font-size: 12px;
-  color: var(--error);
-  margin-top: 2px;
-  display: none;
-}
-.form-error.show { display: block; }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="header" id="header">
-  <div class="header-inner">
-    <a href="/" class="logo">
-      <div class="logo-icon">DC</div>
-      <div class="logo-text">Data Consultants <span>Stays</span></div>
+<!-- ── NAVIGATION ── -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">
+      <div class="nav-brand-icon">DC</div>
+      <div>
+        <div class="nav-brand-text">Data Consultants Stays</div>
+        <div class="nav-brand-sub">Luxe Short-Stay</div>
+      </div>
     </a>
-    <div class="header-right">
-      <div class="header-phone">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-        +31 20 123 4567
-      </div>
-      <select class="header-select" aria-label="Taal">
-        <option>NL</option>
-        <option>EN</option>
-        <option>DE</option>
-      </select>
-      <select class="header-select" aria-label="Valuta">
-        <option>EUR (&euro;)</option>
-        <option>USD ($)</option>
-        <option>GBP (&pound;)</option>
-      </select>
+    <div class="nav-links">
+      <a href="#properties">Residences</a>
+      <a href="#how-it-works">Hoe het werkt</a>
+      <a href="#why-us">Waarom wij</a>
+      <a href="#faq">FAQ</a>
+      <a href="#properties" class="nav-cta">Boek nu</a>
     </div>
   </div>
-</header>
+</nav>
 
-<!-- HERO -->
+<!-- ── HERO ── -->
 <section class="hero">
-  <div class="hero-content">
-    <div class="hero-badge">&#9733; Premium Serviced Apartments</div>
-    <h1>Uw thuis, weg van huis</h1>
-    <p>Luxe gemeubileerde appartementen in de mooiste steden van Nederland. Boek direct voor de beste prijs.</p>
-  </div>
-
-  <!-- BOOKING CARD -->
-  <div class="booking-card" id="bookingCard">
-    <!-- Progress -->
-    <div class="progress-bar" id="progressBar">
-      <div class="progress-step active" data-step="1">
-        <div class="progress-step-line"></div>
-        <div class="progress-step-label">Datums</div>
-      </div>
-      <div class="progress-step" data-step="2">
-        <div class="progress-step-line"></div>
-        <div class="progress-step-label">Appartementen</div>
-      </div>
-      <div class="progress-step" data-step="3">
-        <div class="progress-step-line"></div>
-        <div class="progress-step-label">Tarieven</div>
-      </div>
-      <div class="progress-step" data-step="4">
-        <div class="progress-step-line"></div>
-        <div class="progress-step-label">Overzicht</div>
-      </div>
-      <div class="progress-step" data-step="5">
-        <div class="progress-step-line"></div>
-        <div class="progress-step-label">Gegevens</div>
+  <div class="hero-inner">
+    <div class="hero-content animate-in">
+      <div class="hero-eyebrow">Premium Short-Stay Residences</div>
+      <h1>Luxe Short-Stay <span>Appartementen</span></h1>
+      <p class="hero-subtitle">
+        Volledig gemeubileerde premium appartementen voor professionals, expats en
+        zakelijke reizigers. Verblijf van 1 week tot 2 jaar in het hart van de Randstad.
+      </p>
+      <div class="hero-actions">
+        <a href="#properties" class="btn btn-primary btn-lg">Bekijk residences</a>
+        <a href="#how-it-works" class="btn btn-outline btn-lg">Hoe het werkt</a>
       </div>
     </div>
-
-    <div class="step-content">
-
-      <!-- ===== STEP 1: DATUMS ===== -->
-      <div class="step-panel active" id="step1">
-        <h2 class="step-title">Wanneer wilt u verblijven?</h2>
-        <p class="step-subtitle">Selecteer uw in- en uitcheckdatums en het aantal gasten.</p>
-
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label"><span class="icon">&#128197;</span> Inchecken</label>
-            <input type="date" class="form-input" id="checkinDate" required>
-            <div class="form-error" id="checkinError">Selecteer een incheckdatum</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label"><span class="icon">&#128197;</span> Uitchecken</label>
-            <input type="date" class="form-input" id="checkoutDate" required>
-            <div class="form-error" id="checkoutError">Selecteer een uitcheckdatum na inchecken</div>
-          </div>
-        </div>
-
-        <div style="margin-top: 24px;">
-          <label class="form-label" style="margin-bottom: 8px;"><span class="icon">&#128101;</span> Gasten</label>
-          <div class="guest-row">
-            <div class="guest-info">
-              <h4>Volwassenen</h4>
-              <p>18 jaar en ouder</p>
-            </div>
-            <div class="guest-counter">
-              <button class="guest-btn" onclick="adjustGuests('adults', -1)" id="adultsMin">&#8722;</button>
-              <span class="guest-count" id="adultsCount">2</span>
-              <button class="guest-btn" onclick="adjustGuests('adults', 1)">&#43;</button>
-            </div>
-          </div>
-          <div class="guest-row">
-            <div class="guest-info">
-              <h4>Kinderen</h4>
-              <p>0 - 17 jaar</p>
-            </div>
-            <div class="guest-counter">
-              <button class="guest-btn" onclick="adjustGuests('children', -1)" id="childrenMin">&#8722;</button>
-              <span class="guest-count" id="childrenCount">0</span>
-              <button class="guest-btn" onclick="adjustGuests('children', 1)">&#43;</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="promo-row">
-          <input type="text" class="form-input" id="promoCode" placeholder="Promotiecode (optioneel)">
-          <button class="promo-btn" onclick="applyPromo()">Toepassen</button>
-        </div>
-
-        <div class="btn-row">
-          <div></div>
-          <button class="btn btn-primary" onclick="goToStep(2)">Volgende &#8594;</button>
-        </div>
-      </div>
-
-      <!-- ===== STEP 2: APPARTEMENTEN ===== -->
-      <div class="step-panel" id="step2">
-        <h2 class="step-title">Kies uw appartement</h2>
-        <p class="step-subtitle">Selecteer het type verblijf dat bij u past.</p>
-
-        <div class="filter-bar" id="filterBar">
-          <button class="filter-chip active" onclick="filterApartments('alle')">Alle</button>
-          <button class="filter-chip" onclick="filterApartments('studio')">Studio's</button>
-          <button class="filter-chip" onclick="filterApartments('appartement')">Appartementen</button>
-          <button class="filter-chip" onclick="filterApartments('woonhuis')">Villa's</button>
-        </div>
-
-        <div class="apartment-grid" id="apartmentGrid">
-          <!-- Dynamically populated -->
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-secondary" onclick="goToStep(1)">&#8592; Terug</button>
-          <button class="btn btn-primary" onclick="goToStep(3)" id="step2Next" disabled>Selecteer een appartement</button>
-        </div>
-      </div>
-
-      <!-- ===== STEP 3: TARIEVEN ===== -->
-      <div class="step-panel" id="step3">
-        <h2 class="step-title">Kies uw tarief</h2>
-        <p class="step-subtitle">Selecteer het tarief dat het beste bij uw plannen past.</p>
-
-        <div class="selected-summary" id="selectedSummary">
-          <!-- Populated dynamically -->
-        </div>
-
-        <div id="rateCards">
-          <!-- Populated dynamically -->
-        </div>
-
-        <div class="price-calc" id="priceCalc">
-          <!-- Populated dynamically -->
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-secondary" onclick="goToStep(2)">&#8592; Terug</button>
-          <button class="btn btn-primary" onclick="goToStep(4)" id="step3Next" disabled>Selecteer een tarief</button>
-        </div>
-      </div>
-
-      <!-- ===== STEP 4: SAMENVATTING ===== -->
-      <div class="step-panel" id="step4">
-        <h2 class="step-title">Boekingsoverzicht</h2>
-        <p class="step-subtitle">Controleer uw reservering voordat u verdergaat.</p>
-
-        <div class="summary-card" id="summaryCard">
-          <!-- Populated dynamically -->
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-secondary" onclick="goToStep(3)">&#8592; Terug</button>
-          <button class="btn btn-primary" onclick="goToStep(5)">Bevestig &amp; ga verder &#8594;</button>
-        </div>
-      </div>
-
-      <!-- ===== STEP 5: GEGEVENS ===== -->
-      <div class="step-panel" id="step5">
-        <h2 class="step-title">Uw gegevens</h2>
-        <p class="step-subtitle">Vul uw contactgegevens in om de reservering af te ronden.</p>
-
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">Voornaam *</label>
-            <input type="text" class="form-input" id="guestFirstName" placeholder="Jan" required>
-            <div class="form-error" id="firstNameError">Voornaam is verplicht</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Achternaam *</label>
-            <input type="text" class="form-input" id="guestLastName" placeholder="de Vries" required>
-            <div class="form-error" id="lastNameError">Achternaam is verplicht</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">E-mailadres *</label>
-            <input type="email" class="form-input" id="guestEmail" placeholder="jan@voorbeeld.nl" required>
-            <div class="form-error" id="emailError">Geldig e-mailadres is verplicht</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Telefoonnummer *</label>
-            <input type="tel" class="form-input" id="guestPhone" placeholder="+31 6 12345678" required>
-            <div class="form-error" id="phoneError">Telefoonnummer is verplicht</div>
-          </div>
-          <div class="form-group full">
-            <label class="form-label">Adres</label>
-            <input type="text" class="form-input" id="guestAddress" placeholder="Straat en huisnummer">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Postcode</label>
-            <input type="text" class="form-input" id="guestPostcode" placeholder="1234 AB">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Stad</label>
-            <input type="text" class="form-input" id="guestCity" placeholder="Amsterdam">
-          </div>
-          <div class="form-group full">
-            <label class="form-label">Bijzondere verzoeken</label>
-            <textarea class="form-input" id="guestRequests" placeholder="Eventuele wensen of opmerkingen voor uw verblijf..." rows="3"></textarea>
-          </div>
-        </div>
-
-        <div class="terms-check">
-          <input type="checkbox" id="termsAccepted">
-          <label for="termsAccepted">
-            Ik ga akkoord met de <a href="#">Algemene Voorwaarden</a> en het <a href="#">Privacybeleid</a> van Data Consultants Stays. Ik begrijp het annuleringsbeleid dat bij het gekozen tarief hoort.
-          </label>
-        </div>
-        <div class="form-error" id="termsError" style="margin-left: 32px;">U moet akkoord gaan met de voorwaarden</div>
-
-        <div class="btn-row">
-          <button class="btn btn-secondary" onclick="goToStep(4)">&#8592; Terug</button>
-          <button class="btn btn-primary" onclick="submitBooking()" id="submitBtn">Reserveer nu &#8594;</button>
-        </div>
-      </div>
-
-      <!-- ===== CONFIRMATION ===== -->
-      <div class="step-panel" id="stepConfirmation">
-        <div class="confirmation">
-          <div class="confirmation-icon">&#10003;</div>
-          <h2>Reservering bevestigd!</h2>
-          <p>Uw boeking is succesvol ontvangen.</p>
-          <p>Een bevestiging wordt verzonden naar <strong id="confirmEmail"></strong></p>
-          <div class="booking-number" id="confirmNumber"></div>
-          <div class="confirmation-details" id="confirmDetails">
-            <!-- Populated dynamically -->
-          </div>
-          <div class="btn-row" style="justify-content: center; margin-top: 32px;">
-            <button class="btn btn-primary" onclick="newBooking()">Nieuwe boeking</button>
+    <div class="hero-visual animate-in animate-delay-2">
+      <div class="hero-card">
+        <div class="hero-card-image"></div>
+        <div class="hero-card-body">
+          <h3>The Keizersgracht Suite</h3>
+          <p>Amsterdam &bull; Luxe Studio &bull; 65m&sup2;</p>
+          <div class="hero-card-price">
+            <strong>&euro;2.500</strong>
+            <span>/maand</span>
           </div>
         </div>
       </div>
-
-    </div>
-  </div>
-
-  <!-- Trust badges -->
-  <div class="trust-bar">
-    <div class="trust-item">
-      <div class="trust-icon">&#128274;</div>
-      Veilig betalen
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon">&#9989;</div>
-      Direct bevestiging
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon">&#128222;</div>
-      24/7 klantenservice
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon">&#11088;</div>
-      Beste prijs garantie
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- ── PROPERTIES ── -->
+<section class="section" id="properties">
+  <div class="section-header animate-in">
+    <div class="section-eyebrow">Onze Residences</div>
+    <h2 class="section-title">Drie exclusieve locaties</h2>
+    <p class="section-subtitle">
+      Elk appartement is zorgvuldig ingericht en voorzien van alle gemakken
+      voor een comfortabel en productief verblijf.
+    </p>
+  </div>
+  <div class="properties-grid" id="propertiesGrid">
+    <!-- Properties loaded from API -->
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="steps-section" id="how-it-works">
+  <div class="section-header animate-in" style="max-width:1200px;margin:0 auto;">
+    <div class="section-eyebrow">In 4 stappen</div>
+    <h2 class="section-title">Hoe het werkt</h2>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card animate-in animate-delay-1">
+      <div class="step-number">1</div>
+      <h3>Kies uw residence</h3>
+      <p>Bekijk onze drie exclusieve locaties en kies het appartement dat bij u past.</p>
+    </div>
+    <div class="step-card animate-in animate-delay-2">
+      <div class="step-number">2</div>
+      <h3>Selecteer uw periode</h3>
+      <p>Van 1 week tot 2 jaar. Hoe langer u blijft, hoe voordeliger het wordt.</p>
+    </div>
+    <div class="step-card animate-in animate-delay-3">
+      <div class="step-number">3</div>
+      <h3>Onderteken het contract</h3>
+      <p>Wij genereren automatisch een huurovereenkomst. Bekijk en accepteer de voorwaarden.</p>
+    </div>
+    <div class="step-card animate-in animate-delay-4">
+      <div class="step-number">4</div>
+      <h3>Betaal en verhuis</h3>
+      <p>Betaal veilig via iDEAL. Ontvang uw contract, factuur en sleutelinstructies.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHY CHOOSE US ── -->
+<section class="section" id="why-us">
+  <div class="section-header animate-in">
+    <div class="section-eyebrow">Waarom Data Consultants Stays</div>
+    <h2 class="section-title">Meer dan een verblijf</h2>
+  </div>
+  <div class="benefits-grid">
+    <div class="benefit-card animate-in animate-delay-1">
+      <div class="benefit-icon">&#9201;</div>
+      <h3>Flexibele periodes</h3>
+      <p>Van 1 week tot 2 jaar. Verleng of verkort uw verblijf wanneer u wilt, met korting bij langere periodes.</p>
+    </div>
+    <div class="benefit-card animate-in animate-delay-2">
+      <div class="benefit-icon">&#9733;</div>
+      <h3>Volledig gemeubileerd</h3>
+      <p>Premium meubilair, volledige keuken, wasmachine, droger en alle huishoudelijke benodigdheden.</p>
+    </div>
+    <div class="benefit-card animate-in animate-delay-3">
+      <div class="benefit-icon">&#9889;</div>
+      <h3>Alles inclusief</h3>
+      <p>Gas, water, licht, internet en wekelijkse schoonmaak inbegrepen. Geen verborgen kosten.</p>
+    </div>
+    <div class="benefit-card animate-in animate-delay-4">
+      <div class="benefit-icon">&#9742;</div>
+      <h3>Persoonlijke service</h3>
+      <p>Dedicated aanspreekpunt voor al uw vragen. Check-in begeleiding en 24/7 noodlijn.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="section" id="faq" style="padding-bottom:8rem;">
+  <div class="section-header animate-in">
+    <div class="section-eyebrow">Veelgestelde vragen</div>
+    <h2 class="section-title">FAQ</h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Wat is de minimale verblijfsduur?
+        <span class="faq-arrow">&#9660;</span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner">
+        De minimale verblijfsduur is 1 week (7 dagen). Wij richten ons op short-stay verblijven voor professionals en expats, niet op vakantiehuur per nacht.
+      </div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Zijn de appartementen gemeubileerd?
+        <span class="faq-arrow">&#9660;</span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner">
+        Ja, al onze appartementen zijn volledig gemeubileerd en uitgerust met premium meubilair, keukenapparatuur, beddengoed, handdoeken en alle huishoudelijke benodigdheden. U hoeft alleen uw koffer mee te nemen.
+      </div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Wat is inbegrepen in de maandprijs?
+        <span class="faq-arrow">&#9660;</span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner">
+        De maandprijs is inclusief gas, water, licht, snel internet, gemeentelijke belastingen en wekelijkse schoonmaak. Daarnaast betaalt u maandelijks servicekosten die o.a. onderhoud en verzekering dekken.
+      </div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Krijg ik korting bij een langer verblijf?
+        <span class="faq-arrow">&#9660;</span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner">
+        Ja! Wij hanteren een staffelkorting: 3+ maanden: 10% korting, 6+ maanden: 15% korting, 12+ maanden: 20% korting op de maandprijs. Hoe langer u blijft, hoe voordeliger het wordt.
+      </div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Hoe werkt het huurcontract?
+        <span class="faq-arrow">&#9660;</span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner">
+        Na uw boeking genereren wij automatisch een huurovereenkomst naar Nederlands recht. Dit contract bevat alle voorwaarden, de huurperiode, de prijs en de huisregels. U kunt het contract online bekijken en downloaden als PDF.
+      </div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Kan ik mijn werkgever laten betalen?
+        <span class="faq-arrow">&#9660;</span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner">
+        Ja, dat is mogelijk. Bij de boeking kunt u de gegevens van uw werkgever opgeven. Wij sturen de factuur dan naar het bedrijf. Neem contact met ons op voor maatwerk facturatie.
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
 <footer class="footer">
   <div class="footer-inner">
-    <div class="footer-copy">&copy; 2026 Data Consultants Stays. Alle rechten voorbehouden.</div>
-    <div class="footer-links">
-      <a href="#">Over ons</a>
-      <a href="#">Contact</a>
-      <a href="#">Voorwaarden</a>
-      <a href="#">Privacy</a>
-      <a href="admin.html">Admin</a>
+    <div class="footer-brand">
+      <h3>Data Consultants Stays</h3>
+      <p>Premium short-stay appartementen voor professionals en expats in de Randstad. Van 1 week tot 2 jaar.</p>
     </div>
+    <div class="footer-col">
+      <h4>Links</h4>
+      <a href="#properties">Residences</a>
+      <a href="#how-it-works">Hoe het werkt</a>
+      <a href="#why-us">Waarom wij</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="#">info@dataconsultants.nl</a>
+      <a href="#">+31 (0)20 123 4567</a>
+      <a href="#">Amsterdam, Nederland</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    &copy; 2026 Data Consultants B.V. Alle rechten voorbehouden. KvK: 12345678
   </div>
 </footer>
 
-<script>
-// ==================== STATE ====================
-const state = {
-  step: 1,
-  checkin: null,
-  checkout: null,
-  adults: 2,
-  children: 0,
-  promoCode: '',
-  promoDiscount: 0,
-  selectedApartment: null,
-  selectedRate: null, // 'flexibel', 'standaard', 'niet_restitueerbaar'
-  apartments: [],
-  filter: 'alle'
-};
-
-// ==================== AMENITY ICONS ====================
-const amenityIcons = {
-  wifi: { icon: '&#128246;', label: 'WiFi' },
-  keuken: { icon: '&#127860;', label: 'Keuken' },
-  wasmachine: { icon: '&#129523;', label: 'Wasmachine' },
-  droger: { icon: '&#127744;', label: 'Droger' },
-  vaatwasser: { icon: '&#129523;', label: 'Vaatwasser' },
-  airco: { icon: '&#10052;', label: 'Airco' },
-  TV: { icon: '&#128250;', label: 'TV' },
-  handdoeken: { icon: '&#128703;', label: 'Handdoeken' },
-  beddengoed: { icon: '&#128716;', label: 'Beddengoed' },
-  lift: { icon: '&#9650;', label: 'Lift' },
-  parkeren: { icon: '&#128663;', label: 'Parkeren' },
-  tuin: { icon: '&#127795;', label: 'Tuin' },
-  balkon: { icon: '&#127749;', label: 'Balkon' },
-  open_haard: { icon: '&#128293;', label: 'Open haard' },
-  fiets: { icon: '&#128690;', label: 'Fietsen' }
-};
-
-// Category gradient map
-const categoryGradients = {
-  'Luxe Appartement': 'grad-luxury',
-  'Gezellige Studio': 'grad-cozy',
-  'Stadsvilla': 'grad-villa',
-  'Modern Appartement': 'grad-modern',
-  'Premium Penthouse': 'grad-penthouse'
-};
-
-// ==================== INIT ====================
-document.addEventListener('DOMContentLoaded', async () => {
-  // Set minimum dates
-  const today = new Date();
-  const todayStr = today.toISOString().split('T')[0];
-  document.getElementById('checkinDate').min = todayStr;
-  document.getElementById('checkoutDate').min = todayStr;
-
-  // Default dates: tomorrow + day after
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const dayAfter = new Date(today);
-  dayAfter.setDate(dayAfter.getDate() + 3);
-
-  document.getElementById('checkinDate').value = tomorrow.toISOString().split('T')[0];
-  document.getElementById('checkoutDate').value = dayAfter.toISOString().split('T')[0];
-
-  state.checkin = tomorrow.toISOString().split('T')[0];
-  state.checkout = dayAfter.toISOString().split('T')[0];
-
-  // Date change listeners
-  document.getElementById('checkinDate').addEventListener('change', (e) => {
-    state.checkin = e.target.value;
-    const minCheckout = new Date(e.target.value);
-    minCheckout.setDate(minCheckout.getDate() + 1);
-    document.getElementById('checkoutDate').min = minCheckout.toISOString().split('T')[0];
-    if (state.checkout && state.checkout <= state.checkin) {
-      document.getElementById('checkoutDate').value = minCheckout.toISOString().split('T')[0];
-      state.checkout = minCheckout.toISOString().split('T')[0];
-    }
-  });
-  document.getElementById('checkoutDate').addEventListener('change', (e) => {
-    state.checkout = e.target.value;
-  });
-
-  // Load apartments
-  try {
-    const res = await fetch('/api/panden');
-    state.apartments = await res.json();
-  } catch (e) {
-    console.error('Failed to load apartments:', e);
-    state.apartments = [];
-  }
-
-  // Header scroll effect
-  window.addEventListener('scroll', () => {
-    document.getElementById('header').classList.toggle('scrolled', window.scrollY > 10);
-  });
-
-  updateGuestButtons();
-});
-
-// ==================== GUEST CONTROLS ====================
-function adjustGuests(type, delta) {
-  if (type === 'adults') {
-    state.adults = Math.max(1, Math.min(10, state.adults + delta));
-    document.getElementById('adultsCount').textContent = state.adults;
-  } else {
-    state.children = Math.max(0, Math.min(6, state.children + delta));
-    document.getElementById('childrenCount').textContent = state.children;
-  }
-  updateGuestButtons();
-}
-
-function updateGuestButtons() {
-  document.getElementById('adultsMin').disabled = state.adults <= 1;
-  document.getElementById('childrenMin').disabled = state.children <= 0;
-}
-
-// ==================== PROMO ====================
-function applyPromo() {
-  const code = document.getElementById('promoCode').value.trim().toUpperCase();
-  if (code === 'WELKOM10') {
-    state.promoCode = code;
-    state.promoDiscount = 0.10;
-    document.getElementById('promoCode').style.borderColor = 'var(--success)';
-    alert('Promotiecode toegepast: 10% korting!');
-  } else if (code === 'DCSTAYS15') {
-    state.promoCode = code;
-    state.promoDiscount = 0.15;
-    document.getElementById('promoCode').style.borderColor = 'var(--success)';
-    alert('Promotiecode toegepast: 15% korting!');
-  } else if (code) {
-    state.promoDiscount = 0;
-    state.promoCode = '';
-    document.getElementById('promoCode').style.borderColor = 'var(--error)';
-    alert('Ongeldige promotiecode. Probeer WELKOM10 of DCSTAYS15.');
-  }
-}
-
-// ==================== NAVIGATION ====================
-function goToStep(step) {
-  // Validate current step
-  if (step > state.step) {
-    if (!validateStep(state.step)) return;
-  }
-
-  // If going to step 2, load apartments and check availability (including blokkades)
-  if (step === 2) {
-    if (state.checkin && state.checkout) {
-      fetch(`/api/beschikbaarheid?checkin=${state.checkin}&checkout=${state.checkout}`)
-        .then(r => r.json())
-        .then(data => {
-          if (data.beschikbaar) {
-            const availIds = new Set(data.beschikbaar.map(a => a.id));
-            state.apartments.forEach(a => { a._available = availIds.has(a.id); });
-          }
-          renderApartments();
-        })
-        .catch(() => renderApartments());
-    } else {
-      renderApartments();
-    }
-  }
-
-  // If going to step 3, render rates
-  if (step === 3) {
-    if (!state.selectedApartment) {
-      alert('Selecteer eerst een appartement.');
-      return;
-    }
-    renderRates();
-  }
-
-  // If going to step 4, render summary
-  if (step === 4) {
-    if (!state.selectedRate) {
-      alert('Selecteer eerst een tarief.');
-      return;
-    }
-    renderSummary();
-  }
-
-  state.step = step;
-
-  // Update panels
-  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('step' + step).classList.add('active');
-
-  // Update progress
-  document.querySelectorAll('.progress-step').forEach(s => {
-    const sStep = parseInt(s.dataset.step);
-    s.classList.remove('active', 'completed');
-    if (sStep === step) s.classList.add('active');
-    else if (sStep < step) s.classList.add('completed');
-  });
-
-  // Scroll to card
-  document.getElementById('bookingCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-function validateStep(step) {
-  if (step === 1) {
-    let valid = true;
-    const checkin = document.getElementById('checkinDate');
-    const checkout = document.getElementById('checkoutDate');
-
-    if (!checkin.value) {
-      checkin.classList.add('error');
-      document.getElementById('checkinError').classList.add('show');
-      valid = false;
-    } else {
-      checkin.classList.remove('error');
-      document.getElementById('checkinError').classList.remove('show');
-    }
-
-    if (!checkout.value || checkout.value <= checkin.value) {
-      checkout.classList.add('error');
-      document.getElementById('checkoutError').classList.add('show');
-      valid = false;
-    } else {
-      checkout.classList.remove('error');
-      document.getElementById('checkoutError').classList.remove('show');
-    }
-
-    return valid;
-  }
-  return true;
-}
-
-// ==================== STEP 2: APARTMENTS ====================
-function renderApartments() {
-  const totalGuests = state.adults + state.children;
-  const grid = document.getElementById('apartmentGrid');
-  const filtered = state.apartments.filter(a => {
-    if (state.filter !== 'alle' && a.type !== state.filter) return false;
-    if (a.max_gasten < totalGuests) return false;
-    // Filter out apartments blocked by reserveringen or iCal blokkades
-    if (a._available === false) return false;
-    return true;
-  });
-
-  if (filtered.length === 0) {
-    grid.innerHTML = `
-      <div style="text-align:center; padding:40px; color:var(--text-secondary);">
-        <p style="font-size:18px; margin-bottom:8px;">Geen beschikbare appartementen</p>
-        <p>Probeer andere datums of een ander aantal gasten.</p>
-      </div>`;
-    return;
-  }
-
-  grid.innerHTML = filtered.map(apt => {
-    const gradClass = categoryGradients[apt.categorie] || 'grad-modern';
-    const selected = state.selectedApartment && state.selectedApartment.id === apt.id;
-    const amenitiesHtml = (apt.amenities || []).slice(0, 6).map(a => {
-      const info = amenityIcons[a] || { icon: '&#10003;', label: a };
-      return `<span class="amenity-tag"><span class="icon">${info.icon}</span> ${info.label}</span>`;
-    }).join('');
-
-    return `
-      <div class="apt-card ${selected ? 'selected' : ''}" onclick="selectApartment('${apt.id}')">
-        <div class="apt-photo">
-          <div class="gradient-placeholder ${gradClass}"></div>
-          <div class="apt-badge">${apt.categorie}</div>
+<!-- ── BOOKING MODAL ── -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2 id="modalTitle">Boek uw verblijf</h2>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.3rem;" id="modalSubtitle"></p>
+      </div>
+      <button class="modal-close" onclick="closeBooking()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <!-- Wizard Steps -->
+      <div class="wizard-steps" id="wizardSteps">
+        <div class="wizard-step active" data-step="1">
+          <div class="wizard-step-number">1</div>
+          <div class="wizard-step-label">Periode</div>
         </div>
-        <div class="apt-body">
-          <div class="apt-location">${apt.stad}</div>
-          <div class="apt-name">${apt.naam}</div>
-          <div class="apt-desc">${apt.beschrijving}</div>
-          <div class="apt-amenities">${amenitiesHtml}</div>
-          <div class="apt-footer">
-            <div>
-              <div class="apt-price">&euro;${apt.nachtprijs} <span>/ nacht</span></div>
-              <div class="apt-capacity">&#128101; Max ${apt.max_gasten} gasten &middot; ${apt.slaapkamers === 0 ? 'Studio' : apt.slaapkamers + ' slaapkamer' + (apt.slaapkamers > 1 ? 's' : '')} &middot; ${apt.oppervlakte_m2}m&sup2;</div>
+        <div class="wizard-step" data-step="2">
+          <div class="wizard-step-number">2</div>
+          <div class="wizard-step-label">Gegevens</div>
+        </div>
+        <div class="wizard-step" data-step="3">
+          <div class="wizard-step-number">3</div>
+          <div class="wizard-step-label">Contract</div>
+        </div>
+        <div class="wizard-step" data-step="4">
+          <div class="wizard-step-number">4</div>
+          <div class="wizard-step-label">Betaling</div>
+        </div>
+        <div class="wizard-step" data-step="5">
+          <div class="wizard-step-number">5</div>
+          <div class="wizard-step-label">Bevestiging</div>
+        </div>
+      </div>
+
+      <!-- Step 1: Period -->
+      <div class="wizard-panel active" id="step1">
+        <h3 style="font-size:1rem;margin-bottom:1.25rem;">Kies uw verblijfsperiode</h3>
+        <div class="form-group">
+          <label class="form-label">Check-in datum</label>
+          <input type="date" class="form-input" id="bookCheckin">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Verblijfsduur</label>
+          <div class="duration-grid" id="durationGrid">
+            <div class="duration-option" data-days="7" onclick="selectDuration(this,7)">
+              <span class="dur-label">1 week</span>
             </div>
-            <button class="btn btn-select ${selected ? 'selected' : ''}">${selected ? '&#10003; Geselecteerd' : 'Selecteer'}</button>
+            <div class="duration-option" data-days="14" onclick="selectDuration(this,14)">
+              <span class="dur-label">2 weken</span>
+            </div>
+            <div class="duration-option" data-days="30" onclick="selectDuration(this,30)">
+              <span class="dur-label">1 maand</span>
+            </div>
+            <div class="duration-option" data-days="90" onclick="selectDuration(this,90)">
+              <span class="dur-label">3 maanden</span>
+              <span class="dur-discount">-10%</span>
+            </div>
+            <div class="duration-option" data-days="180" onclick="selectDuration(this,180)">
+              <span class="dur-label">6 maanden</span>
+              <span class="dur-discount">-15%</span>
+            </div>
+            <div class="duration-option" data-days="365" onclick="selectDuration(this,365)">
+              <span class="dur-label">1 jaar</span>
+              <span class="dur-discount">-20%</span>
+            </div>
           </div>
         </div>
-      </div>`;
-  }).join('');
-}
-
-function filterApartments(type) {
-  state.filter = type;
-  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-  event.target.classList.add('active');
-  renderApartments();
-}
-
-function selectApartment(id) {
-  state.selectedApartment = state.apartments.find(a => a.id === id);
-  state.selectedRate = null;
-  const btn = document.getElementById('step2Next');
-  btn.disabled = false;
-  btn.textContent = 'Volgende \u2192';
-  renderApartments();
-}
-
-// ==================== STEP 3: RATES ====================
-function renderRates() {
-  const apt = state.selectedApartment;
-  if (!apt) return;
-
-  const gradClass = categoryGradients[apt.categorie] || 'grad-modern';
-
-  document.getElementById('selectedSummary').innerHTML = `
-    <div class="selected-summary-photo">
-      <div class="gradient-placeholder ${gradClass}" style="width:100%;height:100%;"></div>
-    </div>
-    <div class="selected-summary-info">
-      <h4>${apt.naam}</h4>
-      <p>${apt.stad} &middot; ${apt.oppervlakte_m2}m&sup2; &middot; Max ${apt.max_gasten} gasten</p>
-    </div>`;
-
-  const rates = [
-    {
-      key: 'flexibel',
-      name: 'Flexibel',
-      tag: '<span class="rate-tag popular">Populair</span>',
-      desc: 'Gratis annulering tot 48 uur voor aankomst. Volledige flexibiliteit voor onverwachte wijzigingen.',
-      price: apt.tarieven.flexibel
-    },
-    {
-      key: 'standaard',
-      name: 'Standaard',
-      tag: '',
-      desc: 'Annulering tot 7 dagen voor aankomst met 50% restitutie. Goede balans tussen prijs en flexibiliteit.',
-      price: apt.tarieven.standaard
-    },
-    {
-      key: 'niet_restitueerbaar',
-      name: 'Niet-restitueerbaar',
-      tag: '<span class="rate-tag best">Beste prijs</span>',
-      desc: 'Geen restitutie bij annulering. De laagste prijs voor wie zeker is van de reis.',
-      price: apt.tarieven.niet_restitueerbaar
-    }
-  ];
-
-  document.getElementById('rateCards').innerHTML = rates.map(r => {
-    const selected = state.selectedRate === r.key;
-    return `
-      <div class="rate-card ${selected ? 'selected' : ''}" onclick="selectRate('${r.key}')">
-        <div class="rate-radio"></div>
-        <div class="rate-info">
-          <div class="rate-name">${r.name} ${r.tag}</div>
-          <div class="rate-desc">${r.desc}</div>
+        <div class="form-group">
+          <label class="form-label">Of kies een aangepaste einddatum</label>
+          <input type="date" class="form-input" id="bookCheckout">
+          <div class="form-hint">Minimaal 7 dagen, maximaal 2 jaar</div>
         </div>
-        <div class="rate-price">
-          <div class="amount">&euro;${r.price}</div>
-          <div class="per">per nacht</div>
+        <div class="price-summary" id="priceSummary" style="display:none;">
+          <div class="price-line"><span>Maandprijs</span><span id="sumBase"></span></div>
+          <div class="price-line" id="sumDiscountRow" style="display:none;">
+            <span id="sumDiscountLabel">Korting</span><span id="sumDiscount" class="discount"></span>
+          </div>
+          <div class="price-line"><span>Servicekosten/maand</span><span id="sumService"></span></div>
+          <div class="price-line"><span>Borg (eenmalig)</span><span id="sumBorg"></span></div>
+          <div class="price-line"><span>Verblijfsduur</span><span id="sumDuration"></span></div>
+          <div class="price-line total"><span>Totaal eerste betaling</span><span id="sumTotal"></span></div>
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.5rem;">
+            Prijzen zijn exclusief 21% BTW. De borg wordt terugbetaald bij vertrek.
+          </div>
         </div>
-      </div>`;
-  }).join('');
+        <div style="display:flex;justify-content:flex-end;margin-top:1.5rem;">
+          <button class="btn btn-primary" onclick="nextStep(2)">Volgende</button>
+        </div>
+      </div>
 
-  updatePriceCalc();
-}
+      <!-- Step 2: Guest Details -->
+      <div class="wizard-panel" id="step2">
+        <h3 style="font-size:1rem;margin-bottom:1.25rem;">Uw gegevens</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Volledige naam *</label>
+            <input type="text" class="form-input" id="guestName" placeholder="Jan de Vries">
+          </div>
+          <div class="form-group">
+            <label class="form-label">E-mailadres *</label>
+            <input type="email" class="form-input" id="guestEmail" placeholder="jan@voorbeeld.nl">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Telefoonnummer *</label>
+            <input type="tel" class="form-input" id="guestPhone" placeholder="+31 6 12345678">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bedrijf / Werkgever</label>
+            <input type="text" class="form-input" id="guestCompany" placeholder="Optioneel">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">BSN (optioneel)</label>
+            <input type="text" class="form-input" id="guestBSN" placeholder="123456789">
+            <div class="form-hint">Vereist voor verblijf langer dan 4 maanden</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Reden van verblijf</label>
+            <select class="form-select" id="guestReason">
+              <option value="">Selecteer...</option>
+              <option value="expat">Expat / Relocatie</option>
+              <option value="zakelijk">Zakelijke opdracht</option>
+              <option value="tijdelijk">Tijdelijke huisvesting</option>
+              <option value="renovatie">Renovatie eigen woning</option>
+              <option value="studie">Studie / Stage</option>
+              <option value="anders">Anders</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Aantal gasten</label>
+          <select class="form-select" id="guestCount">
+            <option value="1">1 persoon</option>
+            <option value="2">2 personen</option>
+            <option value="3">3 personen</option>
+            <option value="4">4 personen</option>
+            <option value="5">5 personen</option>
+            <option value="6">6 personen</option>
+          </select>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:1.5rem;">
+          <button class="btn btn-outline" onclick="prevStep(1)">Terug</button>
+          <button class="btn btn-primary" onclick="nextStep(3)">Volgende</button>
+        </div>
+      </div>
 
-function selectRate(key) {
-  state.selectedRate = key;
-  const btn = document.getElementById('step3Next');
-  btn.disabled = false;
-  btn.textContent = 'Volgende \u2192';
-  renderRates();
-}
+      <!-- Step 3: Contract Preview -->
+      <div class="wizard-panel" id="step3">
+        <h3 style="font-size:1rem;margin-bottom:1.25rem;">Huurovereenkomst</h3>
+        <div class="contract-preview" id="contractPreview">
+          <!-- Contract HTML loaded from API -->
+          <p style="text-align:center;color:var(--text-muted);padding:2rem;">Contract wordt gegenereerd...</p>
+        </div>
+        <div class="contract-check">
+          <input type="checkbox" id="acceptContract">
+          <label for="acceptContract">
+            Ik heb de huurovereenkomst gelezen en ga akkoord met de algemene voorwaarden,
+            huisregels en betalingsvoorwaarden.
+          </label>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:1.5rem;">
+          <button class="btn btn-outline" onclick="prevStep(2)">Terug</button>
+          <button class="btn btn-primary" id="btnToPayment" onclick="nextStep(4)" disabled>Akkoord &amp; betalen</button>
+        </div>
+      </div>
 
-function getNights() {
-  if (!state.checkin || !state.checkout) return 0;
-  const a = new Date(state.checkin);
-  const b = new Date(state.checkout);
-  return Math.max(0, Math.round((b - a) / 86400000));
-}
+      <!-- Step 4: Payment (iDEAL) -->
+      <div class="wizard-panel" id="step4">
+        <div class="ideal-container">
+          <div class="ideal-header">
+            <h3>iDEAL Betaling</h3>
+            <p>Veilig betalen via uw eigen bank</p>
+          </div>
+          <div class="ideal-body">
+            <div class="ideal-amount">
+              <div class="amount" id="idealAmount">&euro;0,00</div>
+              <div class="ref">Referentie: <strong id="idealRef">-</strong></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kies uw bank</label>
+              <div class="bank-grid">
+                <div class="bank-option" onclick="selectBank(this,'ING')">
+                  <span class="bank-icon">&#127974;</span> ING
+                </div>
+                <div class="bank-option" onclick="selectBank(this,'Rabobank')">
+                  <span class="bank-icon">&#127974;</span> Rabobank
+                </div>
+                <div class="bank-option" onclick="selectBank(this,'ABN AMRO')">
+                  <span class="bank-icon">&#127974;</span> ABN AMRO
+                </div>
+                <div class="bank-option" onclick="selectBank(this,'SNS')">
+                  <span class="bank-icon">&#127974;</span> SNS
+                </div>
+                <div class="bank-option" onclick="selectBank(this,'ASN')">
+                  <span class="bank-icon">&#127974;</span> ASN Bank
+                </div>
+                <div class="bank-option" onclick="selectBank(this,'Triodos')">
+                  <span class="bank-icon">&#127974;</span> Triodos
+                </div>
+                <div class="bank-option" onclick="selectBank(this,'Knab')">
+                  <span class="bank-icon">&#127974;</span> Knab
+                </div>
+                <div class="bank-option" onclick="selectBank(this,'Bunq')">
+                  <span class="bank-icon">&#127974;</span> bunq
+                </div>
+                <div class="bank-option" onclick="selectBank(this,'RegioBank')">
+                  <span class="bank-icon">&#127974;</span> RegioBank
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-block btn-lg" id="btnPay" onclick="processPayment()" disabled>
+              Betaal nu
+            </button>
+            <div style="text-align:center;margin-top:1rem;">
+              <button class="btn btn-outline btn-sm" onclick="prevStep(3)">Terug</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-function calcTotal() {
-  const apt = state.selectedApartment;
-  if (!apt || !state.selectedRate) return { nights: 0, rate: 0, subtotal: 0, cleaning: 0, service: 0, discount: 0, total: 0 };
-  const nights = getNights();
-  const rate = apt.tarieven[state.selectedRate];
-  const subtotal = nights * rate;
-  const cleaning = apt.schoonmaakkosten;
-  const service = Math.round(subtotal * 0.08);
-  const discount = Math.round(subtotal * state.promoDiscount);
-  const total = subtotal + cleaning + service - discount;
-  return { nights, rate, subtotal, cleaning, service, discount, total };
-}
-
-function updatePriceCalc() {
-  const c = calcTotal();
-  const priceCalcEl = document.getElementById('priceCalc');
-
-  if (!state.selectedRate) {
-    priceCalcEl.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:14px;">Selecteer een tarief om de totaalprijs te berekenen</p>`;
-    return;
-  }
-
-  let discountRow = '';
-  if (c.discount > 0) {
-    discountRow = `<div class="price-row" style="color:var(--success);">
-      <span>Korting (${state.promoCode})</span>
-      <span>-&euro;${c.discount}</span>
-    </div>`;
-  }
-
-  priceCalcEl.innerHTML = `
-    <div class="price-row"><span>${c.nights} nachten &times; &euro;${c.rate}</span><span>&euro;${c.subtotal}</span></div>
-    <div class="price-row"><span>Schoonmaakkosten</span><span>&euro;${c.cleaning}</span></div>
-    <div class="price-row"><span>Servicekosten (8%)</span><span>&euro;${c.service}</span></div>
-    ${discountRow}
-    <div class="price-row total"><span>Totaal</span><span>&euro;${c.total}</span></div>`;
-}
-
-// ==================== STEP 4: SUMMARY ====================
-function renderSummary() {
-  const apt = state.selectedApartment;
-  const c = calcTotal();
-  const rateNames = { flexibel: 'Flexibel', standaard: 'Standaard', niet_restitueerbaar: 'Niet-restitueerbaar' };
-
-  const formatDate = (d) => {
-    const dt = new Date(d);
-    return dt.toLocaleDateString('nl-NL', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
-  };
-
-  let discountRow = '';
-  if (c.discount > 0) {
-    discountRow = `<div class="summary-row">
-      <span class="summary-label">Korting (${state.promoCode})</span>
-      <span class="summary-value" style="color:var(--success)">-&euro;${c.discount}</span>
-    </div>`;
-  }
-
-  document.getElementById('summaryCard').innerHTML = `
-    <div class="summary-header">
-      <h3>${apt.naam}</h3>
-      <p>${apt.adres}, ${apt.stad} ${apt.postcode}</p>
+      <!-- Step 5: Confirmation -->
+      <div class="wizard-panel" id="step5">
+        <div class="confirmation">
+          <div class="confirmation-icon">&#10003;</div>
+          <h2>Boeking bevestigd!</h2>
+          <p>Uw reservering is succesvol verwerkt. Hieronder vindt u alle details.</p>
+          <div class="confirmation-details" id="confirmDetails">
+            <!-- Filled by JS -->
+          </div>
+          <div class="confirmation-actions">
+            <button class="btn btn-primary" onclick="downloadContract()">Contract downloaden</button>
+            <button class="btn btn-outline" onclick="downloadInvoice()">Factuur downloaden</button>
+          </div>
+          <div class="notice-box">
+            Bewaar deze pagina! Uw contract en factuur zijn ook per e-mail verzonden naar het opgegeven e-mailadres.
+            Neem bij vragen contact op met info@dataconsultants.nl.
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="summary-body">
-      <div class="summary-row">
-        <span class="summary-label">Inchecken</span>
-        <span class="summary-value">${formatDate(state.checkin)}</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">Uitchecken</span>
-        <span class="summary-value">${formatDate(state.checkout)}</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">Verblijfsduur</span>
-        <span class="summary-value">${c.nights} nachten</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">Gasten</span>
-        <span class="summary-value">${state.adults} volwassene${state.adults > 1 ? 'n' : ''}${state.children > 0 ? ', ' + state.children + ' kind' + (state.children > 1 ? 'eren' : '') : ''}</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">Tarief</span>
-        <span class="summary-value">${rateNames[state.selectedRate]}</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">${c.nights} nachten &times; &euro;${c.rate}</span>
-        <span class="summary-value">&euro;${c.subtotal}</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">Schoonmaakkosten</span>
-        <span class="summary-value">&euro;${c.cleaning}</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">Servicekosten</span>
-        <span class="summary-value">&euro;${c.service}</span>
-      </div>
-      ${discountRow}
-    </div>
-    <div class="summary-total">
-      <span class="label">Totaalprijs</span>
-      <span class="amount">&euro;${c.total}</span>
-    </div>`;
+  </div>
+</div>
+
+<script>
+const API = '';
+let properties = [];
+let selectedProperty = null;
+let selectedDuration = 0;
+let selectedBank = '';
+let bookingResult = null;
+let contractId = null;
+let invoiceId = null;
+
+// ── Init ──
+document.addEventListener('DOMContentLoaded', () => {
+  loadProperties();
+  setupNav();
+  setupAnimations();
+  setupContractCheckbox();
+  setMinDate();
+});
+
+function setMinDate() {
+  const today = new Date().toISOString().split('T')[0];
+  const ci = document.getElementById('bookCheckin');
+  if (ci) ci.min = today;
 }
 
-// ==================== STEP 5: SUBMIT ====================
-async function submitBooking() {
-  // Validate
-  let valid = true;
-  const fields = [
-    { id: 'guestFirstName', error: 'firstNameError' },
-    { id: 'guestLastName', error: 'lastNameError' },
-    { id: 'guestEmail', error: 'emailError' },
-    { id: 'guestPhone', error: 'phoneError' }
-  ];
-
-  fields.forEach(f => {
-    const el = document.getElementById(f.id);
-    const errEl = document.getElementById(f.error);
-    if (!el.value.trim()) {
-      el.classList.add('error');
-      errEl.classList.add('show');
-      valid = false;
-    } else {
-      el.classList.remove('error');
-      errEl.classList.remove('show');
-    }
+function setupContractCheckbox() {
+  const cb = document.getElementById('acceptContract');
+  const btn = document.getElementById('btnToPayment');
+  cb.addEventListener('change', () => {
+    btn.disabled = !cb.checked;
   });
+}
 
-  // Email validation
-  const emailEl = document.getElementById('guestEmail');
-  if (emailEl.value && !emailEl.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-    emailEl.classList.add('error');
-    document.getElementById('emailError').classList.add('show');
-    valid = false;
+function setupNav() {
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  });
+}
+
+function setupAnimations() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.animationPlayState = 'running';
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.animate-in').forEach(el => {
+    el.style.animationPlayState = 'paused';
+    observer.observe(el);
+  });
+}
+
+// ── Load Properties ──
+async function loadProperties() {
+  try {
+    const resp = await fetch(API + '/api/panden');
+    const data = await resp.json();
+    // Filter to our 3 luxury properties
+    const luxuryIds = [
+      'a1b2c3d4-e5f6-7890-abcd-ef1234567801',
+      'c3d4e5f6-a7b8-9012-cdef-123456789003',
+      'a7b8c9d0-e1f2-3456-abcd-567890123407'
+    ];
+    properties = (Array.isArray(data) ? data : data.data || [])
+      .filter(p => luxuryIds.includes(p.id));
+
+    // If migration hasn't run yet, also show properties that have maandprijs
+    if (properties.length === 0) {
+      properties = (Array.isArray(data) ? data : data.data || []).slice(0, 3);
+    }
+
+    renderProperties();
+  } catch (e) {
+    console.error('Failed to load properties:', e);
+    document.getElementById('propertiesGrid').innerHTML =
+      '<p style="text-align:center;color:var(--text-muted);padding:3rem;">Kan properties niet laden. Is de server actief op poort 8088?</p>';
   }
+}
 
-  // Terms
-  if (!document.getElementById('termsAccepted').checked) {
-    document.getElementById('termsError').classList.add('show');
-    valid = false;
+function renderProperties() {
+  const grid = document.getElementById('propertiesGrid');
+  const gradients = ['gold', 'bronze', 'platinum'];
+  grid.innerHTML = properties.map((p, i) => {
+    const maandprijs = p.maandprijs || p.huurprijs || 0;
+    const m2 = p.oppervlakte_m2 || 0;
+    const slk = p.slaapkamers || 0;
+    const bad = p.badkamers || 0;
+    const gasten = p.max_gasten || 0;
+    const amenities = (p.amenities || []).slice(0, 6);
+    const cat = p.categorie || p.type || '';
+
+    return `
+      <div class="property-card animate-in animate-delay-${i+1}">
+        <div class="property-image">
+          <div class="property-image-gradient ${gradients[i]}"></div>
+          <div class="property-badge">${cat}</div>
+        </div>
+        <div class="property-content">
+          <div class="property-category">${cat}</div>
+          <h3 class="property-name">${p.naam}</h3>
+          <div class="property-location">&#128205; ${p.adres || ''}, ${p.stad || ''}</div>
+          <p class="property-desc">${(p.beschrijving || '').substring(0, 180)}${(p.beschrijving || '').length > 180 ? '...' : ''}</p>
+          <div class="property-features">
+            <div class="property-feature"><strong>${m2}</strong> m&sup2;</div>
+            <div class="property-feature"><strong>${slk}</strong> slaapkamer${slk !== 1 ? 's' : ''}</div>
+            <div class="property-feature"><strong>${bad}</strong> badkamer${bad !== 1 ? 's' : ''}</div>
+            <div class="property-feature"><strong>${gasten}</strong> gasten max</div>
+          </div>
+          <div class="property-amenities">
+            ${amenities.map(a => `<span class="amenity-tag">${a}</span>`).join('')}
+          </div>
+          <div class="property-pricing">
+            <span class="property-price">Vanaf &euro;${formatPrice(maandprijs)}</span>
+            <span class="property-price-label">/maand</span>
+          </div>
+          <div class="property-actions">
+            <button class="btn btn-primary" onclick="openBooking('${p.id}')">Direct boeken</button>
+            <button class="btn btn-outline" onclick="scrollToDetails('${p.id}')">Bekijk details</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function formatPrice(n) {
+  if (!n) return '0';
+  return new Intl.NumberFormat('nl-NL', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
+}
+
+function formatPriceDecimal(n) {
+  return new Intl.NumberFormat('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+}
+
+function scrollToDetails(id) {
+  document.getElementById('properties').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── Booking Flow ──
+function openBooking(propertyId) {
+  selectedProperty = properties.find(p => p.id === propertyId);
+  if (!selectedProperty) return;
+
+  document.getElementById('modalSubtitle').textContent = selectedProperty.naam;
+  document.getElementById('bookingModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  // Reset
+  goToStep(1);
+  selectedDuration = 0;
+  selectedBank = '';
+  bookingResult = null;
+  contractId = null;
+  invoiceId = null;
+  document.querySelectorAll('.duration-option').forEach(d => d.classList.remove('selected'));
+  document.getElementById('priceSummary').style.display = 'none';
+  document.getElementById('acceptContract').checked = false;
+  document.getElementById('btnToPayment').disabled = true;
+  document.getElementById('btnPay').disabled = true;
+
+  // Set max guests
+  const gc = document.getElementById('guestCount');
+  const maxG = selectedProperty.max_gasten || 6;
+  gc.innerHTML = '';
+  for (let i = 1; i <= maxG; i++) {
+    gc.innerHTML += `<option value="${i}">${i} persoon${i > 1 ? 'en' : ''}</option>`;
+  }
+}
+
+function closeBooking() {
+  document.getElementById('bookingModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function goToStep(n) {
+  document.querySelectorAll('.wizard-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  document.querySelectorAll('.wizard-step').forEach(s => {
+    const sn = parseInt(s.dataset.step);
+    s.classList.remove('active', 'completed');
+    if (sn === n) s.classList.add('active');
+    else if (sn < n) s.classList.add('completed');
+  });
+}
+
+function nextStep(n) {
+  if (n === 2) {
+    // Validate step 1
+    const checkin = document.getElementById('bookCheckin').value;
+    const checkout = document.getElementById('bookCheckout').value;
+    if (!checkin) { alert('Kies een check-in datum.'); return; }
+    if (!checkout && selectedDuration === 0) { alert('Kies een verblijfsduur.'); return; }
+    const ci = new Date(checkin);
+    const co = checkout ? new Date(checkout) : new Date(ci.getTime() + selectedDuration * 86400000);
+    const days = Math.round((co - ci) / 86400000);
+    if (days < 7) { alert('Minimale verblijfsduur is 7 dagen.'); return; }
+    if (days > 730) { alert('Maximale verblijfsduur is 730 dagen (2 jaar).'); return; }
+  }
+  if (n === 3) {
+    // Validate step 2
+    if (!document.getElementById('guestName').value.trim()) { alert('Vul uw naam in.'); return; }
+    if (!document.getElementById('guestEmail').value.trim()) { alert('Vul uw e-mailadres in.'); return; }
+    if (!document.getElementById('guestPhone').value.trim()) { alert('Vul uw telefoonnummer in.'); return; }
+    // Generate contract
+    generateContract();
+  }
+  if (n === 4) {
+    if (!document.getElementById('acceptContract').checked) {
+      alert('U moet akkoord gaan met de huurovereenkomst.');
+      return;
+    }
+    setupPayment();
+  }
+  goToStep(n);
+}
+
+function prevStep(n) { goToStep(n); }
+
+// ── Duration Selection ──
+function selectDuration(el, days) {
+  document.querySelectorAll('.duration-option').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedDuration = days;
+
+  const checkin = document.getElementById('bookCheckin').value;
+  if (checkin) {
+    const ci = new Date(checkin);
+    const co = new Date(ci.getTime() + days * 86400000);
+    document.getElementById('bookCheckout').value = co.toISOString().split('T')[0];
+  }
+  updatePriceSummary();
+}
+
+document.getElementById('bookCheckout')?.addEventListener('change', function() {
+  selectedDuration = 0;
+  document.querySelectorAll('.duration-option').forEach(d => d.classList.remove('selected'));
+  updatePriceSummary();
+});
+
+document.getElementById('bookCheckin')?.addEventListener('change', function() {
+  if (selectedDuration > 0) {
+    const ci = new Date(this.value);
+    const co = new Date(ci.getTime() + selectedDuration * 86400000);
+    document.getElementById('bookCheckout').value = co.toISOString().split('T')[0];
+  }
+  updatePriceSummary();
+});
+
+function getDiscount(days) {
+  if (days >= 365) return 0.20;
+  if (days >= 180) return 0.15;
+  if (days >= 90) return 0.10;
+  return 0;
+}
+
+function getDiscountLabel(days) {
+  if (days >= 365) return '20% korting (12+ maanden)';
+  if (days >= 180) return '15% korting (6+ maanden)';
+  if (days >= 90) return '10% korting (3+ maanden)';
+  return '';
+}
+
+function calcPricing() {
+  if (!selectedProperty) return null;
+  const checkin = document.getElementById('bookCheckin').value;
+  const checkout = document.getElementById('bookCheckout').value;
+  if (!checkin || !checkout) return null;
+
+  const ci = new Date(checkin);
+  const co = new Date(checkout);
+  const days = Math.round((co - ci) / 86400000);
+  if (days < 7) return null;
+
+  const maandprijs = selectedProperty.maandprijs || selectedProperty.huurprijs || 0;
+  const weekprijs = selectedProperty.weekprijs || maandprijs / 4;
+  const borg = selectedProperty.borg || maandprijs;
+  const servicekosten = selectedProperty.servicekosten_maand || 150;
+
+  let months = days / 30;
+  let basePrijs;
+  if (days <= 14) {
+    // Week pricing
+    basePrijs = weekprijs * (days / 7);
   } else {
-    document.getElementById('termsError').classList.remove('show');
+    basePrijs = maandprijs * months;
   }
 
-  if (!valid) return;
+  const discount = getDiscount(days);
+  const discountAmount = basePrijs * discount;
+  const huurBedrag = basePrijs - discountAmount;
+  const serviceTotaal = servicekosten * months;
+  const subtotaal = huurBedrag + serviceTotaal;
+  const btw = subtotaal * 0.21;
+  const totaalExclBorg = subtotaal + btw;
+  const totaal = totaalExclBorg + borg;
 
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="loading-spinner"></span> Bezig met reserveren...';
+  return {
+    days, months, maandprijs, weekprijs, borg, servicekosten,
+    basePrijs, discount, discountAmount, huurBedrag,
+    serviceTotaal, subtotaal, btw, totaalExclBorg, totaal,
+    checkin, checkout
+  };
+}
 
-  const c = calcTotal();
-  const rateNames = { flexibel: 'Flexibel', standaard: 'Standaard', niet_restitueerbaar: 'Niet-restitueerbaar' };
-  const bookingNumber = 'DCS-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 4).toUpperCase();
+function updatePriceSummary() {
+  const p = calcPricing();
+  const sum = document.getElementById('priceSummary');
+  if (!p) { sum.style.display = 'none'; return; }
+  sum.style.display = 'block';
 
-  const booking = {
-    boekingnummer: bookingNumber,
-    datum_aangemaakt: new Date().toISOString(),
-    appartement_id: state.selectedApartment.id,
-    appartement_naam: state.selectedApartment.naam,
-    adres: state.selectedApartment.adres + ', ' + state.selectedApartment.stad,
-    checkin: state.checkin,
-    checkout: state.checkout,
-    nachten: c.nights,
-    volwassenen: state.adults,
-    kinderen: state.children,
-    tarief_type: state.selectedRate,
-    tarief_naam: rateNames[state.selectedRate],
-    nachtprijs: c.rate,
-    subtotaal: c.subtotal,
-    schoonmaakkosten: c.cleaning,
-    servicekosten: c.service,
-    korting: c.discount,
-    promo_code: state.promoCode || null,
-    totaal: c.total,
-    gast: {
-      voornaam: document.getElementById('guestFirstName').value.trim(),
-      achternaam: document.getElementById('guestLastName').value.trim(),
-      email: document.getElementById('guestEmail').value.trim(),
-      telefoon: document.getElementById('guestPhone').value.trim(),
-      adres: document.getElementById('guestAddress').value.trim(),
-      postcode: document.getElementById('guestPostcode').value.trim(),
-      stad: document.getElementById('guestCity').value.trim()
-    },
-    bijzondere_verzoeken: document.getElementById('guestRequests').value.trim(),
-    status: 'bevestigd'
+  document.getElementById('sumBase').textContent = `\u20AC${formatPriceDecimal(p.maandprijs)}`;
+
+  const discRow = document.getElementById('sumDiscountRow');
+  if (p.discount > 0) {
+    discRow.style.display = 'flex';
+    document.getElementById('sumDiscountLabel').textContent = getDiscountLabel(p.days);
+    document.getElementById('sumDiscount').textContent = `-\u20AC${formatPriceDecimal(p.discountAmount)}`;
+  } else {
+    discRow.style.display = 'none';
+  }
+
+  document.getElementById('sumService').textContent = `\u20AC${formatPriceDecimal(p.servicekosten)}`;
+  document.getElementById('sumBorg').textContent = `\u20AC${formatPriceDecimal(p.borg)}`;
+
+  let durLabel;
+  if (p.days < 30) durLabel = `${p.days} dagen`;
+  else if (p.days < 365) durLabel = `${Math.round(p.months)} maand${Math.round(p.months) > 1 ? 'en' : ''}`;
+  else durLabel = `${(p.months / 12).toFixed(1)} jaar`;
+  document.getElementById('sumDuration').textContent = durLabel;
+
+  document.getElementById('sumTotal').textContent = `\u20AC${formatPriceDecimal(p.totaal)}`;
+}
+
+// ── Contract Generation ──
+async function generateContract() {
+  const pricing = calcPricing();
+  if (!pricing) return;
+
+  const contractData = {
+    property_id: selectedProperty.id,
+    property_naam: selectedProperty.naam,
+    property_adres: selectedProperty.adres || '',
+    property_postcode: selectedProperty.postcode || '',
+    property_stad: selectedProperty.stad || '',
+    checkin: pricing.checkin,
+    checkout: pricing.checkout,
+    days: pricing.days,
+    maandprijs: pricing.maandprijs,
+    discount: pricing.discount,
+    huur_totaal: pricing.huurBedrag,
+    servicekosten: pricing.servicekosten,
+    borg: pricing.borg,
+    totaal: pricing.totaal,
+    gast_naam: document.getElementById('guestName').value.trim(),
+    gast_email: document.getElementById('guestEmail').value.trim(),
+    gast_telefoon: document.getElementById('guestPhone').value.trim(),
+    gast_bedrijf: document.getElementById('guestCompany').value.trim(),
+    gast_bsn: document.getElementById('guestBSN').value.trim(),
+    reden_verblijf: document.getElementById('guestReason').value,
+    gasten: parseInt(document.getElementById('guestCount').value) || 1,
   };
 
-  // Save to server
   try {
-    await fetch('/api/reservering', {
+    const resp = await fetch(API + '/api/contract/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(booking)
+      body: JSON.stringify(contractData)
     });
+    const result = await resp.json();
+    if (result.contract_html) {
+      document.getElementById('contractPreview').innerHTML = result.contract_html;
+      contractId = result.contract_id;
+    }
   } catch (e) {
-    console.warn('Server save failed, saving to localStorage only:', e);
+    document.getElementById('contractPreview').innerHTML =
+      '<p style="color:var(--error);padding:2rem;text-align:center;">Kon contract niet genereren. Probeer opnieuw.</p>';
   }
-
-  // Also save to localStorage
-  const bookings = JSON.parse(localStorage.getItem('dcstays_bookings') || '[]');
-  bookings.push(booking);
-  localStorage.setItem('dcstays_bookings', JSON.stringify(bookings));
-
-  // Show confirmation
-  setTimeout(() => {
-    showConfirmation(booking);
-  }, 1200);
 }
 
-function showConfirmation(booking) {
-  const formatDate = (d) => {
-    const dt = new Date(d);
-    return dt.toLocaleDateString('nl-NL', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
-  };
+// ── Payment ──
+function setupPayment() {
+  const pricing = calcPricing();
+  if (!pricing) return;
+  document.getElementById('idealAmount').textContent = `\u20AC${formatPriceDecimal(pricing.totaal)}`;
+  document.getElementById('idealRef').textContent = `DCS-${Date.now().toString(36).toUpperCase()}`;
 
-  document.getElementById('confirmEmail').textContent = booking.gast.email;
-  document.getElementById('confirmNumber').textContent = booking.boekingnummer;
-
-  document.getElementById('confirmDetails').innerHTML = `
-    <div class="summary-row">
-      <span class="summary-label">Appartement</span>
-      <span class="summary-value">${booking.appartement_naam}</span>
-    </div>
-    <div class="summary-row">
-      <span class="summary-label">Inchecken</span>
-      <span class="summary-value">${formatDate(booking.checkin)}</span>
-    </div>
-    <div class="summary-row">
-      <span class="summary-label">Uitchecken</span>
-      <span class="summary-value">${formatDate(booking.checkout)}</span>
-    </div>
-    <div class="summary-row">
-      <span class="summary-label">Totaal</span>
-      <span class="summary-value" style="font-size:18px; color:var(--primary);">&euro;${booking.totaal}</span>
-    </div>`;
-
-  // Hide progress and show confirmation
-  document.getElementById('progressBar').style.display = 'none';
-  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('stepConfirmation').classList.add('active');
-
-  document.getElementById('bookingCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // Reset bank selection
+  selectedBank = '';
+  document.querySelectorAll('.bank-option').forEach(b => b.classList.remove('selected'));
+  document.getElementById('btnPay').disabled = true;
 }
 
-function newBooking() {
-  // Reset state
-  state.selectedApartment = null;
-  state.selectedRate = null;
-  state.promoCode = '';
-  state.promoDiscount = 0;
-  state.step = 1;
+function selectBank(el, bank) {
+  document.querySelectorAll('.bank-option').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedBank = bank;
+  document.getElementById('btnPay').disabled = false;
+}
 
-  // Reset form
-  document.getElementById('guestFirstName').value = '';
-  document.getElementById('guestLastName').value = '';
-  document.getElementById('guestEmail').value = '';
-  document.getElementById('guestPhone').value = '';
-  document.getElementById('guestAddress').value = '';
-  document.getElementById('guestPostcode').value = '';
-  document.getElementById('guestCity').value = '';
-  document.getElementById('guestRequests').value = '';
-  document.getElementById('termsAccepted').checked = false;
-  document.getElementById('promoCode').value = '';
-  document.getElementById('promoCode').style.borderColor = '';
+async function processPayment() {
+  if (!selectedBank) return;
+  const btn = document.getElementById('btnPay');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading-spinner"></span> Verwerken...';
 
-  const submitBtn = document.getElementById('submitBtn');
-  submitBtn.disabled = false;
-  submitBtn.innerHTML = 'Reserveer nu &#8594;';
+  const pricing = calcPricing();
 
-  const step2Next = document.getElementById('step2Next');
-  step2Next.disabled = true;
-  step2Next.textContent = 'Selecteer een appartement';
+  try {
+    // 1. Create reservation
+    const resResp = await fetch(API + '/api/reservering', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        appartement_id: selectedProperty.id,
+        checkin: pricing.checkin,
+        checkout: pricing.checkout,
+        gast_naam: document.getElementById('guestName').value.trim(),
+        gast_email: document.getElementById('guestEmail').value.trim(),
+        gast_telefoon: document.getElementById('guestPhone').value.trim(),
+        gasten: parseInt(document.getElementById('guestCount').value) || 1,
+        nachtprijs: pricing.maandprijs / 30,
+        schoonmaakkosten: 0,
+        totaal: pricing.totaal,
+        status: 'bevestigd',
+      })
+    });
+    const resData = await resResp.json();
+    bookingResult = resData;
 
-  const step3Next = document.getElementById('step3Next');
-  step3Next.disabled = true;
-  step3Next.textContent = 'Selecteer een tarief';
+    // 2. Create payment
+    await fetch(API + '/api/betalingen', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        reservering_id: resData.boekingnummer || '',
+        gast_naam: document.getElementById('guestName').value.trim(),
+        bedrag: pricing.totaal,
+        methode: 'iDEAL',
+        bank: selectedBank,
+        status: 'voltooid',
+        beschrijving: `Betaling ${selectedProperty.naam} - ${pricing.days} dagen`
+      })
+    });
 
-  // Show progress bar again
-  document.getElementById('progressBar').style.display = 'flex';
+    // 3. Generate invoice
+    try {
+      const invResp = await fetch(API + '/api/factuur/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reservering_extern_id: resData.boekingnummer || '',
+          gast_naam: document.getElementById('guestName').value.trim(),
+          gast_email: document.getElementById('guestEmail').value.trim(),
+          property_naam: selectedProperty.naam,
+          huur_bedrag: pricing.huurBedrag,
+          servicekosten: pricing.serviceTotaal,
+          borg: pricing.borg,
+          days: pricing.days,
+        })
+      });
+      const invData = await invResp.json();
+      invoiceId = invData.factuur_id;
+    } catch (e) { console.warn('Invoice generation failed:', e); }
 
-  // Go to step 1
-  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('step1').classList.add('active');
-  document.querySelectorAll('.progress-step').forEach(s => {
-    s.classList.remove('active', 'completed');
-    if (s.dataset.step === '1') s.classList.add('active');
+    // Simulate processing delay
+    await new Promise(r => setTimeout(r, 1500));
+
+    // Show confirmation
+    showConfirmation(pricing, resData);
+    goToStep(5);
+  } catch (e) {
+    console.error('Payment failed:', e);
+    alert('Er is een fout opgetreden bij het verwerken van de betaling. Probeer opnieuw.');
+    btn.disabled = false;
+    btn.textContent = 'Betaal nu';
+  }
+}
+
+function showConfirmation(pricing, resData) {
+  const details = document.getElementById('confirmDetails');
+  details.innerHTML = `
+    <div class="detail-row"><span>Boekingnummer</span><span><strong>${resData.boekingnummer || '-'}</strong></span></div>
+    <div class="detail-row"><span>Residence</span><span>${selectedProperty.naam}</span></div>
+    <div class="detail-row"><span>Adres</span><span>${selectedProperty.adres || ''}, ${selectedProperty.stad || ''}</span></div>
+    <div class="detail-row"><span>Check-in</span><span>${formatDateNL(pricing.checkin)}</span></div>
+    <div class="detail-row"><span>Check-out</span><span>${formatDateNL(pricing.checkout)}</span></div>
+    <div class="detail-row"><span>Verblijfsduur</span><span>${pricing.days} dagen</span></div>
+    <div class="detail-row"><span>Gasten</span><span>${document.getElementById('guestCount').value}</span></div>
+    <div class="detail-row" style="border-top:1px solid var(--border);margin-top:0.5rem;padding-top:0.5rem;">
+      <span>Totaal betaald</span><span><strong>\u20AC${formatPriceDecimal(pricing.totaal)}</strong></span>
+    </div>
+    <div class="detail-row"><span>Betaalmethode</span><span>iDEAL (${selectedBank})</span></div>
+  `;
+}
+
+function formatDateNL(dateStr) {
+  if (!dateStr) return '-';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('nl-NL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+// ── Downloads ──
+function downloadContract() {
+  if (contractId) {
+    window.open(API + '/api/contract/' + contractId, '_blank');
+  } else {
+    const html = document.getElementById('contractPreview').innerHTML;
+    downloadHtml(html, 'huurovereenkomst.html');
+  }
+}
+
+function downloadInvoice() {
+  if (invoiceId) {
+    window.open(API + '/api/factuur/' + invoiceId, '_blank');
+  } else {
+    alert('Factuur is nog niet beschikbaar.');
+  }
+}
+
+function downloadHtml(html, filename) {
+  const fullHtml = `<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8"><title>${filename}</title>
+  <style>body{font-family:Verdana,sans-serif;max-width:800px;margin:2rem auto;padding:2rem;line-height:1.8;font-size:14px;}
+  h3,h4{margin-top:1.5rem;}table{width:100%;border-collapse:collapse;margin:1rem 0;}
+  td,th{padding:0.5rem;border:1px solid #ddd;text-align:left;}</style></head>
+  <body>${html}</body></html>`;
+  const blob = new Blob([fullHtml], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── FAQ Toggle ──
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const answer = item.querySelector('.faq-answer');
+  const isOpen = item.classList.contains('open');
+
+  // Close all
+  document.querySelectorAll('.faq-item').forEach(fi => {
+    fi.classList.remove('open');
+    fi.querySelector('.faq-answer').style.maxHeight = '0';
   });
 
-  document.getElementById('bookingCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (!isOpen) {
+    item.classList.add('open');
+    answer.style.maxHeight = answer.scrollHeight + 'px';
+  }
 }
-</script>
 
+// Close modal on overlay click
+document.getElementById('bookingModal').addEventListener('click', function(e) {
+  if (e.target === this) closeBooking();
+});
+
+// Close modal on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeBooking();
+});
+</script>
 </body>
 </html>

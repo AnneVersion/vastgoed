@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
-"""Data Consultants Stays - Booking Engine & Admin Server (port 8088)
+"""Data Consultants Stays - Luxury Short-Stay Booking Engine & Admin Server (port 8088)
    PostgreSQL backend with connection pooling, logging, and input validation.
+   Features: contract generation, invoice generation, iDEAL simulation.
 """
 
 import json
 import logging
+import math
 import os
 import re
 import uuid
 import urllib.request
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+from decimal import Decimal
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
@@ -73,15 +76,16 @@ def db_query(sql, params=None, fetchone=False):
 
 
 def db_execute(sql, params=None, returning=False):
-    """Execute INSERT/UPDATE/DELETE. Returns row dict if RETURNING is used."""
+    """Execute INSERT/UPDATE/DELETE. Return row if RETURNING, else rowcount."""
     conn = get_conn()
     try:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             cur.execute(sql, params)
-            conn.commit()
             if returning:
                 row = cur.fetchone()
+                conn.commit()
                 return dict(row) if row else None
+            conn.commit()
             return cur.rowcount
     except Exception:
         conn.rollback()
@@ -92,9 +96,9 @@ def db_execute(sql, params=None, returning=False):
 
 # ── Input validation ─────────────────────────────────────────
 
-EMAIL_RE = re.compile(r"^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$")
+EMAIL_RE = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-PHONE_RE = re.compile(r"^[\+\d\s\-()]{6,20}$")
+PHONE_RE = re.compile(r"^[\+\d\s\(\)\-]{6,20}$")
 
 VALID_STATUSES = {"pending", "bevestigd", "geannuleerd", "voltooid"}
 VALID_BETAALSTATUSES = {"openstaand", "betaald", "terugbetaald"}
@@ -103,14 +107,12 @@ VALID_TARIEF_TYPES = {"flexibel", "standaard", "niet_restitueerbaar", ""}
 
 
 def validate_email(email):
-    """Return True if email is valid or empty."""
     if not email:
         return True
     return bool(EMAIL_RE.match(email))
 
 
 def validate_date(date_str):
-    """Return True if date string is valid YYYY-MM-DD."""
     if not date_str:
         return False
     if not DATE_RE.match(date_str):
@@ -123,7 +125,6 @@ def validate_date(date_str):
 
 
 def validate_phone(phone):
-    """Return True if phone is valid or empty."""
     if not phone:
         return True
     return bool(PHONE_RE.match(phone))
@@ -132,17 +133,14 @@ def validate_phone(phone):
 # ── Helpers to convert DB rows to JSON-compatible API format ──
 
 def _serialize(obj):
-    """Make a dict JSON-serializable (handle Decimal, date, etc.)."""
     if obj is None:
         return obj
-    from decimal import Decimal
-    import datetime as dt
     cleaned = {}
     for k, v in obj.items():
         if isinstance(v, Decimal):
             cleaned[k] = float(v)
-        elif isinstance(v, (dt.date, dt.datetime)):
-            cleaned[k] = v.isoformat() if isinstance(v, dt.datetime) else str(v)
+        elif isinstance(v, (date, datetime)):
+            cleaned[k] = v.isoformat() if isinstance(v, datetime) else str(v)
         elif isinstance(v, list):
             cleaned[k] = [float(x) if isinstance(x, Decimal) else x for x in v]
         else:
@@ -151,7 +149,6 @@ def _serialize(obj):
 
 
 def _woning_to_api(row):
-    """Convert a woningen DB row to the JSON format the frontend expects."""
     if row is None:
         return None
     d = _serialize(row)
@@ -164,7 +161,6 @@ def _woning_to_api(row):
 
 
 def _reservering_to_api(row):
-    """Convert a reserveringen DB row to the JSON format the frontend expects."""
     if row is None:
         return None
     d = _serialize(row)
@@ -180,7 +176,6 @@ def _reservering_to_api(row):
 
 
 def _betaling_to_api(row):
-    """Convert a betalingen DB row to the JSON format the frontend expects."""
     if row is None:
         return None
     d = _serialize(row)
@@ -194,9 +189,34 @@ def _betaling_to_api(row):
 
 
 def _next_id(prefix):
-    """Generate next sequential ID like RES-2026-009 from the database."""
     year = datetime.now().year
-    table = "reserveringen" if prefix == "RES" else "betalingen"
+    table_map = {"RES": "reserveringen", "PAY": "betalingen", "CON": "contracten", "FAC": "facturen"}
+    table = table_map.get(prefix, "reserveringen")
+
+    if prefix in ("CON",):
+        rows = db_query(
+            "SELECT contract_nr FROM contracten WHERE contract_nr LIKE %s ORDER BY contract_nr DESC LIMIT 1",
+            (f"{prefix}-{year}-%",)
+        )
+        if rows:
+            parts = rows[0]["contract_nr"].split("-")
+            nxt = int(parts[2]) + 1 if len(parts) == 3 else 1
+        else:
+            nxt = 1
+        return f"{prefix}-{year}-{nxt:04d}"
+
+    if prefix in ("FAC",):
+        rows = db_query(
+            "SELECT factuur_nr FROM facturen WHERE factuur_nr LIKE %s ORDER BY factuur_nr DESC LIMIT 1",
+            (f"DC-{year}-%",)
+        )
+        if rows:
+            parts = rows[0]["factuur_nr"].split("-")
+            nxt = int(parts[2]) + 1 if len(parts) == 3 else 1
+        else:
+            nxt = 1
+        return f"DC-{year}-{nxt:04d}"
+
     rows = db_query(
         f"SELECT extern_id FROM {table} WHERE extern_id LIKE %s ORDER BY extern_id DESC LIMIT 1",
         (f"{prefix}-{year}-%",)
@@ -218,7 +238,6 @@ def _next_id(prefix):
 # ── Pagination helper ────────────────────────────────────────
 
 def _parse_pagination(qs):
-    """Parse page and per_page from query string. Returns (offset, limit, page, per_page)."""
     try:
         page = max(1, int(qs.get("page", [1])[0]))
     except (ValueError, IndexError):
@@ -232,8 +251,6 @@ def _parse_pagination(qs):
 
 
 def _paginated_response(rows, total, page, per_page):
-    """Build a paginated response envelope."""
-    import math
     return {
         "data": rows,
         "pagination": {
@@ -248,7 +265,6 @@ def _paginated_response(rows, total, page, per_page):
 # ── iCal parsing ─────────────────────────────────────────────
 
 def _parse_ical(ical_text):
-    """Parse iCal text into a list of event dicts with start, end, summary."""
     events = []
     in_event = False
     event = {}
@@ -262,7 +278,7 @@ def _parse_ical(ical_text):
             events.append(event)
         elif in_event:
             if line.startswith("DTSTART"):
-                event["start"] = line.split(":")[-1][:8]  # YYYYMMDD
+                event["start"] = line.split(":")[-1][:8]
             elif line.startswith("DTEND"):
                 event["end"] = line.split(":")[-1][:8]
             elif line.startswith("SUMMARY"):
@@ -270,6 +286,253 @@ def _parse_ical(ical_text):
             elif line.startswith("UID"):
                 event["uid"] = line.split(":", 1)[-1]
     return events
+
+
+# ── Contract HTML Generation ─────────────────────────────────
+
+def _generate_contract_html(data):
+    """Generate a Dutch short-stay rental contract (huurovereenkomst)."""
+    today = datetime.now().strftime("%d-%m-%Y")
+    checkin_fmt = _fmt_date_nl(data.get("checkin", ""))
+    checkout_fmt = _fmt_date_nl(data.get("checkout", ""))
+    days = data.get("days", 0)
+    months = round(days / 30, 1)
+    maandprijs = data.get("maandprijs", 0)
+    discount = data.get("discount", 0)
+    discount_pct = int(discount * 100)
+    huur_totaal = data.get("huur_totaal", 0)
+    borg = data.get("borg", 0)
+    servicekosten = data.get("servicekosten", 0)
+
+    return f"""
+    <h3>HUUROVEREENKOMST VOOR WOONRUIMTE<br>(Short-Stay)</h3>
+    <p style="text-align:center;color:#8A8A8A;font-size:0.75rem;">Datum: {today}</p>
+
+    <h4>Artikel 1 - Partijen</h4>
+    <div class="contract-section">
+      <p><strong>Verhuurder:</strong><br>
+      Data Consultants B.V.<br>
+      Keizersgracht 274, 1016 EV Amsterdam<br>
+      KvK: 12345678 | BTW: NL123456789B01</p>
+
+      <p style="margin-top:0.75rem;"><strong>Huurder:</strong><br>
+      {data.get('gast_naam', '')}<br>
+      E-mail: {data.get('gast_email', '')}<br>
+      Telefoon: {data.get('gast_telefoon', '')}
+      {'<br>Werkgever: ' + data['gast_bedrijf'] if data.get('gast_bedrijf') else ''}
+      {'<br>BSN: ' + data['gast_bsn'] if data.get('gast_bsn') else ''}</p>
+    </div>
+
+    <h4>Artikel 2 - Het gehuurde</h4>
+    <div class="contract-section">
+      <p>De gemeubileerde woonruimte gelegen aan:<br>
+      <strong>{data.get('property_naam', '')}</strong><br>
+      {data.get('property_adres', '')}, {data.get('property_postcode', '')} {data.get('property_stad', '')}</p>
+      <p>Het gehuurde is bestemd om te worden gebruikt als woonruimte voor maximaal
+      {data.get('gasten', 1)} persoon/personen.</p>
+    </div>
+
+    <h4>Artikel 3 - Huurperiode</h4>
+    <div class="contract-section">
+      <p>De huurovereenkomst wordt aangegaan voor bepaalde tijd:<br>
+      <strong>Ingangsdatum:</strong> {checkin_fmt}<br>
+      <strong>Einddatum:</strong> {checkout_fmt}<br>
+      <strong>Duur:</strong> {days} dagen ({months} maanden)</p>
+      <p>Na afloop van de overeengekomen huurperiode eindigt de huurovereenkomst van
+      rechtswege, zonder dat opzegging vereist is.</p>
+    </div>
+
+    <h4>Artikel 4 - Huurprijs en betalingsvoorwaarden</h4>
+    <div class="contract-section">
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><td style="padding:0.4rem;border:1px solid #ddd;">Maandelijkse huurprijs</td>
+            <td style="padding:0.4rem;border:1px solid #ddd;text-align:right;">&euro; {maandprijs:,.2f}</td></tr>
+        {'<tr><td style="padding:0.4rem;border:1px solid #ddd;">Korting (' + str(discount_pct) + '%)</td><td style="padding:0.4rem;border:1px solid #ddd;text-align:right;color:#2D8B4E;">-' + str(discount_pct) + '%</td></tr>' if discount > 0 else ''}
+        <tr><td style="padding:0.4rem;border:1px solid #ddd;">Servicekosten per maand</td>
+            <td style="padding:0.4rem;border:1px solid #ddd;text-align:right;">&euro; {servicekosten:,.2f}</td></tr>
+        <tr><td style="padding:0.4rem;border:1px solid #ddd;">Waarborgsom (borg)</td>
+            <td style="padding:0.4rem;border:1px solid #ddd;text-align:right;">&euro; {borg:,.2f}</td></tr>
+        <tr style="font-weight:bold;"><td style="padding:0.4rem;border:1px solid #ddd;">Totale huur ({months} maanden)</td>
+            <td style="padding:0.4rem;border:1px solid #ddd;text-align:right;">&euro; {huur_totaal:,.2f}</td></tr>
+      </table>
+      <p style="margin-top:0.75rem;">De huur dient maandelijks bij vooruitbetaling te worden voldaan, uiterlijk op de eerste
+      dag van iedere kalendermaand, op rekeningnummer NL00 INGB 0000 0000 00 t.n.v.
+      Data Consultants B.V., onder vermelding van het adres van het gehuurde.</p>
+      <p>Alle genoemde bedragen zijn exclusief 21% BTW.</p>
+    </div>
+
+    <h4>Artikel 5 - Waarborgsom</h4>
+    <div class="contract-section">
+      <p>De huurder betaalt een waarborgsom van &euro; {borg:,.2f}. Deze waarborgsom wordt
+      binnen 14 dagen na het einde van de huurovereenkomst terugbetaald, verminderd met
+      eventuele kosten voor schade aan het gehuurde of achterstallige betalingen.</p>
+    </div>
+
+    <h4>Artikel 6 - Opzegtermijn</h4>
+    <div class="contract-section">
+      <p>Bij huurovereenkomsten korter dan 3 maanden: geen tussentijdse opzegging mogelijk.<br>
+      Bij huurovereenkomsten van 3 maanden of langer: opzegtermijn van 1 maand.<br>
+      Opzegging dient schriftelijk (per e-mail) te geschieden.</p>
+    </div>
+
+    <h4>Artikel 7 - Huisregels</h4>
+    <div class="contract-section">
+      <ol style="padding-left:1.5rem;">
+        <li>Het gehuurde mag uitsluitend worden gebruikt als woonruimte.</li>
+        <li>Huisdieren zijn niet toegestaan, tenzij schriftelijk anders overeengekomen.</li>
+        <li>Roken is niet toegestaan in het gehuurde.</li>
+        <li>De huurder is verantwoordelijk voor het normale onderhoud en het schoon houden.</li>
+        <li>Overlast voor buren dient te worden voorkomen. Stilte tussen 22:00 en 07:00.</li>
+        <li>Onderverhuur is niet toegestaan.</li>
+        <li>De huurder dient zich in te schrijven bij de gemeente indien het verblijf langer
+            dan 4 maanden duurt.</li>
+      </ol>
+    </div>
+
+    <h4>Artikel 8 - Inbegrepen voorzieningen</h4>
+    <div class="contract-section">
+      <p>In de huurprijs zijn inbegrepen: gas, water, elektriciteit, internet,
+      gemeentelijke belastingen en wekelijkse schoonmaak. De servicekosten dekken
+      gebouwonderhoud, verzekering en administratiekosten.</p>
+    </div>
+
+    <h4>Artikel 9 - Algemene voorwaarden</h4>
+    <div class="contract-section">
+      <p>Op deze overeenkomst zijn de Algemene Voorwaarden van Data Consultants B.V.
+      van toepassing, welke bij het aangaan van deze overeenkomst aan de huurder ter hand
+      zijn gesteld. Op deze overeenkomst is Nederlands recht van toepassing.</p>
+    </div>
+
+    <h4>Artikel 10 - Ondertekening</h4>
+    <div class="contract-section" style="margin-top:2rem;">
+      <table style="width:100%;border:none;">
+        <tr>
+          <td style="width:50%;padding:1rem;border:none;vertical-align:top;">
+            <p><strong>Verhuurder:</strong></p>
+            <p>Data Consultants B.V.</p>
+            <div style="height:60px;border-bottom:1px solid #333;margin:1rem 0;"></div>
+            <p>Datum: {today}</p>
+          </td>
+          <td style="width:50%;padding:1rem;border:none;vertical-align:top;">
+            <p><strong>Huurder:</strong></p>
+            <p>{data.get('gast_naam', '')}</p>
+            <div style="height:60px;border-bottom:1px solid #333;margin:1rem 0;"></div>
+            <p>Datum: _______________</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+    """
+
+
+def _fmt_date_nl(date_str):
+    """Format YYYY-MM-DD to Dutch format."""
+    if not date_str:
+        return "-"
+    try:
+        d = datetime.strptime(str(date_str)[:10], "%Y-%m-%d")
+        months_nl = ["januari", "februari", "maart", "april", "mei", "juni",
+                     "juli", "augustus", "september", "oktober", "november", "december"]
+        return f"{d.day} {months_nl[d.month - 1]} {d.year}"
+    except (ValueError, IndexError):
+        return str(date_str)
+
+
+# ── Invoice HTML Generation ──────────────────────────────────
+
+def _generate_invoice_html(data):
+    """Generate a Dutch invoice (factuur)."""
+    today = datetime.now().strftime("%d-%m-%Y")
+    factuur_nr = data.get("factuur_nr", "")
+    vervaldatum = data.get("vervaldatum", "")
+    if isinstance(vervaldatum, (date, datetime)):
+        vervaldatum = _fmt_date_nl(vervaldatum.strftime("%Y-%m-%d"))
+    else:
+        vervaldatum = _fmt_date_nl(str(vervaldatum))
+
+    huur = float(data.get("huur_bedrag", 0))
+    servicekosten = float(data.get("servicekosten", 0))
+    borg = float(data.get("borg", 0))
+    subtotaal = huur + servicekosten
+    btw = subtotaal * 0.21
+    totaal = subtotaal + btw + borg
+
+    return f"""
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem;">
+      <div>
+        <h3 style="font-size:1.5rem;color:#B8860B;margin-bottom:0.5rem;">FACTUUR</h3>
+        <p style="font-size:0.8rem;color:#8A8A8A;">Factuurnummer: <strong>{factuur_nr}</strong></p>
+        <p style="font-size:0.8rem;color:#8A8A8A;">Factuurdatum: {today}</p>
+        <p style="font-size:0.8rem;color:#8A8A8A;">Vervaldatum: {vervaldatum}</p>
+      </div>
+      <div style="text-align:right;">
+        <p style="font-weight:bold;">Data Consultants B.V.</p>
+        <p style="font-size:0.8rem;color:#8A8A8A;">Keizersgracht 274<br>1016 EV Amsterdam<br>
+        KvK: 12345678<br>BTW: NL123456789B01<br>
+        IBAN: NL00 INGB 0000 0000 00</p>
+      </div>
+    </div>
+
+    <div style="margin-bottom:2rem;">
+      <p style="font-weight:bold;margin-bottom:0.3rem;">Factuur aan:</p>
+      <p>{data.get('gast_naam', '')}<br>
+      {data.get('gast_email', '')}</p>
+    </div>
+
+    <p style="margin-bottom:1rem;font-size:0.85rem;">
+      Betreft: Huur {data.get('property_naam', '')} - {data.get('days', 0)} dagen
+    </p>
+
+    <table style="width:100%;border-collapse:collapse;margin-bottom:1.5rem;">
+      <thead>
+        <tr style="background:#F5F0E8;">
+          <th style="padding:0.6rem;border:1px solid #ddd;text-align:left;">Omschrijving</th>
+          <th style="padding:0.6rem;border:1px solid #ddd;text-align:right;">Bedrag</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:0.6rem;border:1px solid #ddd;">Huur {data.get('property_naam', '')}</td>
+          <td style="padding:0.6rem;border:1px solid #ddd;text-align:right;">&euro; {huur:,.2f}</td>
+        </tr>
+        <tr>
+          <td style="padding:0.6rem;border:1px solid #ddd;">Servicekosten</td>
+          <td style="padding:0.6rem;border:1px solid #ddd;text-align:right;">&euro; {servicekosten:,.2f}</td>
+        </tr>
+        <tr style="border-top:2px solid #ddd;">
+          <td style="padding:0.6rem;border:1px solid #ddd;font-weight:bold;">Subtotaal</td>
+          <td style="padding:0.6rem;border:1px solid #ddd;text-align:right;font-weight:bold;">&euro; {subtotaal:,.2f}</td>
+        </tr>
+        <tr>
+          <td style="padding:0.6rem;border:1px solid #ddd;">BTW (21%)</td>
+          <td style="padding:0.6rem;border:1px solid #ddd;text-align:right;">&euro; {btw:,.2f}</td>
+        </tr>
+        <tr>
+          <td style="padding:0.6rem;border:1px solid #ddd;">Waarborgsom (borg)</td>
+          <td style="padding:0.6rem;border:1px solid #ddd;text-align:right;">&euro; {borg:,.2f}</td>
+        </tr>
+        <tr style="background:#F5F0E8;font-weight:bold;font-size:1.1rem;">
+          <td style="padding:0.8rem;border:1px solid #ddd;">Totaal te voldoen</td>
+          <td style="padding:0.8rem;border:1px solid #ddd;text-align:right;">&euro; {totaal:,.2f}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="background:#FDFBF7;border:1px solid #E8E4DC;border-radius:6px;padding:1rem;margin-bottom:1.5rem;">
+      <p style="font-weight:bold;margin-bottom:0.3rem;">Betaalgegevens</p>
+      <p style="font-size:0.85rem;">
+        IBAN: NL00 INGB 0000 0000 00<br>
+        T.n.v.: Data Consultants B.V.<br>
+        O.v.v.: {factuur_nr}
+      </p>
+    </div>
+
+    <p style="font-size:0.8rem;color:#8A8A8A;">
+      Betalingstermijn: 14 dagen na factuurdatum. Bij niet-tijdige betaling wordt
+      de wettelijke rente in rekening gebracht. Op al onze facturen zijn de Algemene
+      Voorwaarden van Data Consultants B.V. van toepassing.
+    </p>
+    """
 
 
 # ── HTTP Handler ─────────────────────────────────────────────
@@ -293,6 +556,13 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
         body = json.dumps(data, ensure_ascii=False, default=str).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _send_html(self, html, status=200):
+        body = html.encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
         self.end_headers()
         self.wfile.write(body)
 
@@ -334,9 +604,8 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         qs = parse_qs(parsed.query)
 
-        # GET /api/panden  (with optional pagination)
+        # GET /api/panden
         if self.command == "GET" and path == "/api/panden":
-            # Check if pagination requested
             if "page" in qs:
                 offset, limit, page, per_page = _parse_pagination(qs)
                 total = db_query("SELECT COUNT(*) as cnt FROM woningen", fetchone=True)["cnt"]
@@ -352,11 +621,9 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                 self._send_json([_woning_to_api(r) for r in rows])
             return True
 
-        # POST /api/woningen (add new property)
+        # POST /api/woningen
         if self.command == "POST" and path == "/api/woningen":
             body = self._read_body()
-
-            # Validate required fields
             if not body.get("naam"):
                 self._send_json({"error": "Veld 'naam' is verplicht"}, 400)
                 return True
@@ -376,7 +643,8 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                         badkamers, max_gasten, huurprijs, nachtprijs, schoonmaakkosten,
                         energielabel, amenities, kenmerken, tarieven, foto_urls, notities,
                         beschikbaar, beschikbaar_vanaf, huurder, onderhoud,
-                        airbnb_url, rating, recensies)
+                        airbnb_url, rating, recensies,
+                        maandprijs, weekprijs, borg, min_verblijf_dagen, max_verblijf_dagen, servicekosten_maand)
                     VALUES (%(extern_id)s, %(naam)s, %(type)s, %(categorie)s, %(beschrijving)s,
                         %(adres)s, %(postcode)s, %(stad)s, %(lat)s, %(lng)s, %(oppervlakte_m2)s,
                         %(kamers)s, %(slaapkamers)s, %(badkamers)s, %(max_gasten)s,
@@ -384,7 +652,9 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                         %(energielabel)s, %(amenities)s, %(kenmerken)s, %(tarieven)s::jsonb,
                         %(foto_urls)s, %(notities)s, %(beschikbaar)s, %(beschikbaar_vanaf)s,
                         %(huurder)s::jsonb, %(onderhoud)s::jsonb,
-                        %(airbnb_url)s, %(rating)s, %(recensies)s)
+                        %(airbnb_url)s, %(rating)s, %(recensies)s,
+                        %(maandprijs)s, %(weekprijs)s, %(borg)s,
+                        %(min_verblijf_dagen)s, %(max_verblijf_dagen)s, %(servicekosten_maand)s)
                     RETURNING *
                 """, {
                     "extern_id": extern_id,
@@ -418,6 +688,12 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                     "airbnb_url": body.get("airbnb_url"),
                     "rating": body.get("rating"),
                     "recensies": body.get("recensies", 0),
+                    "maandprijs": body.get("maandprijs"),
+                    "weekprijs": body.get("weekprijs"),
+                    "borg": body.get("borg"),
+                    "min_verblijf_dagen": body.get("min_verblijf_dagen", 7),
+                    "max_verblijf_dagen": body.get("max_verblijf_dagen", 730),
+                    "servicekosten_maand": body.get("servicekosten_maand", 150),
                 }, returning=True)
                 logger.info(f"Woning aangemaakt: {extern_id} - {body.get('naam')}")
                 self._send_json(_woning_to_api(row), 201)
@@ -439,7 +715,7 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                 self._send_json({"error": "Pand niet gevonden"}, 404)
             return True
 
-        # PUT /api/panden/<id>  or  PUT /api/woningen/<id>
+        # PUT /api/panden/<id> or PUT /api/woningen/<id>
         m_put = re.match(r"^/api/(?:panden|woningen)/([a-zA-Z0-9\-]+)$", path)
         if m_put and self.command == "PUT":
             pand_id = m_put.group(1)
@@ -467,6 +743,10 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                 "beschikbaar": "beschikbaar", "beschikbaar_vanaf": "beschikbaar_vanaf",
                 "airbnb_url": "airbnb_url", "rating": "rating", "recensies": "recensies",
                 "actief": "actief", "ical_url": "ical_url",
+                "maandprijs": "maandprijs", "weekprijs": "weekprijs",
+                "borg": "borg", "min_verblijf_dagen": "min_verblijf_dagen",
+                "max_verblijf_dagen": "max_verblijf_dagen",
+                "servicekosten_maand": "servicekosten_maand",
             }
 
             for json_key, db_col in field_mapping.items():
@@ -548,28 +828,26 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         qs = parse_qs(parsed.query)
 
-        # GET /api/reserveringen (with optional pagination)
+        # GET /api/reserveringen
         if self.command == "GET" and path == "/api/reserveringen":
             if "page" in qs:
                 offset, limit, page, per_page = _parse_pagination(qs)
                 total = db_query("SELECT COUNT(*) as cnt FROM reserveringen", fetchone=True)["cnt"]
                 rows = db_query(
-                    "SELECT * FROM reserveringen ORDER BY id LIMIT %s OFFSET %s",
+                    "SELECT * FROM reserveringen ORDER BY id DESC LIMIT %s OFFSET %s",
                     (limit, offset)
                 )
                 self._send_json(_paginated_response(
                     [_reservering_to_api(r) for r in rows], total, page, per_page
                 ))
             else:
-                rows = db_query("SELECT * FROM reserveringen ORDER BY id")
+                rows = db_query("SELECT * FROM reserveringen ORDER BY id DESC")
                 self._send_json([_reservering_to_api(r) for r in rows])
             return True
 
         # POST /api/reserveringen
         if self.command == "POST" and path == "/api/reserveringen":
             body = self._read_body()
-
-            # Input validation
             errors = []
             if not body.get("gast_naam"):
                 errors.append("gast_naam is verplicht")
@@ -578,21 +856,19 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
             if body.get("gast_telefoon") and not validate_phone(body["gast_telefoon"]):
                 errors.append("Ongeldig telefoonnummer")
             if body.get("check_in") and not validate_date(body["check_in"]):
-                errors.append("Ongeldige check-in datum (gebruik YYYY-MM-DD)")
+                errors.append("Ongeldige check-in datum")
             if body.get("check_out") and not validate_date(body["check_out"]):
-                errors.append("Ongeldige check-out datum (gebruik YYYY-MM-DD)")
+                errors.append("Ongeldige check-out datum")
             if body.get("check_in") and body.get("check_out") and body["check_in"] >= body["check_out"]:
                 errors.append("Check-out moet na check-in liggen")
             if body.get("status") and body["status"] not in VALID_STATUSES:
                 errors.append(f"Ongeldige status: {body['status']}")
-
             if errors:
                 self._send_json({"error": "Validatiefouten", "details": errors}, 400)
                 return True
 
             extern_id = _next_id("RES")
             pand_extern_id = body.get("pand_id", "")
-
             pand_row = db_query(
                 "SELECT id FROM woningen WHERE extern_id = %s", (pand_extern_id,), fetchone=True
             )
@@ -633,7 +909,7 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                     "opmerkingen": body.get("opmerkingen", ""),
                     "aangemaakt": body.get("aangemaakt", datetime.now().isoformat()),
                 }, returning=True)
-                logger.info(f"Reservering aangemaakt: {extern_id} - {body.get('gast_naam')}")
+                logger.info(f"Reservering aangemaakt: {extern_id}")
                 self._send_json(_reservering_to_api(row), 201)
             except Exception as e:
                 logger.error(f"Fout bij aanmaken reservering: {e}")
@@ -647,7 +923,6 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
             body = self._read_body()
             body.pop("id", None)
 
-            # Validate email/phone if provided
             if body.get("gast_email") and not validate_email(body["gast_email"]):
                 self._send_json({"error": "Ongeldig e-mailadres"}, 400)
                 return True
@@ -690,8 +965,9 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
             return True
 
         # DELETE /api/reserveringen/<id>
-        if m and self.command == "DELETE":
-            res_id = m.group(1)
+        m_del = re.match(r"^/api/reserveringen/([A-Z0-9\-]+)$", path)
+        if m_del and self.command == "DELETE":
+            res_id = m_del.group(1)
             count = db_execute("DELETE FROM reserveringen WHERE extern_id = %s", (res_id,))
             if count:
                 logger.info(f"Reservering verwijderd: {res_id}")
@@ -708,28 +984,26 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         qs = parse_qs(parsed.query)
 
-        # GET /api/betalingen (with optional pagination)
+        # GET /api/betalingen
         if self.command == "GET" and path == "/api/betalingen":
             if "page" in qs:
                 offset, limit, page, per_page = _parse_pagination(qs)
                 total = db_query("SELECT COUNT(*) as cnt FROM betalingen", fetchone=True)["cnt"]
                 rows = db_query(
-                    "SELECT * FROM betalingen ORDER BY id LIMIT %s OFFSET %s",
+                    "SELECT * FROM betalingen ORDER BY id DESC LIMIT %s OFFSET %s",
                     (limit, offset)
                 )
                 self._send_json(_paginated_response(
                     [_betaling_to_api(r) for r in rows], total, page, per_page
                 ))
             else:
-                rows = db_query("SELECT * FROM betalingen ORDER BY id")
+                rows = db_query("SELECT * FROM betalingen ORDER BY id DESC")
                 self._send_json([_betaling_to_api(r) for r in rows])
             return True
 
         # POST /api/betalingen
         if self.command == "POST" and path == "/api/betalingen":
             body = self._read_body()
-
-            # Validate
             if not body.get("bedrag") and body.get("bedrag") != 0:
                 self._send_json({"error": "Veld 'bedrag' is verplicht"}, 400)
                 return True
@@ -741,7 +1015,6 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
 
             extern_id = _next_id("PAY")
             res_extern_id = body.get("reservering_id", "")
-
             res_row = db_query(
                 "SELECT id FROM reserveringen WHERE extern_id = %s",
                 (res_extern_id,), fetchone=True
@@ -768,7 +1041,7 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                     "datum": body.get("datum", datetime.now().isoformat()),
                     "beschrijving": body.get("beschrijving", ""),
                 }, returning=True)
-                logger.info(f"Betaling aangemaakt: {extern_id} - {body.get('bedrag')}")
+                logger.info(f"Betaling aangemaakt: {extern_id}")
                 self._send_json(_betaling_to_api(row), 201)
             except Exception as e:
                 logger.error(f"Fout bij aanmaken betaling: {e}")
@@ -803,6 +1076,195 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
 
         return False
 
+    # ── CONTRACT ROUTES ───────────────────────────────────────
+
+    def _route_contracten(self, path):
+        # POST /api/contract/generate
+        if self.command == "POST" and path == "/api/contract/generate":
+            body = self._read_body()
+            contract_html = _generate_contract_html(body)
+            contract_nr = _next_id("CON")
+
+            # Try to store in DB
+            contract_id = None
+            try:
+                row = db_execute("""
+                    INSERT INTO contracten (contract_nr, contract_html)
+                    VALUES (%s, %s) RETURNING id
+                """, (contract_nr, contract_html), returning=True)
+                contract_id = row["id"] if row else None
+                logger.info(f"Contract gegenereerd: {contract_nr}")
+            except Exception as e:
+                logger.warning(f"Contract opslaan mislukt (tabel bestaat mogelijk niet): {e}")
+                contract_id = contract_nr
+
+            self._send_json({
+                "contract_id": contract_id or contract_nr,
+                "contract_nr": contract_nr,
+                "contract_html": contract_html
+            })
+            return True
+
+        # GET /api/contract/<id>
+        m = re.match(r"^/api/contract/(\d+|CON-\d{4}-\d{4})$", path)
+        if m and self.command == "GET":
+            cid = m.group(1)
+            try:
+                if cid.startswith("CON-"):
+                    row = db_query("SELECT * FROM contracten WHERE contract_nr = %s", (cid,), fetchone=True)
+                else:
+                    row = db_query("SELECT * FROM contracten WHERE id = %s", (int(cid),), fetchone=True)
+                if row:
+                    full_html = f"""<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8">
+                    <title>Huurovereenkomst - {row.get('contract_nr','')}</title>
+                    <style>body{{font-family:Verdana,sans-serif;max-width:800px;margin:2rem auto;
+                    padding:2rem;line-height:1.8;font-size:14px;}}h3,h4{{margin-top:1.5rem;}}
+                    table{{width:100%;border-collapse:collapse;margin:1rem 0;}}
+                    td,th{{padding:0.5rem;border:1px solid #ddd;text-align:left;}}
+                    @media print{{body{{margin:0;padding:1cm;}}}}</style></head>
+                    <body>{row['contract_html']}</body></html>"""
+                    self._send_html(full_html)
+                else:
+                    self._send_json({"error": "Contract niet gevonden"}, 404)
+            except Exception as e:
+                self._send_json({"error": str(e)}, 500)
+            return True
+
+        # GET /api/contracten (list)
+        if self.command == "GET" and path == "/api/contracten":
+            try:
+                rows = db_query("SELECT id, contract_nr, reservering_id, ondertekend, ondertekend_datum, created_at FROM contracten ORDER BY id DESC")
+                self._send_json([_serialize(r) for r in rows])
+            except Exception as e:
+                self._send_json({"error": str(e)}, 500)
+            return True
+
+        # PUT /api/contracten/<id>/sign
+        m_sign = re.match(r"^/api/contracten/(\d+)/sign$", path)
+        if m_sign and self.command == "PUT":
+            cid = int(m_sign.group(1))
+            try:
+                row = db_execute("""
+                    UPDATE contracten SET ondertekend = TRUE, ondertekend_datum = NOW()
+                    WHERE id = %s RETURNING *
+                """, (cid,), returning=True)
+                if row:
+                    self._send_json(_serialize(row))
+                else:
+                    self._send_json({"error": "Contract niet gevonden"}, 404)
+            except Exception as e:
+                self._send_json({"error": str(e)}, 500)
+            return True
+
+        return False
+
+    # ── FACTUUR ROUTES ────────────────────────────────────────
+
+    def _route_facturen(self, path):
+        # POST /api/factuur/generate
+        if self.command == "POST" and path == "/api/factuur/generate":
+            body = self._read_body()
+            factuur_nr = _next_id("FAC")
+
+            huur = float(body.get("huur_bedrag", 0))
+            servicekosten = float(body.get("servicekosten", 0))
+            borg = float(body.get("borg", 0))
+            subtotaal = huur + servicekosten
+            btw = subtotaal * 0.21
+            totaal = subtotaal + btw + borg
+            vervaldatum = (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
+
+            body["factuur_nr"] = factuur_nr
+            body["vervaldatum"] = vervaldatum
+            factuur_html = _generate_invoice_html(body)
+
+            factuur_id = None
+            try:
+                row = db_execute("""
+                    INSERT INTO facturen (factuur_nr, reservering_extern_id,
+                        bedrag_excl_btw, btw_percentage, btw_bedrag, totaal,
+                        status, vervaldatum, factuur_html)
+                    VALUES (%s, %s, %s, 21.00, %s, %s, 'openstaand', %s, %s)
+                    RETURNING id
+                """, (factuur_nr, body.get("reservering_extern_id", ""),
+                      subtotaal, btw, totaal, vervaldatum, factuur_html),
+                    returning=True)
+                factuur_id = row["id"] if row else None
+                logger.info(f"Factuur gegenereerd: {factuur_nr}")
+            except Exception as e:
+                logger.warning(f"Factuur opslaan mislukt (tabel bestaat mogelijk niet): {e}")
+                factuur_id = factuur_nr
+
+            self._send_json({
+                "factuur_id": factuur_id or factuur_nr,
+                "factuur_nr": factuur_nr,
+                "totaal": totaal,
+                "vervaldatum": vervaldatum,
+                "factuur_html": factuur_html,
+            })
+            return True
+
+        # GET /api/factuur/<id>
+        m = re.match(r"^/api/factuur/(\d+|DC-\d{4}-\d{4})$", path)
+        if m and self.command == "GET":
+            fid = m.group(1)
+            try:
+                if fid.startswith("DC-"):
+                    row = db_query("SELECT * FROM facturen WHERE factuur_nr = %s", (fid,), fetchone=True)
+                else:
+                    row = db_query("SELECT * FROM facturen WHERE id = %s", (int(fid),), fetchone=True)
+                if row:
+                    full_html = f"""<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8">
+                    <title>Factuur - {row.get('factuur_nr','')}</title>
+                    <style>body{{font-family:Verdana,sans-serif;max-width:800px;margin:2rem auto;
+                    padding:2rem;line-height:1.8;font-size:14px;}}
+                    table{{width:100%;border-collapse:collapse;margin:1rem 0;}}
+                    td,th{{padding:0.5rem;border:1px solid #ddd;text-align:left;}}
+                    @media print{{body{{margin:0;padding:1cm;}}}}</style></head>
+                    <body>{row['factuur_html']}</body></html>"""
+                    self._send_html(full_html)
+                else:
+                    self._send_json({"error": "Factuur niet gevonden"}, 404)
+            except Exception as e:
+                self._send_json({"error": str(e)}, 500)
+            return True
+
+        # GET /api/facturen (list)
+        if self.command == "GET" and path == "/api/facturen":
+            try:
+                rows = db_query("""
+                    SELECT id, factuur_nr, reservering_extern_id,
+                           bedrag_excl_btw, btw_bedrag, totaal, status, vervaldatum, created_at
+                    FROM facturen ORDER BY id DESC
+                """)
+                self._send_json([_serialize(r) for r in rows])
+            except Exception as e:
+                self._send_json({"error": str(e)}, 500)
+            return True
+
+        # PUT /api/facturen/<id>/status
+        m_status = re.match(r"^/api/facturen/(\d+)/status$", path)
+        if m_status and self.command == "PUT":
+            fid = int(m_status.group(1))
+            body = self._read_body()
+            new_status = body.get("status", "")
+            if new_status not in ("openstaand", "betaald", "verlopen"):
+                self._send_json({"error": "Ongeldige status"}, 400)
+                return True
+            try:
+                row = db_execute("""
+                    UPDATE facturen SET status = %s WHERE id = %s RETURNING *
+                """, (new_status, fid), returning=True)
+                if row:
+                    self._send_json(_serialize(row))
+                else:
+                    self._send_json({"error": "Factuur niet gevonden"}, 404)
+            except Exception as e:
+                self._send_json({"error": str(e)}, 500)
+            return True
+
+        return False
+
     # ── KALENDER ROUTE ────────────────────────────────────────
 
     def _route_kalender(self, path):
@@ -812,7 +1274,6 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
             maand = int(params.get("maand", [datetime.now().month])[0])
             jaar = int(params.get("jaar", [datetime.now().year])[0])
 
-            # Validate month/year
             if not (1 <= maand <= 12):
                 self._send_json({"error": "Maand moet tussen 1 en 12 liggen"}, 400)
                 return True
@@ -828,10 +1289,7 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
             calendar = {}
             for pand in panden:
                 eid = pand["extern_id"] or str(pand["id"])
-                calendar[eid] = {
-                    "naam": pand["naam"],
-                    "boekingen": []
-                }
+                calendar[eid] = {"naam": pand["naam"], "boekingen": []}
 
             for res in reserveringen:
                 try:
@@ -867,13 +1325,8 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                             "status": res.get("status", "")
                         })
 
-            self._send_json({
-                "maand": maand,
-                "jaar": jaar,
-                "kalender": calendar
-            })
+            self._send_json({"maand": maand, "jaar": jaar, "kalender": calendar})
             return True
-
         return False
 
     # ── BOOKING ENGINE ROUTES ────────────────────────────────
@@ -882,7 +1335,7 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         qs = parse_qs(parsed.query)
 
-        # GET /api/beschikbaarheid?checkin=&checkout=
+        # GET /api/beschikbaarheid
         if self.command == "GET" and path == "/api/beschikbaarheid":
             checkin = qs.get("checkin", [None])[0]
             checkout = qs.get("checkout", [None])[0]
@@ -890,17 +1343,14 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
             if not checkin or not checkout:
                 self._send_json({"error": "checkin en checkout parameters zijn verplicht"}, 400)
                 return True
-
             if not validate_date(checkin) or not validate_date(checkout):
-                self._send_json({"error": "Ongeldige datumformat (gebruik YYYY-MM-DD)"}, 400)
+                self._send_json({"error": "Ongeldige datumformat"}, 400)
                 return True
-
             if checkin >= checkout:
                 self._send_json({"error": "Checkout moet na checkin liggen"}, 400)
                 return True
 
             panden = db_query("SELECT * FROM woningen ORDER BY id")
-
             conflicting_pand_ids = db_query("""
                 SELECT DISTINCT pand_extern_id FROM reserveringen
                 WHERE status != 'geannuleerd'
@@ -914,7 +1364,6 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
             """, (checkout, checkin, checkout, checkin))
             blocked_eids = {r["pand_extern_id"] for r in conflicting_pand_ids}
 
-            # Also check beschikbaarheid_blokkades
             blocked_by_blokkade = db_query("""
                 SELECT DISTINCT w.extern_id FROM beschikbaarheid_blokkades b
                 JOIN woningen w ON w.id = b.woning_id
@@ -933,6 +1382,7 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                         "naam": pand["naam"],
                         "categorie": pand.get("categorie", ""),
                         "stad": pand.get("stad", ""),
+                        "maandprijs": float(pand["maandprijs"]) if pand.get("maandprijs") else 0,
                         "nachtprijs": float(pand["nachtprijs"]) if pand.get("nachtprijs") else 0,
                         "max_gasten": pand.get("max_gasten", 0),
                         "slaapkamers": pand.get("slaapkamers", 0),
@@ -941,32 +1391,25 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                     })
 
             self._send_json({
-                "checkin": checkin,
-                "checkout": checkout,
-                "beschikbaar": beschikbaar,
-                "aantal": len(beschikbaar)
+                "checkin": checkin, "checkout": checkout,
+                "beschikbaar": beschikbaar, "aantal": len(beschikbaar)
             })
             return True
 
         # POST /api/reservering (booking engine creates booking)
         if self.command == "POST" and path == "/api/reservering":
             body = self._read_body()
-
             required = ["appartement_id", "checkin", "checkout"]
             missing = [f for f in required if not body.get(f)]
             if missing:
                 self._send_json({"error": f"Verplichte velden ontbreken: {', '.join(missing)}"}, 400)
                 return True
-
-            # Validate dates
             if not validate_date(body["checkin"]) or not validate_date(body["checkout"]):
-                self._send_json({"error": "Ongeldige datumformat (gebruik YYYY-MM-DD)"}, 400)
+                self._send_json({"error": "Ongeldige datumformat"}, 400)
                 return True
             if body["checkin"] >= body["checkout"]:
                 self._send_json({"error": "Checkout moet na checkin liggen"}, 400)
                 return True
-
-            # Validate email if provided
             if body.get("gast_email") and not validate_email(body["gast_email"]):
                 self._send_json({"error": "Ongeldig e-mailadres"}, 400)
                 return True
@@ -978,7 +1421,7 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
             if not body.get("status"):
                 body["status"] = "bevestigd"
 
-            # Check availability (reserveringen)
+            # Check availability
             conflicts = db_query("""
                 SELECT id FROM reserveringen
                 WHERE status != 'geannuleerd'
@@ -995,7 +1438,6 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                   body["checkout"], body["checkin"],
                   body["checkout"], body["checkin"]))
 
-            # Also check blokkades
             if not conflicts:
                 blokkade_conflicts = db_query("""
                     SELECT b.id FROM beschikbaarheid_blokkades b
@@ -1043,8 +1485,7 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                     "datum_aangemaakt": body["datum_aangemaakt"],
                     "aangemaakt": body["datum_aangemaakt"],
                 })
-
-                logger.info(f"Boeking aangemaakt: {body['boekingnummer']} voor {body['appartement_id']}")
+                logger.info(f"Boeking aangemaakt: {body['boekingnummer']}")
                 self._send_json({
                     "success": True,
                     "boekingnummer": body["boekingnummer"],
@@ -1060,7 +1501,7 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
     # ── iCAL ROUTES ────────────────────────────────────────────
 
     def _route_ical(self, path):
-        # GET /api/woningen/<id>/ical  - Export iCal
+        # GET /api/woningen/<id>/ical
         m_export = re.match(r"^/api/woningen/([a-zA-Z0-9\-]+)/ical$", path)
         if m_export and self.command == "GET":
             pand_id = m_export.group(1)
@@ -1068,11 +1509,8 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                 "SELECT * FROM woningen WHERE extern_id = %s", (pand_id,), fetchone=True
             )
             if not pand:
-                # Try by numeric id
                 try:
-                    pand = db_query(
-                        "SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True
-                    )
+                    pand = db_query("SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True)
                 except (ValueError, TypeError):
                     pass
             if not pand:
@@ -1087,8 +1525,7 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
             """, (pand.get("extern_id", ""), pand["id"]))
 
             cal_lines = [
-                "BEGIN:VCALENDAR",
-                "VERSION:2.0",
+                "BEGIN:VCALENDAR", "VERSION:2.0",
                 "PRODID:-//Data Consultants Stays//Vastgoed//NL",
                 f"X-WR-CALNAME:{pand['naam']}",
             ]
@@ -1112,10 +1549,9 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                     "END:VEVENT",
                 ])
 
-            # Also include blokkades
-            blokkades = db_query("""
-                SELECT * FROM beschikbaarheid_blokkades WHERE woning_id = %s
-            """, (pand["id"],))
+            blokkades = db_query(
+                "SELECT * FROM beschikbaarheid_blokkades WHERE woning_id = %s", (pand["id"],)
+            )
             for blok in blokkades:
                 ds = blok["datum_start"]
                 de = blok["datum_einde"]
@@ -1134,34 +1570,29 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
             cal_lines.append("END:VCALENDAR")
             ical_text = "\r\n".join(cal_lines) + "\r\n"
 
-            body = ical_text.encode("utf-8")
+            body_bytes = ical_text.encode("utf-8")
             self.send_response(200)
             self.send_header("Content-Type", "text/calendar; charset=utf-8")
             self.send_header("Content-Disposition",
                              f'attachment; filename="{pand["naam"].replace(" ", "_")}.ics"')
             self.end_headers()
-            self.wfile.write(body)
+            self.wfile.write(body_bytes)
             return True
 
-        # POST /api/woningen/<id>/ical-import  - Import external iCal URL
+        # POST /api/woningen/<id>/ical-import
         m_import = re.match(r"^/api/woningen/([a-zA-Z0-9\-]+)/ical-import$", path)
         if m_import and self.command == "POST":
             pand_id = m_import.group(1)
             body = self._read_body()
             ical_url = body.get("ical_url", "").strip()
-
             if not ical_url:
                 self._send_json({"error": "ical_url is verplicht"}, 400)
                 return True
 
-            pand = db_query(
-                "SELECT * FROM woningen WHERE extern_id = %s", (pand_id,), fetchone=True
-            )
+            pand = db_query("SELECT * FROM woningen WHERE extern_id = %s", (pand_id,), fetchone=True)
             if not pand:
                 try:
-                    pand = db_query(
-                        "SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True
-                    )
+                    pand = db_query("SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True)
                 except (ValueError, TypeError):
                     pass
             if not pand:
@@ -1173,23 +1604,14 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                 with urllib.request.urlopen(req, timeout=15) as resp:
                     ical_text = resp.read().decode("utf-8", errors="replace")
             except Exception as e:
-                logger.error(f"iCal fetch failed for {pand_id}: {e}")
                 self._send_json({"error": f"Kan iCal URL niet ophalen: {e}"}, 502)
                 return True
 
             events = _parse_ical(ical_text)
-
-            # Store the iCal URL
-            db_execute(
-                "UPDATE woningen SET ical_url = %s, ical_last_sync = NOW() WHERE id = %s",
-                (ical_url, pand["id"])
-            )
-
-            # Remove old airbnb blokkades for this property, then insert new ones
-            db_execute(
-                "DELETE FROM beschikbaarheid_blokkades WHERE woning_id = %s AND reden LIKE %s",
-                (pand["id"], "Airbnb:%")
-            )
+            db_execute("UPDATE woningen SET ical_url = %s, ical_last_sync = NOW() WHERE id = %s",
+                       (ical_url, pand["id"]))
+            db_execute("DELETE FROM beschikbaarheid_blokkades WHERE woning_id = %s AND reden LIKE %s",
+                       (pand["id"], "Airbnb:%"))
 
             imported = 0
             for ev in events:
@@ -1210,26 +1632,18 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                 imported += 1
 
             logger.info(f"iCal import voor woning {pand_id}: {imported} blokkades")
-            self._send_json({
-                "success": True,
-                "imported": imported,
-                "ical_url": ical_url,
-                "last_sync": datetime.now().isoformat()
-            })
+            self._send_json({"success": True, "imported": imported, "ical_url": ical_url,
+                             "last_sync": datetime.now().isoformat()})
             return True
 
-        # POST /api/woningen/<id>/ical-sync  - Re-sync from stored iCal URL
+        # POST /api/woningen/<id>/ical-sync
         m_sync = re.match(r"^/api/woningen/([a-zA-Z0-9\-]+)/ical-sync$", path)
         if m_sync and self.command == "POST":
             pand_id = m_sync.group(1)
-            pand = db_query(
-                "SELECT * FROM woningen WHERE extern_id = %s", (pand_id,), fetchone=True
-            )
+            pand = db_query("SELECT * FROM woningen WHERE extern_id = %s", (pand_id,), fetchone=True)
             if not pand:
                 try:
-                    pand = db_query(
-                        "SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True
-                    )
+                    pand = db_query("SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True)
                 except (ValueError, TypeError):
                     pass
             if not pand:
@@ -1238,7 +1652,7 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
 
             ical_url = pand.get("ical_url")
             if not ical_url:
-                self._send_json({"error": "Geen iCal URL geconfigureerd voor dit pand"}, 400)
+                self._send_json({"error": "Geen iCal URL geconfigureerd"}, 400)
                 return True
 
             try:
@@ -1246,17 +1660,12 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                 with urllib.request.urlopen(req, timeout=15) as resp:
                     ical_text = resp.read().decode("utf-8", errors="replace")
             except Exception as e:
-                logger.error(f"iCal sync failed for {pand_id}: {e}")
                 self._send_json({"error": f"Kan iCal URL niet ophalen: {e}"}, 502)
                 return True
 
             events = _parse_ical(ical_text)
-
-            # Remove old airbnb blokkades, insert fresh
-            db_execute(
-                "DELETE FROM beschikbaarheid_blokkades WHERE woning_id = %s AND reden LIKE %s",
-                (pand["id"], "Airbnb:%")
-            )
+            db_execute("DELETE FROM beschikbaarheid_blokkades WHERE woning_id = %s AND reden LIKE %s",
+                       (pand["id"], "Airbnb:%"))
 
             imported = 0
             for ev in events:
@@ -1276,55 +1685,36 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                 """, (pand["id"], ds, de, f"Airbnb: {summary}"))
                 imported += 1
 
-            db_execute(
-                "UPDATE woningen SET ical_last_sync = NOW() WHERE id = %s",
-                (pand["id"],)
-            )
-
+            db_execute("UPDATE woningen SET ical_last_sync = NOW() WHERE id = %s", (pand["id"],))
             logger.info(f"iCal sync voor woning {pand_id}: {imported} blokkades")
-            self._send_json({
-                "success": True,
-                "imported": imported,
-                "last_sync": datetime.now().isoformat()
-            })
+            self._send_json({"success": True, "imported": imported,
+                             "last_sync": datetime.now().isoformat()})
             return True
 
-        # GET /api/woningen/<id>/beschikbaarheid  - Check availability
+        # GET /api/woningen/<id>/beschikbaarheid
         m_besch = re.match(r"^/api/woningen/([a-zA-Z0-9\-]+)/beschikbaarheid$", path)
         if m_besch and self.command == "GET":
             pand_id = m_besch.group(1)
-            parsed = urlparse(self.path)
-            qs = parse_qs(parsed.query)
-
-            pand = db_query(
-                "SELECT * FROM woningen WHERE extern_id = %s", (pand_id,), fetchone=True
-            )
+            pand = db_query("SELECT * FROM woningen WHERE extern_id = %s", (pand_id,), fetchone=True)
             if not pand:
                 try:
-                    pand = db_query(
-                        "SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True
-                    )
+                    pand = db_query("SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True)
                 except (ValueError, TypeError):
                     pass
             if not pand:
                 self._send_json({"error": "Pand niet gevonden"}, 404)
                 return True
 
-            # Get all reserveringen for this property
             res_blocks = db_query("""
                 SELECT check_in, check_out, gast_naam, extern_id, status
                 FROM reserveringen
-                WHERE (pand_extern_id = %s OR pand_id = %s)
-                  AND status != 'geannuleerd'
+                WHERE (pand_extern_id = %s OR pand_id = %s) AND status != 'geannuleerd'
                 ORDER BY check_in
             """, (pand.get("extern_id", ""), pand["id"]))
 
-            # Get all blokkades
             blokkades = db_query("""
                 SELECT datum_start, datum_einde, reden, id
-                FROM beschikbaarheid_blokkades
-                WHERE woning_id = %s
-                ORDER BY datum_start
+                FROM beschikbaarheid_blokkades WHERE woning_id = %s ORDER BY datum_start
             """, (pand["id"],))
 
             blocked_dates = []
@@ -1347,37 +1737,31 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                 })
 
             self._send_json({
-                "pand_id": pand_id,
-                "pand_naam": pand["naam"],
+                "pand_id": pand_id, "pand_naam": pand["naam"],
                 "ical_url": pand.get("ical_url"),
                 "ical_last_sync": str(pand.get("ical_last_sync")) if pand.get("ical_last_sync") else None,
                 "blocked": blocked_dates
             })
             return True
 
-        # GET /api/woningen/<id>/blokkades  - List blokkades
+        # GET /api/woningen/<id>/blokkades
         m_blok = re.match(r"^/api/woningen/([a-zA-Z0-9\-]+)/blokkades$", path)
         if m_blok and self.command == "GET":
             pand_id = m_blok.group(1)
-            pand = db_query(
-                "SELECT * FROM woningen WHERE extern_id = %s", (pand_id,), fetchone=True
-            )
+            pand = db_query("SELECT * FROM woningen WHERE extern_id = %s", (pand_id,), fetchone=True)
             if not pand:
                 try:
-                    pand = db_query(
-                        "SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True
-                    )
+                    pand = db_query("SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True)
                 except (ValueError, TypeError):
                     pass
             if not pand:
                 self._send_json({"error": "Pand niet gevonden"}, 404)
                 return True
 
-            blokkades = db_query("""
-                SELECT * FROM beschikbaarheid_blokkades
-                WHERE woning_id = %s ORDER BY datum_start
-            """, (pand["id"],))
-
+            blokkades = db_query(
+                "SELECT * FROM beschikbaarheid_blokkades WHERE woning_id = %s ORDER BY datum_start",
+                (pand["id"],)
+            )
             self._send_json([_serialize(b) for b in blokkades])
             return True
 
@@ -1395,12 +1779,10 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                 totaal_woningen = db_query(
                     "SELECT COUNT(*) as cnt FROM woningen", fetchone=True
                 )["cnt"]
-
                 actieve_res = db_query(
                     "SELECT COUNT(*) as cnt FROM reserveringen WHERE status IN ('bevestigd', 'pending')",
                     fetchone=True
                 )["cnt"]
-
                 bezet = db_query("""
                     SELECT COUNT(DISTINCT w.id) as cnt
                     FROM woningen w
@@ -1408,7 +1790,6 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                     WHERE r.status = 'bevestigd'
                       AND r.check_in <= %s AND r.check_out > %s
                 """, (today, today), fetchone=True)["cnt"]
-
                 bezettingsgraad = round((bezet / totaal_woningen * 100) if totaal_woningen else 0)
 
                 omzet_row = db_query("""
@@ -1422,15 +1803,26 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                     SELECT * FROM reserveringen
                     WHERE check_in = %s AND status = 'bevestigd'
                 """, (today,))
-
                 checkouts_vandaag_rows = db_query("""
                     SELECT * FROM reserveringen
                     WHERE check_out = %s AND status = 'bevestigd'
                 """, (today,))
+                openstaand_rows = db_query(
+                    "SELECT * FROM reserveringen WHERE betaalstatus = 'openstaand'"
+                )
 
-                openstaand_rows = db_query("""
-                    SELECT * FROM reserveringen WHERE betaalstatus = 'openstaand'
-                """)
+                # Extra stats for short-stay
+                contract_count = 0
+                factuur_count = 0
+                try:
+                    contract_count = db_query(
+                        "SELECT COUNT(*) as cnt FROM contracten", fetchone=True
+                    )["cnt"]
+                    factuur_count = db_query(
+                        "SELECT COUNT(*) as cnt FROM facturen", fetchone=True
+                    )["cnt"]
+                except Exception:
+                    pass
 
                 self._send_json({
                     "totaal_woningen": totaal_woningen,
@@ -1440,6 +1832,8 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                     "checkins_vandaag": len(checkins_vandaag_rows),
                     "checkouts_vandaag": len(checkouts_vandaag_rows),
                     "openstaande_betalingen": len(openstaand_rows),
+                    "totaal_contracten": contract_count,
+                    "totaal_facturen": factuur_count,
                     "checkins_vandaag_detail": [_reservering_to_api(r) for r in checkins_vandaag_rows],
                     "checkouts_vandaag_detail": [_reservering_to_api(r) for r in checkouts_vandaag_rows],
                     "openstaand_detail": [_reservering_to_api(r) for r in openstaand_rows]
@@ -1456,6 +1850,10 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
         path = urlparse(self.path).path
 
         if self._route_health(path):
+            return True
+        if self._route_contracten(path):
+            return True
+        if self._route_facturen(path):
             return True
         if self._route_booking(path):
             return True
@@ -1500,7 +1898,6 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
 def main():
     port = 8088
 
-    # Test database connection
     try:
         conn = get_conn()
         put_conn(conn)
@@ -1508,22 +1905,26 @@ def main():
     except Exception as e:
         logger.error(f"Database connection failed: {e}")
         logger.error("Make sure PostgreSQL is running and the 'vastgoed' database exists.")
-        logger.error("Run sql/01_schema.sql and sql/02_seed.sql first.")
+        logger.error("Run sql/01_schema.sql, sql/02_seed.sql and sql/03_short_stay_migration.sql first.")
         return
 
     server = ThreadingHTTPServer(("0.0.0.0", port), VastgoedHandler)
-    logger.info(f"Data Consultants Stays server running on http://localhost:{port}")
+    logger.info(f"Data Consultants Stays - Luxury Short-Stay Platform")
+    logger.info(f"Server running on http://localhost:{port}")
     logger.info(f"Booking engine:  http://localhost:{port}/index.html")
     logger.info(f"Admin panel:     http://localhost:{port}/admin.html")
     logger.info(f"Health check:    http://localhost:{port}/api/health")
     logger.info("API endpoints:")
     logger.info("  GET  /api/health                              - Health check")
-    logger.info("  GET  /api/panden                              - List apartments")
-    logger.info("  GET  /api/panden?page=1&per_page=10           - Paginated listing")
+    logger.info("  GET  /api/panden                              - List properties")
     logger.info("  GET  /api/beschikbaarheid?checkin=&checkout=   - Check availability")
     logger.info("  POST /api/reservering                         - Create booking")
-    logger.info("  GET  /api/reserveringen                       - List bookings")
-    logger.info("  GET  /api/betalingen                          - List payments")
+    logger.info("  POST /api/contract/generate                   - Generate contract")
+    logger.info("  GET  /api/contract/<id>                       - View contract")
+    logger.info("  POST /api/factuur/generate                    - Generate invoice")
+    logger.info("  GET  /api/factuur/<id>                        - View invoice")
+    logger.info("  GET  /api/contracten                          - List contracts")
+    logger.info("  GET  /api/facturen                            - List invoices")
     logger.info("  GET  /api/stats                               - Dashboard stats")
     try:
         server.serve_forever()

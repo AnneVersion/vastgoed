@@ -3,69 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vastgoed Admin - Beheer</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='8' width='24' height='20' rx='2' fill='%234F46E5'/><polygon points='16,2 4,10 28,10' fill='%234F46E5'/><rect x='13' y='18' width='6' height='10' fill='%23818cf8'/><rect x='7' y='12' width='5' height='4' rx='1' fill='%23c7d2fe'/><rect x='20' y='12' width='5' height='4' rx='1' fill='%23c7d2fe'/></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<title>Data Consultants Stays - Admin</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='8' width='24' height='20' rx='2' fill='%23B8860B'/><polygon points='16,2 4,10 28,10' fill='%23B8860B'/><rect x='13' y='18' width='6' height='10' fill='%23D4A843'/><rect x='7' y='12' width='5' height='4' rx='1' fill='%23F5E6C8'/><rect x='20' y='12' width='5' height='4' rx='1' fill='%23F5E6C8'/></svg>">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --primary: #4F46E5;
-  --primary-light: #818cf8;
-  --primary-dark: #3730a3;
-  --primary-bg: rgba(79,70,229,0.08);
-  --primary-bg2: rgba(79,70,229,0.15);
-  --bg: #f8fafc;
+  --gold: #B8860B;
+  --gold-light: #D4A843;
+  --gold-dark: #8B6508;
+  --gold-bg: rgba(184,134,11,0.08);
+  --gold-bg2: rgba(184,134,11,0.15);
+  --bg: #F8F6F1;
   --bg-white: #ffffff;
-  --sidebar-bg: #1e1b4b;
-  --sidebar-text: #c4b5fd;
-  --sidebar-hover: rgba(255,255,255,0.08);
-  --sidebar-active: rgba(79,70,229,0.4);
-  --text: #1e293b;
-  --text-secondary: #64748b;
-  --text-muted: #94a3b8;
-  --border: #e2e8f0;
-  --border-light: #f1f5f9;
-  --success: #10b981;
-  --success-bg: rgba(16,185,129,0.1);
-  --warning: #f59e0b;
-  --warning-bg: rgba(245,158,11,0.1);
-  --danger: #ef4444;
-  --danger-bg: rgba(239,68,68,0.1);
-  --info: #3b82f6;
-  --info-bg: rgba(59,130,246,0.1);
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-lg: 16px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-  --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
-  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
-  --sidebar-width: 260px;
+  --sidebar-bg: #1A1A1A;
+  --sidebar-text: #A0A0A0;
+  --sidebar-hover: rgba(255,255,255,0.06);
+  --sidebar-active: rgba(184,134,11,0.3);
+  --text: #1A1A1A;
+  --text-secondary: #5A5A5A;
+  --text-muted: #8A8A8A;
+  --border: #E8E4DC;
+  --border-light: #F0ECE4;
+  --success: #2D8B4E;
+  --success-bg: rgba(45,139,78,0.1);
+  --warning: #D4A843;
+  --warning-bg: rgba(212,168,67,0.1);
+  --danger: #C0392B;
+  --danger-bg: rgba(192,57,43,0.1);
+  --info: #2E86C1;
+  --info-bg: rgba(46,134,193,0.1);
+  --radius: 8px;
+  --radius-sm: 6px;
+  --radius-lg: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.1);
+  --sidebar-width: 250px;
 }
 
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
 }
 
-/* ── ANIMATIONS ── */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
-@keyframes slideOutRight { from { transform: translateX(0); } to { transform: translateX(100%); } }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── LOGIN SCREEN ── */
+/* ── LOGIN ── */
 .login-screen {
   display: flex; align-items: center; justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+  background: linear-gradient(135deg, #1A1A1A 0%, #2C2C2C 50%, #3A3A3A 100%);
 }
 .login-box {
   background: var(--bg-white); border-radius: var(--radius-lg);
@@ -75,20 +69,18 @@ body {
 }
 .login-icon {
   width: 72px; height: 72px; border-radius: 18px;
-  background: var(--primary-bg2); display: flex;
+  background: var(--gold-bg2); display: flex;
   align-items: center; justify-content: center;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 1.5rem; font-size: 2rem;
 }
-.login-icon .material-icons-outlined { font-size: 36px; color: var(--primary); }
-.login-box h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: .5rem; color: var(--text); }
-.login-box p { color: var(--text-secondary); margin-bottom: 2rem; font-size: .9rem; }
+.login-box h2 { font-size: 1.3rem; font-weight: bold; margin-bottom: .5rem; }
+.login-box p { color: var(--text-secondary); margin-bottom: 2rem; font-size: .85rem; }
 .login-box input {
   width: 100%; padding: .85rem 1rem; border: 2px solid var(--border);
-  border-radius: var(--radius-sm); font-size: 1rem;
+  border-radius: var(--radius-sm); font-size: .9rem;
   font-family: inherit; outline: none; margin-bottom: 1rem;
-  transition: border-color .2s;
 }
-.login-box input:focus { border-color: var(--primary); }
+.login-box input:focus { border-color: var(--gold); }
 .login-error {
   color: var(--danger); font-size: .85rem; margin-bottom: 1rem;
   display: none; padding: .6rem; border-radius: var(--radius-sm);
@@ -98,22 +90,17 @@ body {
 /* ── BUTTONS ── */
 .btn {
   display: inline-flex; align-items: center; gap: .5rem;
-  padding: .65rem 1.25rem; border-radius: var(--radius-sm);
-  font-size: .875rem; font-family: inherit; font-weight: 600;
+  padding: .6rem 1.25rem; border-radius: var(--radius-sm);
+  font-size: .8rem; font-family: inherit; font-weight: bold;
   cursor: pointer; border: none; transition: all .2s; text-decoration: none;
 }
-.btn-primary { background: var(--primary); color: #fff; }
-.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-primary { background: var(--gold); color: #fff; }
+.btn-primary:hover { background: var(--gold-dark); transform: translateY(-1px); }
 .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
-.btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+.btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
 .btn-success { background: var(--success); color: #fff; }
-.btn-success:hover { background: #059669; }
 .btn-danger { background: var(--danger-bg); color: var(--danger); }
-.btn-danger:hover { background: rgba(239,68,68,0.2); }
-.btn-warning { background: var(--warning-bg); color: #b45309; }
-.btn-warning:hover { background: rgba(245,158,11,0.2); }
-.btn-sm { padding: .4rem .75rem; font-size: .8rem; }
-.btn-icon { padding: .5rem; border-radius: var(--radius-sm); }
+.btn-sm { padding: .35rem .7rem; font-size: .75rem; }
 .btn-block { width: 100%; justify-content: center; }
 
 /* ── LAYOUT ── */
@@ -125,7 +112,6 @@ body {
   width: var(--sidebar-width); background: var(--sidebar-bg);
   color: var(--sidebar-text); display: flex; flex-direction: column;
   position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
-  transition: transform .3s ease;
 }
 .sidebar-brand {
   padding: 1.5rem 1.25rem; display: flex; align-items: center; gap: .75rem;
@@ -133,687 +119,274 @@ body {
 }
 .sidebar-brand .brand-icon {
   width: 40px; height: 40px; border-radius: 10px;
-  background: var(--primary); display: flex;
-  align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: bold; color: #fff;
 }
-.sidebar-brand .brand-icon .material-icons-outlined { font-size: 22px; color: #fff; }
-.sidebar-brand .brand-text h3 { font-size: .95rem; font-weight: 700; color: #fff; line-height: 1.2; }
-.sidebar-brand .brand-text span { font-size: .7rem; color: var(--sidebar-text); opacity: .7; }
-
+.sidebar-brand .brand-text h3 { font-size: .85rem; font-weight: bold; color: #fff; line-height: 1.2; }
+.sidebar-brand .brand-text span { font-size: .65rem; color: var(--sidebar-text); opacity: .7; }
 .sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
 .sidebar-nav .nav-label {
-  font-size: .65rem; text-transform: uppercase; letter-spacing: .08em;
-  padding: 1rem 1.25rem .5rem; color: rgba(255,255,255,0.3); font-weight: 700;
+  font-size: .6rem; text-transform: uppercase; letter-spacing: .1em;
+  padding: 1rem 1.25rem .5rem; color: rgba(255,255,255,0.25); font-weight: bold;
 }
 .nav-item {
   display: flex; align-items: center; gap: .75rem;
-  padding: .7rem 1.25rem; margin: 2px .5rem; border-radius: var(--radius-sm);
-  cursor: pointer; transition: all .2s; font-size: .875rem; font-weight: 500;
+  padding: .65rem 1.25rem; margin: 2px .5rem; border-radius: var(--radius-sm);
+  cursor: pointer; transition: all .2s; font-size: .8rem; font-weight: bold;
   color: var(--sidebar-text); user-select: none;
 }
 .nav-item:hover { background: var(--sidebar-hover); color: #fff; }
-.nav-item.active {
-  background: var(--sidebar-active); color: #fff;
-  box-shadow: 0 0 0 1px rgba(79,70,229,0.5);
-}
-.nav-item .material-icons-outlined { font-size: 20px; }
+.nav-item.active { background: var(--sidebar-active); color: #fff; }
 .nav-item .badge {
   margin-left: auto; background: var(--danger); color: #fff;
-  font-size: .65rem; padding: .15rem .45rem; border-radius: 10px; font-weight: 700;
+  font-size: .6rem; padding: .15rem .4rem; border-radius: 8px; font-weight: bold;
 }
-
 .sidebar-footer {
   padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.06);
-  font-size: .8rem;
+  font-size: .75rem;
 }
-.sidebar-footer .user-info { display: flex; align-items: center; gap: .6rem; }
-.sidebar-footer .user-avatar {
-  width: 32px; height: 32px; border-radius: 8px;
-  background: var(--primary); display: flex;
-  align-items: center; justify-content: center;
-  font-size: .8rem; font-weight: 700; color: #fff;
-}
-.sidebar-footer .user-name { font-weight: 600; color: #fff; font-size: .8rem; }
-.sidebar-footer .user-role { font-size: .7rem; color: var(--sidebar-text); }
 .logout-btn {
-  margin-top: .75rem; width: 100%; display: flex; align-items: center;
+  margin-top: .5rem; width: 100%; display: flex; align-items: center;
   gap: .5rem; padding: .5rem .75rem; border-radius: var(--radius-sm);
   background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
   color: var(--sidebar-text); cursor: pointer; font-family: inherit;
-  font-size: .8rem; transition: all .2s;
+  font-size: .75rem; transition: all .2s;
 }
-.logout-btn:hover { background: rgba(239,68,68,0.15); color: #ef4444; border-color: rgba(239,68,68,0.3); }
+.logout-btn:hover { background: rgba(192,57,43,0.15); color: #ef4444; }
 
-/* ── MAIN CONTENT ── */
-.main-content {
-  flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
-}
+/* ── MAIN ── */
+.main-content { flex: 1; margin-left: var(--sidebar-width); min-height: 100vh; }
 .content-header {
   background: var(--bg-white); border-bottom: 1px solid var(--border);
   padding: 1.25rem 2rem; display: flex; align-items: center;
   justify-content: space-between; position: sticky; top: 0; z-index: 50;
 }
-.content-header h1 { font-size: 1.35rem; font-weight: 700; }
-.content-header .header-meta { font-size: .85rem; color: var(--text-secondary); }
+.content-header h1 { font-size: 1.2rem; font-weight: bold; }
+.content-header .header-meta { font-size: .8rem; color: var(--text-secondary); }
 .content-body { padding: 1.5rem 2rem 3rem; }
 
-/* ── TAB PANELS ── */
-.tab-panel { display: none; animation: fadeIn .3s ease; }
+/* ── TABS ── */
+.tab-panel { display: none; animation: fadeIn 0.3s ease; }
 .tab-panel.active { display: block; }
 
 /* ── STAT CARDS ── */
 .stats-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.25rem; margin-bottom: 1.5rem;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem; margin-bottom: 2rem;
 }
 .stat-card {
-  background: var(--bg-white); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1.25rem 1.5rem;
-  box-shadow: var(--shadow); transition: all .3s;
+  background: var(--bg-white); border-radius: var(--radius-lg);
+  padding: 1.5rem; box-shadow: var(--shadow);
+  border: 1px solid var(--border-light);
 }
-.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.stat-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: .75rem; }
-.stat-icon {
-  width: 44px; height: 44px; border-radius: var(--radius-sm);
-  display: flex; align-items: center; justify-content: center;
-}
-.stat-icon.blue { background: var(--info-bg); color: var(--info); }
-.stat-icon.green { background: var(--success-bg); color: var(--success); }
-.stat-icon.yellow { background: var(--warning-bg); color: var(--warning); }
-.stat-icon.purple { background: var(--primary-bg); color: var(--primary); }
-.stat-label { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-secondary); font-weight: 600; }
-.stat-value { font-size: 1.75rem; font-weight: 800; color: var(--text); margin-top: .25rem; }
-.stat-sub { font-size: .8rem; color: var(--text-muted); margin-top: .25rem; }
+.stat-card .stat-label { font-size: .7rem; color: var(--text-muted); font-weight: bold; text-transform: uppercase; letter-spacing: .05em; }
+.stat-card .stat-value { font-size: 1.8rem; font-weight: bold; margin: .25rem 0; }
+.stat-card .stat-sub { font-size: .75rem; color: var(--text-secondary); }
+.stat-card.gold .stat-value { color: var(--gold); }
+.stat-card.green .stat-value { color: var(--success); }
+.stat-card.blue .stat-value { color: var(--info); }
 
-/* ── CARDS ── */
-.card {
-  background: var(--bg-white); border: 1px solid var(--border);
-  border-radius: var(--radius); box-shadow: var(--shadow);
-  overflow: hidden;
+/* ── TABLE ── */
+.data-table-wrapper {
+  background: var(--bg-white); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow); overflow: hidden;
+  border: 1px solid var(--border-light);
 }
-.card-header {
+.table-header {
   padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-light);
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; justify-content: space-between; align-items: center;
 }
-.card-header h3 { font-size: .95rem; font-weight: 700; display: flex; align-items: center; gap: .5rem; }
-.card-body { padding: 1.25rem 1.5rem; }
-
-/* ── TABLES ── */
-.table-container { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: .875rem; }
-thead th {
-  text-align: left; padding: .75rem 1rem; background: var(--bg);
-  border-bottom: 2px solid var(--border); font-weight: 600;
-  font-size: .75rem; text-transform: uppercase; letter-spacing: .04em;
-  color: var(--text-secondary); white-space: nowrap;
+.table-header h3 { font-size: .95rem; }
+.data-table {
+  width: 100%; border-collapse: collapse;
 }
-tbody td {
-  padding: .75rem 1rem; border-bottom: 1px solid var(--border-light);
+.data-table th {
+  text-align: left; padding: .75rem 1rem;
+  font-size: .7rem; font-weight: bold; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .05em;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg);
+}
+.data-table td {
+  padding: .75rem 1rem; font-size: .8rem;
+  border-bottom: 1px solid var(--border-light);
   vertical-align: middle;
 }
-tbody tr { transition: background .15s; }
-tbody tr:hover { background: var(--bg); }
-tbody tr:last-child td { border-bottom: none; }
+.data-table tr:hover { background: rgba(184,134,11,0.02); }
+.data-table .empty-row td {
+  text-align: center; padding: 3rem; color: var(--text-muted);
+}
 
-/* ── BADGES / STATUS ── */
+/* ── BADGES ── */
 .badge {
-  display: inline-flex; align-items: center; gap: .3rem;
-  padding: .25rem .65rem; border-radius: 20px; font-size: .75rem; font-weight: 600;
+  display: inline-flex; align-items: center; padding: .2rem .6rem;
+  border-radius: 4px; font-size: .7rem; font-weight: bold;
 }
 .badge-success { background: var(--success-bg); color: var(--success); }
-.badge-warning { background: var(--warning-bg); color: #b45309; }
+.badge-warning { background: var(--warning-bg); color: #8B6508; }
 .badge-danger { background: var(--danger-bg); color: var(--danger); }
 .badge-info { background: var(--info-bg); color: var(--info); }
-.badge-neutral { background: var(--bg); color: var(--text-secondary); border: 1px solid var(--border); }
-
-/* ── FILTER BAR ── */
-.filter-bar {
-  display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 1.25rem;
-  align-items: center;
-}
-.filter-bar input, .filter-bar select {
-  padding: .55rem .85rem; border: 1px solid var(--border);
-  border-radius: var(--radius-sm); font-family: inherit;
-  font-size: .85rem; outline: none; background: var(--bg-white);
-  transition: border-color .2s;
-}
-.filter-bar input:focus, .filter-bar select:focus { border-color: var(--primary); }
-.filter-bar input { min-width: 220px; }
-
-/* ── CHARTS ── */
-.charts-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem;
-}
-.chart-container { position: relative; height: 260px; }
-.chart-container canvas { width: 100% !important; height: 100% !important; }
-
-/* ── BAR CHART (CSS only) ── */
-.css-chart { display: flex; align-items: flex-end; gap: 6px; height: 200px; padding-top: 1rem; }
-.css-bar {
-  flex: 1; background: linear-gradient(to top, var(--primary), var(--primary-light));
-  border-radius: 4px 4px 0 0; min-height: 4px;
-  transition: height .6s ease; position: relative; cursor: pointer;
-}
-.css-bar:hover { opacity: .85; }
-.css-bar .bar-label {
-  position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%);
-  font-size: .65rem; color: var(--text-muted); white-space: nowrap;
-}
-.css-bar .bar-value {
-  position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
-  font-size: .7rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap;
-}
-.css-line-chart { position: relative; height: 200px; padding: 1rem 0; }
-
-/* ── ALERTS LIST ── */
-.alert-list { display: flex; flex-direction: column; gap: .5rem; }
-.alert-item {
-  display: flex; align-items: center; gap: .75rem;
-  padding: .65rem 1rem; background: var(--bg); border-radius: var(--radius-sm);
-  border: 1px solid var(--border-light); transition: border-color .2s;
-}
-.alert-item:hover { border-color: var(--border); }
-.alert-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.alert-dot.green { background: var(--success); }
-.alert-dot.red { background: var(--danger); }
-.alert-dot.yellow { background: var(--warning); }
-.alert-dot.blue { background: var(--info); }
-.alert-text { font-size: .85rem; color: var(--text); flex: 1; }
-.alert-time { font-size: .75rem; color: var(--text-muted); white-space: nowrap; }
-
-/* ── PROPERTY GRID ── */
-.property-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 1.25rem;
-}
-.property-card {
-  background: var(--bg-white); border: 1px solid var(--border);
-  border-radius: var(--radius); overflow: hidden;
-  box-shadow: var(--shadow); transition: all .3s; cursor: pointer;
-}
-.property-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-.property-img {
-  height: 160px; position: relative; overflow: hidden;
-}
-.property-img-gradient {
-  width: 100%; height: 100%;
-}
-.property-img .property-badge {
-  position: absolute; top: .75rem; right: .75rem;
-}
-.property-info { padding: 1rem 1.25rem; }
-.property-name { font-weight: 700; font-size: 1rem; margin-bottom: .25rem; }
-.property-address { font-size: .8rem; color: var(--text-secondary); display: flex; align-items: center; gap: .3rem; margin-bottom: .75rem; }
-.property-meta { display: flex; gap: 1rem; font-size: .8rem; color: var(--text-secondary); margin-bottom: .75rem; }
-.property-meta span { display: flex; align-items: center; gap: .25rem; }
-.property-price { font-weight: 700; font-size: 1.1rem; color: var(--primary); }
-.property-price span { font-size: .8rem; font-weight: 400; color: var(--text-muted); }
-.property-actions {
-  padding: .75rem 1.25rem; border-top: 1px solid var(--border-light);
-  display: flex; gap: .5rem; justify-content: flex-end;
-}
-
-/* ── SLIDE PANEL ── */
-.slide-panel-overlay {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
-  z-index: 200; animation: fadeIn .2s;
-}
-.slide-panel-overlay.active { display: block; }
-.slide-panel {
-  position: fixed; top: 0; right: 0; bottom: 0; width: 560px;
-  max-width: 95vw; background: var(--bg-white); z-index: 201;
-  box-shadow: -10px 0 40px rgba(0,0,0,0.15);
-  animation: slideInRight .3s ease;
-  display: flex; flex-direction: column;
-}
-.slide-panel-header {
-  padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.slide-panel-header h3 { font-size: 1.1rem; font-weight: 700; }
-.slide-panel-close {
-  width: 36px; height: 36px; border: none; background: var(--bg);
-  border-radius: var(--radius-sm); cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .2s; color: var(--text-secondary);
-}
-.slide-panel-close:hover { background: var(--danger-bg); color: var(--danger); }
-.slide-panel-body { flex: 1; overflow-y: auto; padding: 1.5rem; }
-.slide-panel-footer {
-  padding: 1rem 1.5rem; border-top: 1px solid var(--border);
-  display: flex; gap: .75rem; justify-content: flex-end;
-}
-
-/* ── FORMS ── */
-.form-group { margin-bottom: 1.25rem; }
-.form-group label {
-  display: block; font-size: .8rem; font-weight: 600;
-  color: var(--text-secondary); margin-bottom: .4rem;
-}
-.form-group input, .form-group select, .form-group textarea {
-  width: 100%; padding: .65rem .85rem; border: 1px solid var(--border);
-  border-radius: var(--radius-sm); font-family: inherit; font-size: .9rem;
-  outline: none; transition: border-color .2s; background: var(--bg-white);
-}
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); }
-.form-group textarea { min-height: 80px; resize: vertical; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
-
-.checkbox-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: .5rem;
-}
-.checkbox-item {
-  display: flex; align-items: center; gap: .5rem;
-  font-size: .85rem; cursor: pointer; padding: .4rem .6rem;
-  border-radius: var(--radius-sm); transition: background .15s;
-}
-.checkbox-item:hover { background: var(--bg); }
-.checkbox-item input[type=checkbox] {
-  width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer;
-}
-
-/* ── CALENDAR ── */
-.calendar-container { margin-top: 1rem; }
-.calendar-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 1rem;
-}
-.calendar-header h3 { font-size: 1.1rem; font-weight: 700; }
-.calendar-nav { display: flex; gap: .5rem; }
-.calendar-grid {
-  display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
-}
-.calendar-day-header {
-  padding: .5rem; text-align: center; font-size: .75rem;
-  font-weight: 700; color: var(--text-secondary); text-transform: uppercase;
-}
-.calendar-day {
-  min-height: 80px; padding: .4rem; border: 1px solid var(--border-light);
-  border-radius: 4px; font-size: .8rem; background: var(--bg-white);
-  transition: background .15s; cursor: pointer; position: relative;
-}
-.calendar-day:hover { background: var(--bg); }
-.calendar-day.other-month { opacity: .4; }
-.calendar-day .day-number { font-weight: 600; color: var(--text); margin-bottom: .25rem; }
-.calendar-day.today { background: var(--primary-bg); border-color: var(--primary-light); }
-.calendar-booking {
-  font-size: .65rem; padding: .15rem .35rem; border-radius: 3px;
-  margin-bottom: 2px; white-space: nowrap; overflow: hidden;
-  text-overflow: ellipsis; font-weight: 500;
-}
-.calendar-booking.booked { background: var(--info-bg); color: var(--info); }
-.calendar-booking.pending { background: var(--warning-bg); color: #b45309; }
-.calendar-booking.blocked { background: var(--danger-bg); color: var(--danger); }
-
-/* ── iDEAL MODAL ── */
-.modal-overlay {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-  z-index: 300; align-items: center; justify-content: center;
-}
-.modal-overlay.active { display: flex; }
-.modal {
-  background: var(--bg-white); border-radius: var(--radius-lg);
-  max-width: 480px; width: 90%; box-shadow: var(--shadow-lg);
-  animation: fadeInUp .3s ease; overflow: hidden;
-}
-.modal-header {
-  padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.modal-header h3 { font-size: 1.05rem; font-weight: 700; }
-.modal-body { padding: 1.5rem; }
-.modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; gap: .75rem; justify-content: flex-end; }
-
-.ideal-banks { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin: 1rem 0; }
-.ideal-bank {
-  display: flex; align-items: center; gap: .6rem;
-  padding: .75rem 1rem; border: 2px solid var(--border);
-  border-radius: var(--radius-sm); cursor: pointer;
-  transition: all .2s; font-size: .85rem; font-weight: 500;
-}
-.ideal-bank:hover { border-color: var(--primary-light); background: var(--primary-bg); }
-.ideal-bank.selected { border-color: var(--primary); background: var(--primary-bg); }
-.ideal-bank-logo {
-  width: 32px; height: 32px; border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: .7rem; color: #fff;
-}
-
-.ideal-progress { text-align: center; padding: 2rem 1rem; }
-.ideal-spinner {
-  width: 48px; height: 48px; border: 4px solid var(--border);
-  border-top-color: var(--primary); border-radius: 50%;
-  animation: spin 1s linear infinite; margin: 0 auto 1rem;
-}
-.ideal-success .material-icons-outlined { font-size: 64px; color: var(--success); }
-
-/* ── PAYMENT TOTALS ── */
-.payment-totals {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem; margin-bottom: 1.5rem;
-}
-.payment-total-card {
-  background: var(--bg-white); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1rem 1.25rem;
-  box-shadow: var(--shadow);
-}
-.payment-total-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-secondary); font-weight: 600; }
-.payment-total-value { font-size: 1.35rem; font-weight: 800; margin-top: .25rem; }
-
-/* ── MINI CALENDAR (property detail) ── */
-.mini-calendar { margin-top: 1rem; }
-.mini-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-.mini-cal-header { text-align: center; font-size: .65rem; font-weight: 700; color: var(--text-muted); padding: .25rem; }
-.mini-cal-day {
-  text-align: center; padding: .35rem; font-size: .75rem; border-radius: 4px;
-  cursor: default;
-}
-.mini-cal-day.available { background: var(--success-bg); color: var(--success); }
-.mini-cal-day.booked { background: var(--info-bg); color: var(--info); }
-.mini-cal-day.blocked { background: var(--danger-bg); color: var(--danger); }
-.mini-cal-day.empty { background: transparent; }
-
-/* ── EXPANDABLE ROW ── */
-.expandable-details {
-  display: none; background: var(--bg); padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--border-light);
-}
-.expandable-details.active { display: block; animation: fadeIn .2s; }
-.detail-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
-.detail-item label { font-size: .7rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
-.detail-item p { font-size: .85rem; color: var(--text); font-weight: 500; }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 1024px) {
-  .charts-grid { grid-template-columns: 1fr; }
-  .form-row, .form-row-3 { grid-template-columns: 1fr; }
-  .detail-grid { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 768px) {
-  .sidebar { transform: translateX(-100%); }
-  .sidebar.open { transform: translateX(0); }
-  .main-content { margin-left: 0; }
-  .content-header { padding: 1rem; }
-  .content-body { padding: 1rem; }
-  .stats-grid { grid-template-columns: 1fr 1fr; }
-  .property-grid { grid-template-columns: 1fr; }
-  .slide-panel { width: 100%; }
-  .mobile-menu-btn { display: flex !important; }
-}
-
-.mobile-menu-btn {
-  display: none; width: 40px; height: 40px; border: none;
-  background: var(--bg); border-radius: var(--radius-sm);
-  align-items: center; justify-content: center; cursor: pointer;
-}
+.badge-muted { background: var(--bg); color: var(--text-muted); }
 
 /* ── TOAST ── */
-.toast-container { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 500; display: flex; flex-direction: column; gap: .5rem; }
 .toast {
-  background: var(--bg-white); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); padding: .85rem 1.25rem;
-  box-shadow: var(--shadow-lg); display: flex; align-items: center;
-  gap: .6rem; min-width: 300px; animation: slideInRight .3s ease;
-  font-size: .875rem;
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;
+  background: var(--text); color: white; padding: 1rem 1.5rem;
+  border-radius: var(--radius); font-size: .85rem;
+  box-shadow: var(--shadow-lg); animation: fadeInUp 0.3s ease;
+  max-width: 400px;
 }
-.toast.success { border-left: 4px solid var(--success); }
-.toast.error { border-left: 4px solid var(--danger); }
-.toast.info { border-left: 4px solid var(--info); }
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
 
-/* ── EMPTY STATE ── */
-.empty-state {
-  text-align: center; padding: 3rem 2rem; color: var(--text-muted);
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .main-content { margin-left: 0; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .content-body { padding: 1rem; }
 }
-.empty-state .material-icons-outlined { font-size: 48px; margin-bottom: 1rem; opacity: .5; }
-.empty-state p { font-size: .9rem; }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════ LOGIN SCREEN ═══════════════ -->
+<!-- ── LOGIN ── -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
-    <div class="login-icon">
-      <span class="material-icons-outlined">apartment</span>
-    </div>
-    <h2>Vastgoed Admin</h2>
-    <p>Log in om het beheerpaneel te openen</p>
+    <div class="login-icon">&#127968;</div>
+    <h2>Admin Panel</h2>
+    <p>Data Consultants Stays - Beheer</p>
     <div class="login-error" id="loginError">Onjuist wachtwoord</div>
     <input type="password" id="loginPassword" placeholder="Wachtwoord" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="btn btn-primary btn-block" onclick="doLogin()">
-      <span class="material-icons-outlined" style="font-size:18px">login</span>
-      Inloggen
-    </button>
+    <button class="btn btn-primary btn-block" onclick="doLogin()">Inloggen</button>
   </div>
 </div>
 
-<!-- ═══════════════ APP LAYOUT ═══════════════ -->
+<!-- ── APP LAYOUT ── -->
 <div class="app-layout" id="appLayout">
-
-  <!-- ── SIDEBAR ── -->
-  <aside class="sidebar" id="sidebar">
+  <!-- Sidebar -->
+  <aside class="sidebar">
     <div class="sidebar-brand">
-      <div class="brand-icon"><span class="material-icons-outlined">apartment</span></div>
+      <div class="brand-icon">DC</div>
       <div class="brand-text">
-        <h3>VastgoedBeheer</h3>
-        <span>Property Management</span>
+        <h3>DC Stays</h3>
+        <span>Admin Panel</span>
       </div>
     </div>
-
     <nav class="sidebar-nav">
-      <div class="nav-label">Hoofdmenu</div>
-      <div class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
-        <span class="material-icons-outlined">dashboard</span>
-        Dashboard
-      </div>
-      <div class="nav-item" data-tab="woningen" onclick="switchTab('woningen')">
-        <span class="material-icons-outlined">home_work</span>
-        Woningen
-      </div>
-      <div class="nav-item" data-tab="reserveringen" onclick="switchTab('reserveringen')">
-        <span class="material-icons-outlined">book_online</span>
-        Reserveringen
-        <span class="badge" id="resBadge" style="display:none">0</span>
-      </div>
-
-      <div class="nav-label">Financieel</div>
-      <div class="nav-item" data-tab="betalingen" onclick="switchTab('betalingen')">
-        <span class="material-icons-outlined">payments</span>
-        Betalingen
-      </div>
-
+      <div class="nav-label">Beheer</div>
+      <div class="nav-item active" onclick="switchTab('dashboard')">&#128200; Dashboard</div>
+      <div class="nav-item" onclick="switchTab('panden')">&#127968; Residences</div>
+      <div class="nav-item" onclick="switchTab('reserveringen')">&#128197; Reserveringen</div>
+      <div class="nav-item" onclick="switchTab('betalingen')">&#128179; Betalingen</div>
+      <div class="nav-label">Documenten</div>
+      <div class="nav-item" onclick="switchTab('contracten')">&#128196; Contracten</div>
+      <div class="nav-item" onclick="switchTab('facturen')">&#128203; Facturen</div>
       <div class="nav-label">Planning</div>
-      <div class="nav-item" data-tab="kalender" onclick="switchTab('kalender')">
-        <span class="material-icons-outlined">calendar_month</span>
-        Kalender
-      </div>
+      <div class="nav-item" onclick="switchTab('kalender')">&#128197; Kalender</div>
     </nav>
-
     <div class="sidebar-footer">
-      <div class="user-info">
-        <div class="user-avatar">A</div>
-        <div>
-          <div class="user-name">Admin</div>
-          <div class="user-role">Beheerder</div>
-        </div>
-      </div>
-      <button class="logout-btn" onclick="doLogout()">
-        <span class="material-icons-outlined" style="font-size:16px">logout</span>
-        Uitloggen
-      </button>
+      <div style="font-weight:bold;color:#fff;font-size:.8rem;">Beheerder</div>
+      <div style="font-size:.7rem;color:var(--sidebar-text);">admin@dataconsultants.nl</div>
+      <button class="logout-btn" onclick="doLogout()">&#128682; Uitloggen</button>
     </div>
   </aside>
 
-  <!-- ── MAIN ── -->
+  <!-- Main Content -->
   <main class="main-content">
-    <div class="content-header">
+    <header class="content-header">
       <div>
-        <button class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">
-          <span class="material-icons-outlined">menu</span>
-        </button>
         <h1 id="pageTitle">Dashboard</h1>
-        <div class="header-meta" id="pageMeta">Overzicht van uw vastgoed portfolio</div>
+        <span class="header-meta" id="pageMeta"></span>
       </div>
-      <div style="display:flex;align-items:center;gap:.75rem">
-        <span class="header-meta" id="headerDate"></span>
-      </div>
-    </div>
-
+      <div id="headerActions"></div>
+    </header>
     <div class="content-body">
 
-      <!-- ═══════════ DASHBOARD TAB ═══════════ -->
+      <!-- ═══ DASHBOARD ═══ -->
       <div class="tab-panel active" id="tab-dashboard">
-        <div class="stats-grid" id="dashStats"></div>
-
-        <div class="charts-grid">
-          <div class="card">
-            <div class="card-header"><h3><span class="material-icons-outlined" style="font-size:18px;color:var(--primary)">bar_chart</span> Bezetting per week</h3></div>
-            <div class="card-body">
-              <div class="css-chart" id="chartBezetting"></div>
-              <div style="height:24px"></div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header"><h3><span class="material-icons-outlined" style="font-size:18px;color:var(--success)">trending_up</span> Inkomsten per maand</h3></div>
-            <div class="card-body">
-              <div class="css-chart" id="chartInkomsten"></div>
-              <div style="height:24px"></div>
-            </div>
-          </div>
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card gold"><div class="stat-label">Residences</div><div class="stat-value" id="statWoningen">-</div></div>
+          <div class="stat-card green"><div class="stat-label">Actieve reserveringen</div><div class="stat-value" id="statReserveringen">-</div></div>
+          <div class="stat-card blue"><div class="stat-label">Bezettingsgraad</div><div class="stat-value" id="statBezetting">-</div></div>
+          <div class="stat-card gold"><div class="stat-label">Omzet deze maand</div><div class="stat-value" id="statOmzet">-</div></div>
+          <div class="stat-card"><div class="stat-label">Contracten</div><div class="stat-value" id="statContracten">-</div></div>
+          <div class="stat-card"><div class="stat-label">Facturen</div><div class="stat-value" id="statFacturen">-</div></div>
         </div>
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
-          <div class="card">
-            <div class="card-header"><h3><span class="material-icons-outlined" style="font-size:18px;color:var(--info)">schedule</span> Recente reserveringen</h3></div>
-            <div class="card-body" id="recentReservations"></div>
-          </div>
-          <div class="card">
-            <div class="card-header">
-              <h3><span class="material-icons-outlined" style="font-size:18px;color:var(--warning)">notifications_active</span> Meldingen</h3>
-            </div>
-            <div class="card-body">
-              <div class="alert-list" id="alertsList"></div>
-            </div>
-          </div>
+        <div class="data-table-wrapper">
+          <div class="table-header"><h3>Recente reserveringen</h3></div>
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>Gast</th><th>Residence</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Bedrag</th></tr></thead>
+            <tbody id="dashRecentTable"><tr class="empty-row"><td colspan="7">Laden...</td></tr></tbody>
+          </table>
         </div>
       </div>
 
-      <!-- ═══════════ WONINGEN TAB ═══════════ -->
-      <div class="tab-panel" id="tab-woningen">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem">
-          <div class="filter-bar" style="margin-bottom:0">
-            <input type="text" id="woningenSearch" placeholder="Zoek op naam of adres..." oninput="renderWoningen()">
-            <select id="woningenTypeFilter" onchange="renderWoningen()">
-              <option value="">Alle types</option>
-              <option value="studio">Studio</option>
-              <option value="appartement">Appartement</option>
-              <option value="woonhuis">Woonhuis</option>
-              <option value="penthouse">Penthouse</option>
-            </select>
-          </div>
-          <button class="btn btn-primary" onclick="openAddProperty()">
-            <span class="material-icons-outlined" style="font-size:18px">add</span>
-            Nieuwe woning
-          </button>
+      <!-- ═══ PANDEN ═══ -->
+      <div class="tab-panel" id="tab-panden">
+        <div class="data-table-wrapper">
+          <div class="table-header"><h3>Alle Residences</h3></div>
+          <table class="data-table">
+            <thead><tr><th>Naam</th><th>Type</th><th>Stad</th><th>m&sup2;</th><th>Maandprijs</th><th>Borg</th><th>Status</th></tr></thead>
+            <tbody id="pandenTable"><tr class="empty-row"><td colspan="7">Laden...</td></tr></tbody>
+          </table>
         </div>
-        <div class="property-grid" id="woningenGrid"></div>
       </div>
 
-      <!-- ═══════════ RESERVERINGEN TAB ═══════════ -->
+      <!-- ═══ RESERVERINGEN ═══ -->
       <div class="tab-panel" id="tab-reserveringen">
-        <div class="filter-bar">
-          <input type="text" id="resSearch" placeholder="Zoek op naam of ID..." oninput="renderReserveringen()">
-          <select id="resStatusFilter" onchange="renderReserveringen()">
-            <option value="">Alle statussen</option>
-            <option value="bevestigd">Bevestigd</option>
-            <option value="pending">Pending</option>
-            <option value="geannuleerd">Geannuleerd</option>
-          </select>
-          <select id="resBetaalFilter" onchange="renderReserveringen()">
-            <option value="">Alle betaalstatussen</option>
-            <option value="betaald">Betaald</option>
-            <option value="openstaand">Openstaand</option>
-            <option value="terugbetaald">Terugbetaald</option>
-          </select>
-          <input type="date" id="resDateFrom" onchange="renderReserveringen()" title="Vanaf datum">
-          <input type="date" id="resDateTo" onchange="renderReserveringen()" title="Tot datum">
-          <button class="btn btn-primary btn-sm" onclick="openNewReservation()">
-            <span class="material-icons-outlined" style="font-size:16px">add</span>
-            Nieuw
-          </button>
-        </div>
-        <div class="card">
-          <div class="table-container">
-            <table id="resTable">
-              <thead>
-                <tr>
-                  <th>ID</th><th>Gast</th><th>Woning</th><th>Check-in</th><th>Check-out</th>
-                  <th>Gasten</th><th>Totaal</th><th>Status</th><th>Betaling</th><th>Acties</th>
-                </tr>
-              </thead>
-              <tbody id="resTableBody"></tbody>
-            </table>
-          </div>
+        <div class="data-table-wrapper">
+          <div class="table-header"><h3>Alle Reserveringen</h3></div>
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>Gast</th><th>Residence</th><th>Check-in</th><th>Check-out</th><th>Gasten</th><th>Status</th><th>Bedrag</th><th>Acties</th></tr></thead>
+            <tbody id="reserveringenTable"><tr class="empty-row"><td colspan="9">Laden...</td></tr></tbody>
+          </table>
         </div>
       </div>
 
-      <!-- ═══════════ BETALINGEN TAB ═══════════ -->
+      <!-- ═══ BETALINGEN ═══ -->
       <div class="tab-panel" id="tab-betalingen">
-        <div class="payment-totals" id="paymentTotals"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.75rem">
-          <div class="filter-bar" style="margin-bottom:0">
-            <input type="text" id="paySearch" placeholder="Zoek op gast of ID..." oninput="renderBetalingen()">
-            <select id="payStatusFilter" onchange="renderBetalingen()">
-              <option value="">Alle statussen</option>
-              <option value="voltooid">Voltooid</option>
-              <option value="pending">Pending</option>
-              <option value="terugbetaald">Terugbetaald</option>
-            </select>
-          </div>
-          <button class="btn btn-secondary btn-sm" onclick="exportBetalingenCSV()">
-            <span class="material-icons-outlined" style="font-size:16px">download</span>
-            Exporteer CSV
-          </button>
-        </div>
-        <div class="card">
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Datum</th><th>ID</th><th>Reservering</th><th>Gast</th>
-                  <th>Bedrag</th><th>Methode</th><th>Bank</th><th>Status</th><th>Acties</th>
-                </tr>
-              </thead>
-              <tbody id="payTableBody"></tbody>
-            </table>
-          </div>
+        <div class="data-table-wrapper">
+          <div class="table-header"><h3>Alle Betalingen</h3></div>
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>Gast</th><th>Bedrag</th><th>Methode</th><th>Bank</th><th>Status</th><th>Datum</th><th>Acties</th></tr></thead>
+            <tbody id="betalingenTable"><tr class="empty-row"><td colspan="8">Laden...</td></tr></tbody>
+          </table>
         </div>
       </div>
 
-      <!-- ═══════════ KALENDER TAB ═══════════ -->
+      <!-- ═══ CONTRACTEN ═══ -->
+      <div class="tab-panel" id="tab-contracten">
+        <div class="data-table-wrapper">
+          <div class="table-header"><h3>Alle Contracten</h3></div>
+          <table class="data-table">
+            <thead><tr><th>Contract Nr</th><th>Reservering</th><th>Ondertekend</th><th>Datum ondertekend</th><th>Aangemaakt</th><th>Acties</th></tr></thead>
+            <tbody id="contractenTable"><tr class="empty-row"><td colspan="6">Laden...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══ FACTUREN ═══ -->
+      <div class="tab-panel" id="tab-facturen">
+        <div class="data-table-wrapper">
+          <div class="table-header"><h3>Alle Facturen</h3></div>
+          <table class="data-table">
+            <thead><tr><th>Factuur Nr</th><th>Reservering</th><th>Excl. BTW</th><th>BTW</th><th>Totaal</th><th>Status</th><th>Vervaldatum</th><th>Acties</th></tr></thead>
+            <tbody id="facturenTable"><tr class="empty-row"><td colspan="8">Laden...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══ KALENDER ═══ -->
       <div class="tab-panel" id="tab-kalender">
-        <div class="card">
-          <div class="card-header">
-            <div class="calendar-nav">
-              <button class="btn btn-secondary btn-sm" onclick="calendarPrev()">
-                <span class="material-icons-outlined" style="font-size:16px">chevron_left</span>
-              </button>
-              <h3 id="calendarTitle" style="margin:0 1rem;min-width:160px;text-align:center"></h3>
-              <button class="btn btn-secondary btn-sm" onclick="calendarNext()">
-                <span class="material-icons-outlined" style="font-size:16px">chevron_right</span>
-              </button>
-            </div>
-            <div style="display:flex;gap:.75rem;align-items:center">
-              <span class="badge badge-success" style="font-size:.7rem"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--success);margin-right:4px"></span> Beschikbaar</span>
-              <span class="badge badge-info" style="font-size:.7rem"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--info);margin-right:4px"></span> Geboekt</span>
-              <span class="badge badge-danger" style="font-size:.7rem"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--danger);margin-right:4px"></span> Geblokkeerd</span>
-            </div>
+        <div class="data-table-wrapper" style="padding:1.5rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+            <button class="btn btn-secondary btn-sm" onclick="changeMonth(-1)">&larr; Vorige</button>
+            <h3 id="kalenderTitle" style="font-size:1rem;"></h3>
+            <button class="btn btn-secondary btn-sm" onclick="changeMonth(1)">Volgende &rarr;</button>
           </div>
-          <div class="card-body">
-            <div id="calendarContent"></div>
-          </div>
+          <div id="kalenderContent" style="overflow-x:auto;"></div>
         </div>
       </div>
 
@@ -821,58 +394,22 @@ tbody tr:last-child td { border-bottom: none; }
   </main>
 </div>
 
-<!-- ── SLIDE PANEL OVERLAY ── -->
-<div class="slide-panel-overlay" id="slidePanelOverlay" onclick="closeSlidePanel()"></div>
-<div class="slide-panel" id="slidePanel" style="display:none">
-  <div class="slide-panel-header">
-    <h3 id="slidePanelTitle">Nieuwe woning</h3>
-    <button class="slide-panel-close" onclick="closeSlidePanel()">
-      <span class="material-icons-outlined">close</span>
-    </button>
-  </div>
-  <div class="slide-panel-body" id="slidePanelBody"></div>
-  <div class="slide-panel-footer" id="slidePanelFooter"></div>
-</div>
-
-<!-- ── iDEAL MODAL ── -->
-<div class="modal-overlay" id="idealModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3 id="idealModalTitle">iDEAL Betaling</h3>
-      <button class="slide-panel-close" onclick="closeIdealModal()">
-        <span class="material-icons-outlined">close</span>
-      </button>
-    </div>
-    <div class="modal-body" id="idealModalBody"></div>
-    <div class="modal-footer" id="idealModalFooter"></div>
-  </div>
-</div>
-
-<!-- ── TOAST CONTAINER ── -->
-<div class="toast-container" id="toastContainer"></div>
-
 <script>
-// ═══════════════════════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════════════════════
-let panden = [];
-let reserveringen = [];
-let betalingen = [];
-let dashStats = {};
-let calendarMonth = new Date().getMonth() + 1;
-let calendarYear = new Date().getFullYear();
+const API = '';
+const ADMIN_PASSWORD = 'admin';
+let currentTab = 'dashboard';
+let kalenderMaand = new Date().getMonth() + 1;
+let kalenderJaar = new Date().getFullYear();
 
-// ── LOGIN ──
+// ── Login ──
 function doLogin() {
   const pw = document.getElementById('loginPassword').value;
-  if (pw === 'admin') {
+  if (pw === ADMIN_PASSWORD) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('appLayout').classList.add('active');
-    loadAllData();
+    loadDashboard();
   } else {
-    const err = document.getElementById('loginError');
-    err.style.display = 'block';
-    err.textContent = 'Onjuist wachtwoord';
+    document.getElementById('loginError').style.display = 'block';
   }
 }
 
@@ -882,1320 +419,325 @@ function doLogout() {
   document.getElementById('loginPassword').value = '';
 }
 
-// ── TAB SWITCHING ──
+// ── Tab Switching ──
 function switchTab(tab) {
+  currentTab = tab;
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('tab-' + tab).classList.add('active');
-  document.querySelector(`.nav-item[data-tab="${tab}"]`).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  event.target.closest('.nav-item').classList.add('active');
 
   const titles = {
-    dashboard: ['Dashboard', 'Overzicht van uw vastgoed portfolio'],
-    woningen: ['Woningen', 'Beheer uw woningen en appartementen'],
-    reserveringen: ['Reserveringen', 'Overzicht van alle boekingen'],
-    betalingen: ['Betalingen', 'Financieel overzicht en transacties'],
-    kalender: ['Kalender', 'Beschikbaarheid en planning']
+    dashboard: 'Dashboard',
+    panden: 'Residences',
+    reserveringen: 'Reserveringen',
+    betalingen: 'Betalingen',
+    contracten: 'Contracten',
+    facturen: 'Facturen',
+    kalender: 'Kalender',
   };
-  document.getElementById('pageTitle').textContent = titles[tab][0];
-  document.getElementById('pageMeta').textContent = titles[tab][1];
+  document.getElementById('pageTitle').textContent = titles[tab] || tab;
 
-  if (tab === 'kalender') renderCalendar();
+  if (tab === 'dashboard') loadDashboard();
+  else if (tab === 'panden') loadPanden();
+  else if (tab === 'reserveringen') loadReserveringen();
+  else if (tab === 'betalingen') loadBetalingen();
+  else if (tab === 'contracten') loadContracten();
+  else if (tab === 'facturen') loadFacturen();
+  else if (tab === 'kalender') loadKalender();
 }
 
-// ── DATA LOADING ──
-async function loadAllData() {
-  try {
-    const [pRes, rRes, bRes, sRes] = await Promise.all([
-      fetch('/api/panden'), fetch('/api/reserveringen'), fetch('/api/betalingen'), fetch('/api/stats')
-    ]);
-    const pData = await pRes.json();
-    const rData = await rRes.json();
-    const bData = await bRes.json();
-    // Handle both paginated {data:[...]} and plain array responses
-    panden = Array.isArray(pData) ? pData : (pData.data || []);
-    reserveringen = Array.isArray(rData) ? rData : (rData.data || []);
-    betalingen = Array.isArray(bData) ? bData : (bData.data || []);
-    if (sRes.ok) dashStats = await sRes.json();
-  } catch (e) {
-    console.error('Data laden mislukt:', e);
-  }
-  renderDashboard();
-  renderWoningen();
-  renderReserveringen();
-  renderBetalingen();
-  updateHeaderDate();
-  updateBadges();
+// ── Format helpers ──
+function fmt(n) {
+  if (n == null) return '-';
+  return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(n);
 }
 
-function updateHeaderDate() {
-  const d = new Date();
-  const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  document.getElementById('headerDate').textContent = d.toLocaleDateString('nl-NL', opts);
+function fmtDate(d) {
+  if (!d) return '-';
+  try { return new Date(d).toLocaleDateString('nl-NL'); } catch { return d; }
 }
-
-function updateBadges() {
-  const pending = reserveringen.filter(r => r.status === 'pending').length;
-  const badge = document.getElementById('resBadge');
-  if (pending > 0) { badge.style.display = 'inline'; badge.textContent = pending; }
-  else { badge.style.display = 'none'; }
-}
-
-// ── TOAST ──
-function showToast(msg, type = 'success') {
-  const container = document.getElementById('toastContainer');
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  const icon = type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info';
-  toast.innerHTML = `<span class="material-icons-outlined" style="font-size:20px">${icon}</span>${msg}`;
-  container.appendChild(toast);
-  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity .3s'; setTimeout(() => toast.remove(), 300); }, 3000);
-}
-
-// ── FORMATTING ──
-function formatCurrency(n) { return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(n); }
-function formatDate(d) { if (!d) return '-'; return new Date(d).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' }); }
-function formatDateTime(d) { if (!d) return '-'; return new Date(d).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); }
 
 function statusBadge(status) {
-  const map = { bevestigd: 'success', pending: 'warning', geannuleerd: 'danger' };
-  const labels = { bevestigd: 'Bevestigd', pending: 'Pending', geannuleerd: 'Geannuleerd' };
-  return `<span class="badge badge-${map[status] || 'neutral'}">${labels[status] || status}</span>`;
-}
-function betaalBadge(status) {
-  const map = { betaald: 'success', openstaand: 'warning', terugbetaald: 'info', voltooid: 'success', pending: 'warning' };
-  const labels = { betaald: 'Betaald', openstaand: 'Openstaand', terugbetaald: 'Terugbetaald', voltooid: 'Voltooid', pending: 'Pending' };
-  return `<span class="badge badge-${map[status] || 'neutral'}">${labels[status] || status}</span>`;
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  DASHBOARD
-// ═══════════════════════════════════════════════════════════════
-function renderDashboard() {
-  const today = new Date().toISOString().slice(0, 10);
-  const now = new Date();
-  const monthKey = now.toISOString().slice(0, 7);
-
-  // Use server stats if available, fallback to client-side calculation
-  const totalProps = dashStats.totaal_woningen != null ? dashStats.totaal_woningen : panden.length;
-  const activeRes = dashStats.actieve_reserveringen != null ? dashStats.actieve_reserveringen :
-    reserveringen.filter(r => r.status === 'bevestigd' || r.status === 'pending').length;
-
-  // Bezettingsgraad
-  let bezet = 0;
-  let bezettingsgraad = 0;
-  if (dashStats.bezettingsgraad != null) {
-    bezettingsgraad = dashStats.bezettingsgraad;
-    bezet = Math.round(totalProps * bezettingsgraad / 100);
-  } else {
-    panden.forEach(p => {
-      const has = reserveringen.some(r =>
-        r.pand_id === p.id && r.status === 'bevestigd' &&
-        r.check_in <= today && r.check_out > today
-      );
-      if (has) bezet++;
-    });
-    bezettingsgraad = totalProps ? Math.round(bezet / totalProps * 100) : 0;
-  }
-
-  // Omzet deze maand
-  const omzetMaand = dashStats.omzet_maand != null ? dashStats.omzet_maand :
-    betalingen
-      .filter(b => b.status === 'voltooid' && (b.datum || '').slice(0, 7) === monthKey)
-      .reduce((s, b) => s + (b.bedrag || 0), 0);
-
-  document.getElementById('dashStats').innerHTML = `
-    <div class="stat-card">
-      <div class="stat-header">
-        <div><div class="stat-label">Totaal woningen</div><div class="stat-value">${totalProps}</div><div class="stat-sub">In portfolio</div></div>
-        <div class="stat-icon blue"><span class="material-icons-outlined">home_work</span></div>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-header">
-        <div><div class="stat-label">Actieve reserveringen</div><div class="stat-value">${activeRes}</div><div class="stat-sub">Bevestigd + pending</div></div>
-        <div class="stat-icon green"><span class="material-icons-outlined">book_online</span></div>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-header">
-        <div><div class="stat-label">Bezettingsgraad</div><div class="stat-value">${bezettingsgraad}%</div><div class="stat-sub">${bezet} van ${totalProps} bezet vandaag</div></div>
-        <div class="stat-icon yellow"><span class="material-icons-outlined">trending_up</span></div>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-header">
-        <div><div class="stat-label">Omzet deze maand</div><div class="stat-value">${formatCurrency(omzetMaand)}</div><div class="stat-sub">${now.toLocaleDateString('nl-NL', { month: 'long', year: 'numeric' })}</div></div>
-        <div class="stat-icon purple"><span class="material-icons-outlined">euro</span></div>
-      </div>
-    </div>
-  `;
-
-  // Charts
-  renderBezettingChart();
-  renderInkomstenChart();
-
-  // Recent reservations (last 5)
-  const recent = [...reserveringen]
-    .sort((a, b) => (b.aangemaakt || '').localeCompare(a.aangemaakt || ''))
-    .slice(0, 5);
-
-  document.getElementById('recentReservations').innerHTML = recent.length ?
-    `<div class="alert-list">${recent.map(r => `
-      <div class="alert-item">
-        <div class="alert-dot ${r.status === 'bevestigd' ? 'green' : r.status === 'pending' ? 'yellow' : 'red'}"></div>
-        <div style="flex:1;min-width:0">
-          <div class="alert-text" style="font-weight:600">${r.gast_naam}</div>
-          <div style="font-size:.75rem;color:var(--text-muted)">${r.pand_naam} &middot; ${formatDate(r.check_in)} - ${formatDate(r.check_out)}</div>
-        </div>
-        <div>${formatCurrency(r.totaal)}</div>
-      </div>
-    `).join('')}</div>` :
-    '<div class="empty-state"><span class="material-icons-outlined">inbox</span><p>Geen reserveringen</p></div>';
-
-  // Alerts
-  const checkins = reserveringen.filter(r => r.check_in === today && r.status === 'bevestigd');
-  const checkouts = reserveringen.filter(r => r.check_out === today && r.status === 'bevestigd');
-  const openstaand = reserveringen.filter(r => r.betaalstatus === 'openstaand');
-
-  let alerts = [];
-  checkins.forEach(r => alerts.push({ dot: 'green', text: `Check-in vandaag: ${r.gast_naam} - ${r.pand_naam}`, time: r.check_in }));
-  checkouts.forEach(r => alerts.push({ dot: 'blue', text: `Check-out vandaag: ${r.gast_naam} - ${r.pand_naam}`, time: r.check_out }));
-  openstaand.forEach(r => alerts.push({ dot: 'yellow', text: `Openstaande betaling: ${r.gast_naam} - ${formatCurrency(r.totaal)}`, time: r.aangemaakt }));
-
-  document.getElementById('alertsList').innerHTML = alerts.length ?
-    alerts.map(a => `
-      <div class="alert-item">
-        <div class="alert-dot ${a.dot}"></div>
-        <div class="alert-text">${a.text}</div>
-      </div>
-    `).join('') :
-    '<div class="empty-state" style="padding:1rem"><span class="material-icons-outlined" style="font-size:32px">check_circle</span><p>Geen meldingen</p></div>';
-}
-
-function renderBezettingChart() {
-  // Simulated weekly occupancy data
-  const weeks = ['W11', 'W12', 'W13', 'W14', 'W15', 'W16'];
-  const values = [44, 67, 56, 78, 45, 62];
-  const max = Math.max(...values, 1);
-  document.getElementById('chartBezetting').innerHTML = values.map((v, i) =>
-    `<div class="css-bar" style="height:${(v / max) * 180}px" title="${v}%">
-      <span class="bar-value">${v}%</span>
-      <span class="bar-label">${weeks[i]}</span>
-    </div>`
-  ).join('');
-}
-
-function renderInkomstenChart() {
-  const months = ['Okt', 'Nov', 'Dec', 'Jan', 'Feb', 'Mrt'];
-  const values = [4200, 5100, 6800, 3900, 5500, 4655];
-  const max = Math.max(...values, 1);
-  document.getElementById('chartInkomsten').innerHTML = values.map((v, i) =>
-    `<div class="css-bar" style="height:${(v / max) * 180}px;background:linear-gradient(to top, #10b981, #34d399)" title="${formatCurrency(v)}">
-      <span class="bar-value">${(v/1000).toFixed(1)}k</span>
-      <span class="bar-label">${months[i]}</span>
-    </div>`
-  ).join('');
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  WONINGEN
-// ═══════════════════════════════════════════════════════════════
-function renderWoningen() {
-  const search = (document.getElementById('woningenSearch').value || '').toLowerCase();
-  const typeFilter = document.getElementById('woningenTypeFilter').value;
-
-  let filtered = panden.filter(p => {
-    if (search && !(p.naam||'').toLowerCase().includes(search) && !(p.adres||'').toLowerCase().includes(search)) return false;
-    if (typeFilter && p.type !== typeFilter) return false;
-    return true;
-  });
-
-  const typeColors = {
-    studio: '#f59e0b', appartement: '#3b82f6', woonhuis: '#10b981', penthouse: '#8b5cf6'
+  const map = {
+    bevestigd: 'success', voltooid: 'success', betaald: 'success',
+    pending: 'warning', openstaand: 'warning',
+    geannuleerd: 'danger', terugbetaald: 'danger', verlopen: 'danger', mislukt: 'danger',
   };
-  const typeGradients = {
-    studio: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
-    appartement: 'linear-gradient(135deg, #60a5fa, #3b82f6)',
-    woonhuis: 'linear-gradient(135deg, #34d399, #10b981)',
-    penthouse: 'linear-gradient(135deg, #a78bfa, #8b5cf6)'
-  };
-
-  document.getElementById('woningenGrid').innerHTML = filtered.length ? filtered.map(p => `
-    <div class="property-card" onclick="openPropertyDetail('${p.id}')">
-      <div class="property-img">
-        <div class="property-img-gradient" style="background:${typeGradients[p.type] || typeGradients.appartement}"></div>
-        <div class="property-badge">
-          <span class="badge badge-${p.beschikbaar !== false ? 'success' : 'danger'}">${p.beschikbaar !== false ? 'Actief' : 'Inactief'}</span>
-        </div>
-      </div>
-      <div class="property-info">
-        <div class="property-name">${p.naam}</div>
-        <div class="property-address"><span class="material-icons-outlined" style="font-size:14px">place</span> ${p.adres || ''}, ${p.stad || ''}</div>
-        <div class="property-meta">
-          <span><span class="material-icons-outlined" style="font-size:14px">bed</span> ${p.slaapkamers || 0}</span>
-          <span><span class="material-icons-outlined" style="font-size:14px">groups</span> ${p.max_gasten || 0}</span>
-          <span><span class="material-icons-outlined" style="font-size:14px">square_foot</span> ${p.oppervlakte_m2 || 0}m&sup2;</span>
-          <span><span class="material-icons-outlined" style="font-size:14px">bolt</span> ${p.energielabel || '-'}</span>
-        </div>
-        <div class="property-price">${formatCurrency(p.nachtprijs || 0)} <span>/ nacht</span></div>
-      </div>
-      <div class="property-actions" onclick="event.stopPropagation()">
-        <button class="btn btn-secondary btn-sm" onclick="openEditProperty('${p.id}')">
-          <span class="material-icons-outlined" style="font-size:14px">edit</span> Bewerken
-        </button>
-        <button class="btn btn-danger btn-sm" onclick="deleteProperty('${p.id}')">
-          <span class="material-icons-outlined" style="font-size:14px">delete</span>
-        </button>
-      </div>
-    </div>
-  `).join('') : '<div class="empty-state"><span class="material-icons-outlined">home_work</span><p>Geen woningen gevonden</p></div>';
+  return `<span class="badge badge-${map[status] || 'muted'}">${status || '-'}</span>`;
 }
 
-function getPropertyFormHTML(p = {}) {
-  const amenitiesList = ['wifi','keuken','wasmachine','droger','vaatwasser','parkeren','balkon','airco','TV','lift','tuin','open_haard','zwembad','handdoeken','beddengoed'];
-  const currentAmenities = p.amenities || [];
-
-  return `
-    <div class="form-row">
-      <div class="form-group"><label>Naam</label><input type="text" id="propNaam" value="${p.naam || ''}"></div>
-      <div class="form-group"><label>Type</label>
-        <select id="propType">
-          <option value="studio" ${p.type==='studio'?'selected':''}>Studio</option>
-          <option value="appartement" ${p.type==='appartement'?'selected':''}>Appartement</option>
-          <option value="woonhuis" ${p.type==='woonhuis'?'selected':''}>Woonhuis</option>
-          <option value="penthouse" ${p.type==='penthouse'?'selected':''}>Penthouse</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group"><label>Categorie</label>
-      <select id="propCategorie">
-        <option value="" ${!p.categorie?'selected':''}>Selecteer...</option>
-        <option value="kort_verblijf" ${p.categorie==='kort_verblijf'?'selected':''}>Kort verblijf</option>
-        <option value="vakantie" ${p.categorie==='vakantie'?'selected':''}>Vakantie</option>
-        <option value="zakelijk" ${p.categorie==='zakelijk'?'selected':''}>Zakelijk</option>
-        <option value="long_stay" ${p.categorie==='long_stay'?'selected':''}>Long stay</option>
-      </select>
-    </div>
-    <div class="form-group"><label>Beschrijving</label><textarea id="propBeschrijving">${p.beschrijving || ''}</textarea></div>
-    <div class="form-row-3">
-      <div class="form-group"><label>Adres</label><input type="text" id="propAdres" value="${p.adres || ''}"></div>
-      <div class="form-group"><label>Stad</label><input type="text" id="propStad" value="${p.stad || ''}"></div>
-      <div class="form-group"><label>Postcode</label><input type="text" id="propPostcode" value="${p.postcode || ''}"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Oppervlakte (m&sup2;)</label><input type="number" id="propOpp" value="${p.oppervlakte_m2 || ''}"></div>
-      <div class="form-group"><label>Kamers</label><input type="number" id="propKamers" value="${p.kamers || ''}"></div>
-    </div>
-    <div class="form-row-3">
-      <div class="form-group"><label>Slaapkamers</label><input type="number" id="propSlaapkamers" value="${p.slaapkamers || ''}"></div>
-      <div class="form-group"><label>Badkamers</label><input type="number" id="propBadkamers" value="${p.badkamers || ''}"></div>
-      <div class="form-group"><label>Max gasten</label><input type="number" id="propMaxGasten" value="${p.max_gasten || ''}"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Nachtprijs (&euro;)</label><input type="number" id="propNachtprijs" value="${p.nachtprijs || ''}"></div>
-      <div class="form-group"><label>Schoonmaakkosten (&euro;)</label><input type="number" id="propSchoonmaak" value="${p.schoonmaakkosten || ''}"></div>
-    </div>
-    <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Tarieven</h4>
-    <div class="form-row-3">
-      <div class="form-group"><label>Flexibel (&euro;)</label><input type="number" id="propFlexibel" value="${(p.tarieven||{}).flexibel || ''}"></div>
-      <div class="form-group"><label>Standaard (&euro;)</label><input type="number" id="propStandaard" value="${(p.tarieven||{}).standaard || ''}"></div>
-      <div class="form-group"><label>Niet-restitueerbaar (&euro;)</label><input type="number" id="propNietRest" value="${(p.tarieven||{}).niet_restitueerbaar || ''}"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Energielabel</label>
-        <select id="propEnergielabel">
-          ${['A+++','A++','A+','A','B','C','D','E','F','G'].map(l => `<option value="${l}" ${p.energielabel===l?'selected':''}>${l}</option>`).join('')}
-        </select>
-      </div>
-      <div class="form-group"><label>Status</label>
-        <select id="propStatus">
-          <option value="true" ${p.beschikbaar !== false ? 'selected' : ''}>Actief</option>
-          <option value="false" ${p.beschikbaar === false ? 'selected' : ''}>Inactief</option>
-        </select>
-      </div>
-    </div>
-    <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Voorzieningen</h4>
-    <div class="checkbox-grid">
-      ${amenitiesList.map(a => `
-        <label class="checkbox-item">
-          <input type="checkbox" class="amenity-cb" value="${a}" ${currentAmenities.includes(a)?'checked':''}>
-          ${a.replace('_',' ')}
-        </label>
-      `).join('')}
-    </div>
-    <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Kenmerken</h4>
-    <div class="form-group"><label>Kenmerken (kommagescheiden)</label><input type="text" id="propKenmerken" value="${(p.kenmerken||[]).join(', ')}" placeholder="bijv. rustige buurt, nabij centrum, balkon op zuiden"></div>
-    <div class="form-group"><label>Notities</label><textarea id="propNotities" placeholder="Interne notities over deze woning...">${p.notities || ''}</textarea></div>
-    <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">
-      <span class="material-icons-outlined" style="font-size:16px;vertical-align:middle;margin-right:4px">sync</span>
-      iCal Synchronisatie
-    </h4>
-    <div class="form-group">
-      <label>Airbnb iCal URL</label>
-      <input type="text" id="propIcalUrl" value="${p.ical_url || ''}" placeholder="https://www.airbnb.nl/calendar/ical/...">
-    </div>
-    ${p.ical_last_sync ? `<div style="font-size:.75rem;color:var(--text-muted);margin-bottom:.5rem">Laatst gesynchroniseerd: ${formatDateTime(p.ical_last_sync)}</div>` : ''}
-    ${p.id ? `
-    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem">
-      <button class="btn btn-secondary btn-sm" onclick="syncIcal('${p.id}')" id="btnSyncIcal">
-        <span class="material-icons-outlined" style="font-size:16px">sync</span> Synchroniseer
-      </button>
-      <button class="btn btn-secondary btn-sm" onclick="copyIcalExportUrl('${p.id}')">
-        <span class="material-icons-outlined" style="font-size:16px">content_copy</span> Exporteer iCal URL
-      </button>
-    </div>
-    <div id="icalBlokkades"></div>
-    ` : '<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Sla de woning eerst op om iCal te synchroniseren.</div>'}
-  `;
+function toast(msg, type = '') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
 }
 
-function collectPropertyData() {
-  const kenmerkenRaw = document.getElementById('propKenmerken').value.trim();
-  const kenmerken = kenmerkenRaw ? kenmerkenRaw.split(',').map(k => k.trim()).filter(k => k) : [];
-  return {
-    naam: document.getElementById('propNaam').value,
-    type: document.getElementById('propType').value,
-    categorie: document.getElementById('propCategorie').value,
-    beschrijving: document.getElementById('propBeschrijving').value,
-    adres: document.getElementById('propAdres').value,
-    stad: document.getElementById('propStad').value,
-    postcode: document.getElementById('propPostcode').value,
-    oppervlakte_m2: parseInt(document.getElementById('propOpp').value) || 0,
-    kamers: parseInt(document.getElementById('propKamers').value) || 0,
-    slaapkamers: parseInt(document.getElementById('propSlaapkamers').value) || 0,
-    badkamers: parseInt(document.getElementById('propBadkamers').value) || 0,
-    max_gasten: parseInt(document.getElementById('propMaxGasten').value) || 0,
-    nachtprijs: parseFloat(document.getElementById('propNachtprijs').value) || 0,
-    schoonmaakkosten: parseFloat(document.getElementById('propSchoonmaak').value) || 0,
-    tarieven: {
-      flexibel: parseFloat(document.getElementById('propFlexibel').value) || 0,
-      standaard: parseFloat(document.getElementById('propStandaard').value) || 0,
-      niet_restitueerbaar: parseFloat(document.getElementById('propNietRest').value) || 0
-    },
-    energielabel: document.getElementById('propEnergielabel').value,
-    beschikbaar: document.getElementById('propStatus').value === 'true',
-    amenities: [...document.querySelectorAll('.amenity-cb:checked')].map(cb => cb.value),
-    kenmerken: kenmerken,
-    notities: document.getElementById('propNotities').value,
-    ical_url: document.getElementById('propIcalUrl') ? document.getElementById('propIcalUrl').value : '',
-    huurprijs: parseFloat(document.getElementById('propNachtprijs').value) * 30 || 0,
-    foto_urls: [],
-    huurder: null,
-    onderhoud: []
-  };
-}
-
-function openAddProperty() {
-  document.getElementById('slidePanelTitle').textContent = 'Nieuwe woning toevoegen';
-  document.getElementById('slidePanelBody').innerHTML = getPropertyFormHTML();
-  document.getElementById('slidePanelFooter').innerHTML = `
-    <button class="btn btn-secondary" onclick="closeSlidePanel()">Annuleren</button>
-    <button class="btn btn-primary" onclick="saveNewProperty()">
-      <span class="material-icons-outlined" style="font-size:16px">save</span> Opslaan
-    </button>
-  `;
-  openSlidePanel();
-}
-
-function openEditProperty(id) {
-  const p = panden.find(x => x.id === id);
-  if (!p) return;
-  document.getElementById('slidePanelTitle').textContent = 'Woning bewerken';
-  document.getElementById('slidePanelBody').innerHTML = getPropertyFormHTML(p);
-  document.getElementById('slidePanelFooter').innerHTML = `
-    <button class="btn btn-secondary" onclick="closeSlidePanel()">Annuleren</button>
-    <button class="btn btn-primary" onclick="saveEditProperty('${id}')">
-      <span class="material-icons-outlined" style="font-size:16px">save</span> Bijwerken
-    </button>
-  `;
-  openSlidePanel();
-  // Load existing blokkades
-  if (p.ical_url) loadIcalBlokkades(id);
-}
-
-async function saveNewProperty() {
-  const data = collectPropertyData();
-  if (!data.naam) { showToast('Vul een naam in', 'error'); return; }
+// ── Dashboard ──
+async function loadDashboard() {
   try {
-    const res = await fetch('/api/woningen', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-    if (res.ok) {
-      showToast('Woning toegevoegd');
-      closeSlidePanel();
-      await loadAllData();
-    } else { showToast('Fout bij opslaan', 'error'); }
-  } catch (e) { showToast('Netwerkfout', 'error'); }
-}
+    const resp = await fetch(API + '/api/stats');
+    const s = await resp.json();
+    document.getElementById('statWoningen').textContent = s.totaal_woningen || 0;
+    document.getElementById('statReserveringen').textContent = s.actieve_reserveringen || 0;
+    document.getElementById('statBezetting').textContent = (s.bezettingsgraad || 0) + '%';
+    document.getElementById('statOmzet').textContent = fmt(s.omzet_maand);
+    document.getElementById('statContracten').textContent = s.totaal_contracten || 0;
+    document.getElementById('statFacturen').textContent = s.totaal_facturen || 0;
 
-async function saveEditProperty(id) {
-  const data = collectPropertyData();
-  try {
-    const res = await fetch(`/api/woningen/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-    if (res.ok) {
-      showToast('Woning bijgewerkt');
-      closeSlidePanel();
-      await loadAllData();
-    } else { showToast('Fout bij bijwerken', 'error'); }
-  } catch (e) { showToast('Netwerkfout', 'error'); }
-}
+    // Recent reservations
+    const resResp = await fetch(API + '/api/reserveringen');
+    const reserveringen = await resResp.json();
+    const recent = (Array.isArray(reserveringen) ? reserveringen : reserveringen.data || []).slice(0, 10);
 
-async function deleteProperty(id) {
-  const p = panden.find(x => x.id === id);
-  if (!confirm(`Weet u zeker dat u "${p?.naam || 'deze woning'}" wilt verwijderen?`)) return;
-  try {
-    const res = await fetch(`/api/woningen/${id}`, { method: 'DELETE' });
-    if (res.ok) { showToast('Woning verwijderd'); await loadAllData(); }
-    else { showToast('Fout bij verwijderen', 'error'); }
-  } catch (e) { showToast('Netwerkfout', 'error'); }
-}
-
-// ── iCAL SYNC FUNCTIONS ──
-async function syncIcal(id) {
-  const icalUrl = document.getElementById('propIcalUrl')?.value?.trim();
-  if (!icalUrl) {
-    showToast('Voer eerst een iCal URL in', 'error');
-    return;
-  }
-
-  const btn = document.getElementById('btnSyncIcal');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="material-icons-outlined" style="font-size:16px;animation:spin 1s linear infinite">sync</span> Bezig...'; }
-
-  try {
-    // First save the ical_url if changed
-    const p = panden.find(x => x.id === id);
-    if (p && p.ical_url !== icalUrl) {
-      await fetch(`/api/woningen/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ical_url: icalUrl })
-      });
-    }
-
-    // Import or sync
-    const endpoint = p?.ical_url ? `/api/woningen/${id}/ical-sync` : `/api/woningen/${id}/ical-import`;
-    const body = p?.ical_url ? {} : { ical_url: icalUrl };
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    const data = await res.json();
-    if (res.ok) {
-      showToast(`iCal gesynchroniseerd: ${data.imported} blokkades geimporteerd`);
-      await loadAllData();
-      loadIcalBlokkades(id);
-    } else {
-      showToast(data.error || 'Synchronisatie mislukt', 'error');
-    }
+    document.getElementById('dashRecentTable').innerHTML = recent.length ? recent.map(r => `
+      <tr>
+        <td><strong>${r.id || '-'}</strong></td>
+        <td>${r.gast_naam || '-'}</td>
+        <td>${r.pand_naam || '-'}</td>
+        <td>${fmtDate(r.check_in)}</td>
+        <td>${fmtDate(r.check_out)}</td>
+        <td>${statusBadge(r.status)}</td>
+        <td>${fmt(r.totaal)}</td>
+      </tr>
+    `).join('') : '<tr class="empty-row"><td colspan="7">Geen reserveringen</td></tr>';
   } catch (e) {
-    showToast('Netwerkfout bij synchronisatie', 'error');
-  } finally {
-    if (btn) { btn.disabled = false; btn.innerHTML = '<span class="material-icons-outlined" style="font-size:16px">sync</span> Synchroniseer'; }
+    console.error(e);
+    toast('Fout bij laden dashboard', 'error');
   }
 }
 
-function copyIcalExportUrl(id) {
-  const url = `${window.location.origin}/api/woningen/${id}/ical`;
-  navigator.clipboard.writeText(url).then(() => {
-    showToast('iCal export URL gekopieerd naar klembord');
-  }).catch(() => {
-    // Fallback
-    prompt('Kopieer deze URL:', url);
-  });
-}
-
-async function loadIcalBlokkades(id) {
-  const container = document.getElementById('icalBlokkades');
-  if (!container) return;
+// ── Panden ──
+async function loadPanden() {
   try {
-    const res = await fetch(`/api/woningen/${id}/blokkades`);
-    const blokkades = await res.json();
-    const airbnbBlokkades = blokkades.filter(b => (b.reden || '').startsWith('Airbnb:'));
-    if (airbnbBlokkades.length === 0) {
-      container.innerHTML = '<div style="font-size:.8rem;color:var(--text-muted)">Geen Airbnb blokkades gevonden.</div>';
-      return;
-    }
-    container.innerHTML = `
-      <div style="font-size:.8rem;font-weight:600;color:var(--text-secondary);margin-bottom:.5rem">Airbnb blokkades (${airbnbBlokkades.length})</div>
-      <div class="alert-list" style="max-height:200px;overflow-y:auto">
-        ${airbnbBlokkades.map(b => `
-          <div class="alert-item">
-            <div class="alert-dot red"></div>
-            <div style="flex:1">
-              <div class="alert-text">${b.reden || 'Geblokkeerd'}</div>
-              <div style="font-size:.7rem;color:var(--text-muted)">${formatDate(b.datum_start)} - ${formatDate(b.datum_einde)}</div>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    `;
+    const resp = await fetch(API + '/api/panden');
+    const data = await resp.json();
+    const panden = Array.isArray(data) ? data : data.data || [];
+
+    document.getElementById('pandenTable').innerHTML = panden.length ? panden.map(p => `
+      <tr>
+        <td><strong>${p.naam || '-'}</strong></td>
+        <td>${p.type || '-'}</td>
+        <td>${p.stad || '-'}</td>
+        <td>${p.oppervlakte_m2 || '-'}</td>
+        <td>${p.maandprijs ? fmt(p.maandprijs) : (p.huurprijs ? fmt(p.huurprijs) : '-')}</td>
+        <td>${p.borg ? fmt(p.borg) : '-'}</td>
+        <td>${p.beschikbaar ? '<span class="badge badge-success">Beschikbaar</span>' : '<span class="badge badge-danger">Bezet</span>'}</td>
+      </tr>
+    `).join('') : '<tr class="empty-row"><td colspan="7">Geen residences</td></tr>';
   } catch (e) {
-    container.innerHTML = '<div style="font-size:.8rem;color:var(--danger)">Kan blokkades niet laden.</div>';
+    toast('Fout bij laden residences', 'error');
   }
 }
 
-function openPropertyDetail(id) {
-  const p = panden.find(x => x.id === id);
-  if (!p) return;
-
-  // Get bookings for this property
-  const propRes = reserveringen.filter(r => r.pand_id === id && r.status !== 'geannuleerd');
-
-  document.getElementById('slidePanelTitle').textContent = p.naam;
-  document.getElementById('slidePanelBody').innerHTML = `
-    <div style="margin-bottom:1.5rem">
-      <div class="detail-grid">
-        <div class="detail-item"><label>Type</label><p>${p.type}</p></div>
-        <div class="detail-item"><label>Categorie</label><p>${p.categorie || '-'}</p></div>
-        <div class="detail-item"><label>Stad</label><p>${p.stad}</p></div>
-        <div class="detail-item"><label>Energielabel</label><p>${p.energielabel || '-'}</p></div>
-        <div class="detail-item"><label>Oppervlakte</label><p>${p.oppervlakte_m2}m&sup2;</p></div>
-        <div class="detail-item"><label>Slaapkamers</label><p>${p.slaapkamers}</p></div>
-        <div class="detail-item"><label>Max gasten</label><p>${p.max_gasten}</p></div>
-      </div>
-    </div>
-    <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Tarieven</h4>
-    <div class="detail-grid">
-      <div class="detail-item"><label>Flexibel</label><p>${formatCurrency((p.tarieven||{}).flexibel||0)}</p></div>
-      <div class="detail-item"><label>Standaard</label><p>${formatCurrency((p.tarieven||{}).standaard||0)}</p></div>
-      <div class="detail-item"><label>Niet-restitueerbaar</label><p>${formatCurrency((p.tarieven||{}).niet_restitueerbaar||0)}</p></div>
-    </div>
-    <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Voorzieningen</h4>
-    <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem">
-      ${(p.amenities||[]).map(a => `<span class="badge badge-info">${a.replace('_',' ')}</span>`).join('')}
-    </div>
-    ${(p.kenmerken||[]).length ? `
-      <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Kenmerken</h4>
-      <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem">
-        ${(p.kenmerken||[]).map(k => `<span class="badge badge-neutral">${k}</span>`).join('')}
-      </div>
-    ` : ''}
-    ${p.notities ? `
-      <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Notities</h4>
-      <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:1rem">${p.notities}</p>
-    ` : ''}
-    ${p.ical_url ? `
-      <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">
-        <span class="material-icons-outlined" style="font-size:16px;vertical-align:middle;margin-right:4px">sync</span>
-        iCal Sync
-      </h4>
-      <div style="font-size:.8rem;color:var(--text-secondary);margin-bottom:.5rem">
-        <span class="badge badge-info" style="font-size:.7rem">Airbnb</span>
-        ${p.ical_last_sync ? `Laatst gesynchroniseerd: ${formatDateTime(p.ical_last_sync)}` : 'Nog niet gesynchroniseerd'}
-      </div>
-      <div style="display:flex;gap:.5rem;margin-bottom:1rem">
-        <button class="btn btn-secondary btn-sm" onclick="syncIcalFromDetail('${id}')">
-          <span class="material-icons-outlined" style="font-size:14px">sync</span> Sync nu
-        </button>
-        <button class="btn btn-secondary btn-sm" onclick="copyIcalExportUrl('${id}')">
-          <span class="material-icons-outlined" style="font-size:14px">content_copy</span> Export URL
-        </button>
-      </div>
-      <div id="detailIcalBlokkades"></div>
-    ` : ''}
-    <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Beschikbaarheid deze maand</h4>
-    ${renderMiniCalendar(id)}
-    ${propRes.length ? `
-      <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Komende boekingen</h4>
-      <div class="alert-list">
-        ${propRes.map(r => `
-          <div class="alert-item">
-            <div class="alert-dot ${r.status === 'bevestigd' ? 'green' : 'yellow'}"></div>
-            <div style="flex:1"><div class="alert-text">${r.gast_naam}</div><div style="font-size:.75rem;color:var(--text-muted)">${formatDate(r.check_in)} - ${formatDate(r.check_out)}</div></div>
-            <div>${formatCurrency(r.totaal)}</div>
-          </div>
-        `).join('')}
-      </div>
-    ` : ''}
-  `;
-  document.getElementById('slidePanelFooter').innerHTML = `
-    <button class="btn btn-secondary" onclick="closeSlidePanel()">Sluiten</button>
-    <button class="btn btn-primary" onclick="closeSlidePanel();openEditProperty('${id}')">
-      <span class="material-icons-outlined" style="font-size:16px">edit</span> Bewerken
-    </button>
-  `;
-  openSlidePanel();
-
-  // Load iCal blokkades for detail view
-  if (p.ical_url) {
-    loadIcalBlokkadesDetail(id);
-  }
-}
-
-async function syncIcalFromDetail(id) {
-  const p = panden.find(x => x.id === id);
-  if (!p || !p.ical_url) { showToast('Geen iCal URL geconfigureerd', 'error'); return; }
+// ── Reserveringen ──
+async function loadReserveringen() {
   try {
-    const res = await fetch(`/api/woningen/${id}/ical-sync`, {
-      method: 'POST',
+    const resp = await fetch(API + '/api/reserveringen');
+    const data = await resp.json();
+    const res = Array.isArray(data) ? data : data.data || [];
+
+    document.getElementById('reserveringenTable').innerHTML = res.length ? res.map(r => `
+      <tr>
+        <td><strong>${r.id || '-'}</strong></td>
+        <td>${r.gast_naam || '-'}<br><span style="font-size:.7rem;color:var(--text-muted)">${r.gast_email || ''}</span></td>
+        <td>${r.pand_naam || '-'}</td>
+        <td>${fmtDate(r.check_in)}</td>
+        <td>${fmtDate(r.check_out)}</td>
+        <td>${r.gasten || 1}</td>
+        <td>${statusBadge(r.status)}</td>
+        <td>${fmt(r.totaal)}</td>
+        <td>
+          ${r.status === 'pending' ? `<button class="btn btn-success btn-sm" onclick="updateRes('${r.id}','bevestigd')">Bevestigen</button>` : ''}
+          ${r.status !== 'geannuleerd' ? `<button class="btn btn-danger btn-sm" onclick="updateRes('${r.id}','geannuleerd')">Annuleren</button>` : ''}
+        </td>
+      </tr>
+    `).join('') : '<tr class="empty-row"><td colspan="9">Geen reserveringen</td></tr>';
+  } catch (e) {
+    toast('Fout bij laden reserveringen', 'error');
+  }
+}
+
+async function updateRes(id, status) {
+  try {
+    await fetch(API + '/api/reserveringen/' + id, {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: '{}'
-    });
-    const data = await res.json();
-    if (res.ok) {
-      showToast(`iCal gesynchroniseerd: ${data.imported} blokkades`);
-      await loadAllData();
-      loadIcalBlokkadesDetail(id);
-    } else {
-      showToast(data.error || 'Sync mislukt', 'error');
-    }
-  } catch (e) { showToast('Netwerkfout', 'error'); }
-}
-
-async function loadIcalBlokkadesDetail(id) {
-  const container = document.getElementById('detailIcalBlokkades');
-  if (!container) return;
-  try {
-    const res = await fetch(`/api/woningen/${id}/blokkades`);
-    const blokkades = await res.json();
-    const airbnbBlokkades = blokkades.filter(b => (b.reden || '').startsWith('Airbnb:'));
-    if (airbnbBlokkades.length === 0) {
-      container.innerHTML = '<div style="font-size:.8rem;color:var(--text-muted)">Geen Airbnb blokkades.</div>';
-      return;
-    }
-    container.innerHTML = `
-      <div class="alert-list" style="max-height:160px;overflow-y:auto">
-        ${airbnbBlokkades.map(b => `
-          <div class="alert-item">
-            <div class="alert-dot red"></div>
-            <div style="flex:1">
-              <div class="alert-text" style="font-size:.8rem">${b.reden}</div>
-              <div style="font-size:.7rem;color:var(--text-muted)">${formatDate(b.datum_start)} - ${formatDate(b.datum_einde)}</div>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    `;
-  } catch (e) { container.innerHTML = ''; }
-}
-
-function renderMiniCalendar(pandId) {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-  const startDow = (firstDay.getDay() + 6) % 7; // Monday=0
-
-  const bookedDates = new Set();
-  const blockedDates = new Set();
-  reserveringen.filter(r => r.pand_id === pandId && r.status !== 'geannuleerd').forEach(r => {
-    const ci = new Date(r.check_in);
-    const co = new Date(r.check_out);
-    let d = new Date(Math.max(ci, firstDay));
-    const end = new Date(Math.min(co, new Date(year, month + 1, 0)));
-    while (d <= end) {
-      bookedDates.add(d.toISOString().slice(0, 10));
-      d.setDate(d.getDate() + 1);
-    }
-  });
-
-  // Also load blokkades async and update calendar
-  const calId = `miniCal_${pandId.replace(/[^a-zA-Z0-9]/g, '_')}`;
-
-  const days = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
-  let html = `<div class="mini-calendar"><div class="mini-cal-grid" id="${calId}">`;
-  html += days.map(d => `<div class="mini-cal-header">${d}</div>`).join('');
-
-  for (let i = 0; i < startDow; i++) html += '<div class="mini-cal-day empty"></div>';
-
-  for (let d = 1; d <= lastDay.getDate(); d++) {
-    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-    const isBooked = bookedDates.has(dateStr);
-    html += `<div class="mini-cal-day ${isBooked ? 'booked' : 'available'}" data-date="${dateStr}">${d}</div>`;
-  }
-  html += '</div></div>';
-
-  // Async: fetch blokkades and mark them
-  setTimeout(() => {
-    fetch(`/api/woningen/${pandId}/blokkades`)
-      .then(r => r.json())
-      .then(blokkades => {
-        const grid = document.getElementById(calId);
-        if (!grid) return;
-        blokkades.forEach(b => {
-          let d = new Date(b.datum_start);
-          const end = new Date(b.datum_einde);
-          while (d < end) {
-            const ds = d.toISOString().slice(0, 10);
-            const cell = grid.querySelector(`[data-date="${ds}"]`);
-            if (cell && !cell.classList.contains('booked')) {
-              cell.className = 'mini-cal-day blocked';
-            }
-            d.setDate(d.getDate() + 1);
-          }
-        });
-      })
-      .catch(() => {});
-  }, 100);
-
-  return html;
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  RESERVERINGEN
-// ═══════════════════════════════════════════════════════════════
-function renderReserveringen() {
-  const search = (document.getElementById('resSearch').value || '').toLowerCase();
-  const statusF = document.getElementById('resStatusFilter').value;
-  const betaalF = document.getElementById('resBetaalFilter').value;
-  const dateFrom = document.getElementById('resDateFrom').value;
-  const dateTo = document.getElementById('resDateTo').value;
-
-  let filtered = reserveringen.filter(r => {
-    if (search && !(r.gast_naam||'').toLowerCase().includes(search) && !(r.id||'').toLowerCase().includes(search)) return false;
-    if (statusF && r.status !== statusF) return false;
-    if (betaalF && r.betaalstatus !== betaalF) return false;
-    if (dateFrom && r.check_in < dateFrom) return false;
-    if (dateTo && r.check_out > dateTo) return false;
-    return true;
-  });
-
-  document.getElementById('resTableBody').innerHTML = filtered.length ? filtered.map(r => `
-    <tr onclick="toggleResDetail('${r.id}')" style="cursor:pointer">
-      <td><span style="font-weight:600;font-size:.8rem;color:var(--primary)">${r.id}</span></td>
-      <td><strong>${r.gast_naam}</strong></td>
-      <td>${r.pand_naam}</td>
-      <td>${formatDate(r.check_in)}</td>
-      <td>${formatDate(r.check_out)}</td>
-      <td style="text-align:center">${r.gasten}</td>
-      <td><strong>${formatCurrency(r.totaal)}</strong></td>
-      <td>${statusBadge(r.status)}</td>
-      <td>${betaalBadge(r.betaalstatus)}</td>
-      <td onclick="event.stopPropagation()">
-        <div style="display:flex;gap:.35rem">
-          ${r.status === 'pending' ? `<button class="btn btn-success btn-sm" onclick="updateResStatus('${r.id}','bevestigd')" title="Bevestigen"><span class="material-icons-outlined" style="font-size:14px">check</span></button>` : ''}
-          ${r.status !== 'geannuleerd' ? `<button class="btn btn-danger btn-sm" onclick="updateResStatus('${r.id}','geannuleerd')" title="Annuleren"><span class="material-icons-outlined" style="font-size:14px">close</span></button>` : ''}
-          ${r.betaalstatus === 'openstaand' ? `<button class="btn btn-primary btn-sm" onclick="startIdealPayment('${r.id}')" title="iDEAL betaling"><span class="material-icons-outlined" style="font-size:14px">payments</span></button>` : ''}
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="10" style="padding:0;border:none">
-        <div class="expandable-details" id="resDetail-${r.id}">
-          <div class="detail-grid">
-            <div class="detail-item"><label>Email</label><p>${r.gast_email || '-'}</p></div>
-            <div class="detail-item"><label>Telefoon</label><p>${r.gast_telefoon || '-'}</p></div>
-            <div class="detail-item"><label>Tarief type</label><p>${r.tarief_type || '-'}</p></div>
-            <div class="detail-item"><label>Nachtprijs</label><p>${formatCurrency(r.nachtprijs || 0)}</p></div>
-            <div class="detail-item"><label>Nachten</label><p>${r.nachten || '-'}</p></div>
-            <div class="detail-item"><label>Schoonmaakkosten</label><p>${formatCurrency(r.schoonmaakkosten || 0)}</p></div>
-            <div class="detail-item"><label>Betaalmethode</label><p>${r.betaal_methode || '-'}</p></div>
-            <div class="detail-item"><label>Aangemaakt</label><p>${formatDateTime(r.aangemaakt)}</p></div>
-            <div class="detail-item"><label>Opmerkingen</label><p>${r.opmerkingen || '-'}</p></div>
-          </div>
-        </div>
-      </td>
-    </tr>
-  `).join('') : `<tr><td colspan="10"><div class="empty-state"><span class="material-icons-outlined">search_off</span><p>Geen reserveringen gevonden</p></div></td></tr>`;
-}
-
-function toggleResDetail(id) {
-  const el = document.getElementById('resDetail-' + id);
-  if (el) el.classList.toggle('active');
-}
-
-async function updateResStatus(id, status) {
-  const labels = { bevestigd: 'bevestigen', geannuleerd: 'annuleren' };
-  if (!confirm(`Weet u zeker dat u deze reservering wilt ${labels[status]}?`)) return;
-  try {
-    const res = await fetch(`/api/reserveringen/${id}`, {
-      method: 'PUT', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status })
     });
-    if (res.ok) {
-      showToast(`Reservering ${status}`);
-      await loadAllData();
-    } else { showToast('Fout bij bijwerken', 'error'); }
-  } catch (e) { showToast('Netwerkfout', 'error'); }
+    toast(`Reservering ${id} bijgewerkt naar ${status}`, 'success');
+    loadReserveringen();
+  } catch (e) {
+    toast('Fout bij bijwerken', 'error');
+  }
 }
 
-function openNewReservation() {
-  document.getElementById('slidePanelTitle').textContent = 'Nieuwe reservering';
-  document.getElementById('slidePanelBody').innerHTML = `
-    <div class="form-row">
-      <div class="form-group"><label>Gast naam</label><input type="text" id="newResGast"></div>
-      <div class="form-group"><label>Email</label><input type="email" id="newResEmail"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Telefoon</label><input type="text" id="newResTel"></div>
-      <div class="form-group"><label>Aantal gasten</label><input type="number" id="newResGasten" value="2" min="1"></div>
-    </div>
-    <div class="form-group"><label>Woning</label>
-      <select id="newResPand" onchange="updateResPrice()">
-        <option value="">Selecteer een woning...</option>
-        ${panden.filter(p => p.beschikbaar !== false).map(p => `<option value="${p.id}" data-prijs="${p.nachtprijs}" data-schoonmaak="${p.schoonmaakkosten||0}" data-naam="${p.naam}">${p.naam} - ${p.stad} (${formatCurrency(p.nachtprijs)}/nacht)</option>`).join('')}
-      </select>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Check-in</label><input type="date" id="newResCheckin" onchange="updateResPrice()"></div>
-      <div class="form-group"><label>Check-out</label><input type="date" id="newResCheckout" onchange="updateResPrice()"></div>
-    </div>
-    <div class="form-group"><label>Tarief type</label>
-      <select id="newResTarief">
-        <option value="standaard">Standaard</option>
-        <option value="flexibel">Flexibel</option>
-        <option value="niet_restitueerbaar">Niet-restitueerbaar</option>
-      </select>
-    </div>
-    <div class="form-group"><label>Opmerkingen</label><textarea id="newResOpmerkingen"></textarea></div>
-    <div id="resPricePreview" style="padding:1rem;background:var(--bg);border-radius:var(--radius-sm);margin-top:.5rem;display:none">
-      <div style="font-size:.85rem;color:var(--text-secondary)">Kostenberekening</div>
-      <div id="resPriceDetail"></div>
-    </div>
-  `;
-  document.getElementById('slidePanelFooter').innerHTML = `
-    <button class="btn btn-secondary" onclick="closeSlidePanel()">Annuleren</button>
-    <button class="btn btn-primary" onclick="saveNewReservation()">
-      <span class="material-icons-outlined" style="font-size:16px">save</span> Reservering aanmaken
-    </button>
-  `;
-  openSlidePanel();
-}
-
-function updateResPrice() {
-  const select = document.getElementById('newResPand');
-  const opt = select.options[select.selectedIndex];
-  const checkin = document.getElementById('newResCheckin').value;
-  const checkout = document.getElementById('newResCheckout').value;
-  const preview = document.getElementById('resPricePreview');
-
-  if (!opt.value || !checkin || !checkout) { preview.style.display = 'none'; return; }
-
-  const prijs = parseFloat(opt.dataset.prijs) || 0;
-  const schoonmaak = parseFloat(opt.dataset.schoonmaak) || 0;
-  const ci = new Date(checkin);
-  const co = new Date(checkout);
-  const nachten = Math.max(1, Math.round((co - ci) / 86400000));
-  const totaal = prijs * nachten + schoonmaak;
-
-  preview.style.display = 'block';
-  document.getElementById('resPriceDetail').innerHTML = `
-    <div style="display:flex;justify-content:space-between;margin-top:.5rem"><span>${nachten} nachten x ${formatCurrency(prijs)}</span><span>${formatCurrency(prijs * nachten)}</span></div>
-    <div style="display:flex;justify-content:space-between;margin-top:.25rem"><span>Schoonmaakkosten</span><span>${formatCurrency(schoonmaak)}</span></div>
-    <div style="display:flex;justify-content:space-between;margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border);font-weight:700;font-size:1.1rem"><span>Totaal</span><span style="color:var(--primary)">${formatCurrency(totaal)}</span></div>
-  `;
-}
-
-async function saveNewReservation() {
-  const select = document.getElementById('newResPand');
-  const opt = select.options[select.selectedIndex];
-  const checkin = document.getElementById('newResCheckin').value;
-  const checkout = document.getElementById('newResCheckout').value;
-
-  if (!opt.value || !checkin || !checkout) { showToast('Vul alle verplichte velden in', 'error'); return; }
-
-  const prijs = parseFloat(opt.dataset.prijs) || 0;
-  const schoonmaak = parseFloat(opt.dataset.schoonmaak) || 0;
-  const nachten = Math.max(1, Math.round((new Date(checkout) - new Date(checkin)) / 86400000));
-
-  const data = {
-    pand_id: opt.value,
-    pand_naam: opt.dataset.naam,
-    gast_naam: document.getElementById('newResGast').value,
-    gast_email: document.getElementById('newResEmail').value,
-    gast_telefoon: document.getElementById('newResTel').value,
-    check_in: checkin,
-    check_out: checkout,
-    gasten: parseInt(document.getElementById('newResGasten').value) || 1,
-    tarief_type: document.getElementById('newResTarief').value,
-    nachtprijs: prijs,
-    nachten: nachten,
-    schoonmaakkosten: schoonmaak,
-    totaal: prijs * nachten + schoonmaak,
-    betaal_methode: '',
-    opmerkingen: document.getElementById('newResOpmerkingen').value
-  };
-
-  if (!data.gast_naam) { showToast('Vul een gastnaam in', 'error'); return; }
-
+// ── Betalingen ──
+async function loadBetalingen() {
   try {
-    const res = await fetch('/api/reserveringen', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-    if (res.ok) {
-      showToast('Reservering aangemaakt');
-      closeSlidePanel();
-      await loadAllData();
-    } else { showToast('Fout bij aanmaken', 'error'); }
-  } catch (e) { showToast('Netwerkfout', 'error'); }
-}
+    const resp = await fetch(API + '/api/betalingen');
+    const data = await resp.json();
+    const items = Array.isArray(data) ? data : data.data || [];
 
-// ═══════════════════════════════════════════════════════════════
-//  BETALINGEN
-// ═══════════════════════════════════════════════════════════════
-function renderBetalingen() {
-  const search = (document.getElementById('paySearch').value || '').toLowerCase();
-  const statusF = document.getElementById('payStatusFilter').value;
-
-  let filtered = betalingen.filter(b => {
-    if (search && !(b.gast_naam||'').toLowerCase().includes(search) && !(b.id||'').toLowerCase().includes(search)) return false;
-    if (statusF && b.status !== statusF) return false;
-    return true;
-  });
-
-  const now = new Date();
-  const today = now.toISOString().slice(0, 10);
-  const weekAgo = new Date(now - 7 * 86400000).toISOString().slice(0, 10);
-  const monthKey = now.toISOString().slice(0, 7);
-  const yearKey = now.getFullYear().toString();
-
-  const vol = betalingen.filter(b => b.status === 'voltooid');
-  const omzetVandaag = vol.filter(b => (b.datum||'').slice(0,10) === today).reduce((s,b) => s + (b.bedrag||0), 0);
-  const omzetWeek = vol.filter(b => (b.datum||'').slice(0,10) >= weekAgo).reduce((s,b) => s + (b.bedrag||0), 0);
-  const omzetMaand = vol.filter(b => (b.datum||'').slice(0,7) === monthKey).reduce((s,b) => s + (b.bedrag||0), 0);
-  const omzetJaar = vol.filter(b => (b.datum||'').slice(0,4) === yearKey).reduce((s,b) => s + (b.bedrag||0), 0);
-
-  document.getElementById('paymentTotals').innerHTML = `
-    <div class="payment-total-card"><div class="payment-total-label">Omzet vandaag</div><div class="payment-total-value" style="color:var(--success)">${formatCurrency(omzetVandaag)}</div></div>
-    <div class="payment-total-card"><div class="payment-total-label">Omzet deze week</div><div class="payment-total-value" style="color:var(--info)">${formatCurrency(omzetWeek)}</div></div>
-    <div class="payment-total-card"><div class="payment-total-label">Omzet deze maand</div><div class="payment-total-value" style="color:var(--primary)">${formatCurrency(omzetMaand)}</div></div>
-    <div class="payment-total-card"><div class="payment-total-label">Omzet dit jaar</div><div class="payment-total-value" style="color:var(--text)">${formatCurrency(omzetJaar)}</div></div>
-  `;
-
-  document.getElementById('payTableBody').innerHTML = filtered.length ? filtered.map(b => `
-    <tr>
-      <td>${formatDateTime(b.datum)}</td>
-      <td><span style="font-weight:600;font-size:.8rem;color:var(--primary)">${b.id}</span></td>
-      <td>${b.reservering_id || '-'}</td>
-      <td><strong>${b.gast_naam || '-'}</strong></td>
-      <td><strong>${formatCurrency(b.bedrag || 0)}</strong></td>
-      <td>${b.methode || '-'}</td>
-      <td>${b.bank || '-'}</td>
-      <td>${betaalBadge(b.status)}</td>
-      <td>
-        ${b.status === 'voltooid' ? `<button class="btn btn-danger btn-sm" onclick="refundPayment('${b.id}')"><span class="material-icons-outlined" style="font-size:14px">undo</span> Terugbetalen</button>` : ''}
-        ${b.status === 'pending' ? `<button class="btn btn-primary btn-sm" onclick="startIdealForPayment('${b.id}')"><span class="material-icons-outlined" style="font-size:14px">payments</span> Betaal</button>` : ''}
-      </td>
-    </tr>
-  `).join('') : `<tr><td colspan="9"><div class="empty-state"><span class="material-icons-outlined">search_off</span><p>Geen betalingen gevonden</p></div></td></tr>`;
+    document.getElementById('betalingenTable').innerHTML = items.length ? items.map(b => `
+      <tr>
+        <td><strong>${b.id || '-'}</strong></td>
+        <td>${b.gast_naam || '-'}</td>
+        <td>${fmt(b.bedrag)}</td>
+        <td>${b.methode || '-'}</td>
+        <td>${b.bank || '-'}</td>
+        <td>${statusBadge(b.status)}</td>
+        <td>${fmtDate(b.datum)}</td>
+        <td>
+          ${b.status === 'voltooid' ? `<button class="btn btn-danger btn-sm" onclick="refundPayment('${b.id}')">Terugbetalen</button>` : ''}
+        </td>
+      </tr>
+    `).join('') : '<tr class="empty-row"><td colspan="8">Geen betalingen</td></tr>';
+  } catch (e) {
+    toast('Fout bij laden betalingen', 'error');
+  }
 }
 
 async function refundPayment(id) {
   if (!confirm('Weet u zeker dat u deze betaling wilt terugbetalen?')) return;
   try {
-    const res = await fetch(`/api/betalingen/${id}/refund`, { method: 'POST' });
-    if (res.ok) {
-      showToast('Betaling terugbetaald');
-      await loadAllData();
-    } else { showToast('Fout bij terugbetaling', 'error'); }
-  } catch (e) { showToast('Netwerkfout', 'error'); }
-}
-
-function exportBetalingenCSV() {
-  const headers = ['Datum', 'ID', 'Reservering', 'Gast', 'Bedrag', 'Methode', 'Bank', 'Status'];
-  const rows = betalingen.map(b => [
-    b.datum, b.id, b.reservering_id, b.gast_naam,
-    b.bedrag, b.methode, b.bank, b.status
-  ]);
-  let csv = headers.join(';') + '\n' + rows.map(r => r.join(';')).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = `betalingen_${new Date().toISOString().slice(0,10)}.csv`;
-  a.click(); URL.revokeObjectURL(url);
-  showToast('CSV gedownload');
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  iDEAL PAYMENT FLOW
-// ═══════════════════════════════════════════════════════════════
-let idealResId = '';
-let idealPayId = '';
-let selectedBank = '';
-
-function startIdealPayment(resId) {
-  idealResId = resId;
-  idealPayId = '';
-  const res = reserveringen.find(r => r.id === resId);
-  if (!res) return;
-  showIdealBankSelection(res.totaal, res.gast_naam);
-}
-
-function startIdealForPayment(payId) {
-  idealPayId = payId;
-  idealResId = '';
-  const pay = betalingen.find(b => b.id === payId);
-  if (!pay) return;
-  idealResId = pay.reservering_id || '';
-  showIdealBankSelection(pay.bedrag, pay.gast_naam);
-}
-
-function showIdealBankSelection(amount, gastNaam) {
-  selectedBank = '';
-  const banks = [
-    { name: 'ABN AMRO', color: '#004D40' },
-    { name: 'ING', color: '#FF6200' },
-    { name: 'Rabobank', color: '#0066B3' },
-    { name: 'SNS Bank', color: '#E4003A' },
-    { name: 'ASN Bank', color: '#00A651' },
-    { name: 'RegioBank', color: '#FF8300' },
-    { name: 'Triodos', color: '#5C8A4D' },
-    { name: 'Bunq', color: '#30C381' },
-    { name: 'Knab', color: '#FF6600' },
-    { name: 'Revolut', color: '#0075EB' }
-  ];
-
-  document.getElementById('idealModalTitle').textContent = 'iDEAL Betaling';
-  document.getElementById('idealModalBody').innerHTML = `
-    <div style="text-align:center;margin-bottom:1rem">
-      <div style="font-size:2rem;font-weight:800;color:var(--primary)">${formatCurrency(amount)}</div>
-      <div style="font-size:.85rem;color:var(--text-secondary)">Betaling voor ${gastNaam}</div>
-    </div>
-    <div style="font-size:.85rem;font-weight:600;margin-bottom:.5rem">Selecteer uw bank</div>
-    <div class="ideal-banks">
-      ${banks.map(b => `
-        <div class="ideal-bank" onclick="selectIdealBank(this, '${b.name}')">
-          <div class="ideal-bank-logo" style="background:${b.color}">${b.name.slice(0,2).toUpperCase()}</div>
-          ${b.name}
-        </div>
-      `).join('')}
-    </div>
-  `;
-  document.getElementById('idealModalFooter').innerHTML = `
-    <button class="btn btn-secondary" onclick="closeIdealModal()">Annuleren</button>
-    <button class="btn btn-primary" id="idealPayBtn" onclick="processIdealPayment()" disabled>
-      <span class="material-icons-outlined" style="font-size:16px">lock</span> Betaal met iDEAL
-    </button>
-  `;
-  document.getElementById('idealModal').classList.add('active');
-}
-
-function selectIdealBank(el, bank) {
-  document.querySelectorAll('.ideal-bank').forEach(b => b.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedBank = bank;
-  document.getElementById('idealPayBtn').disabled = false;
-}
-
-async function processIdealPayment() {
-  document.getElementById('idealModalBody').innerHTML = `
-    <div class="ideal-progress">
-      <div class="ideal-spinner"></div>
-      <div style="font-weight:600;font-size:1rem;margin-bottom:.5rem">Verbinden met ${selectedBank}...</div>
-      <div style="font-size:.85rem;color:var(--text-secondary)">U wordt doorgestuurd naar uw bank</div>
-    </div>
-  `;
-  document.getElementById('idealModalFooter').innerHTML = '';
-
-  // Simulate bank redirect
-  await new Promise(r => setTimeout(r, 2000));
-
-  document.getElementById('idealModalBody').innerHTML = `
-    <div class="ideal-progress">
-      <div class="ideal-spinner"></div>
-      <div style="font-weight:600;font-size:1rem;margin-bottom:.5rem">Betaling verwerken...</div>
-      <div style="font-size:.85rem;color:var(--text-secondary)">Even geduld alstublieft</div>
-    </div>
-  `;
-
-  await new Promise(r => setTimeout(r, 1500));
-
-  // Create payment and update reservation
-  try {
-    const res = reserveringen.find(r => r.id === idealResId);
-
-    if (idealPayId) {
-      // Update existing payment
-      // Simulate by updating the payment status
-      const payRes = await fetch(`/api/betalingen/${idealPayId}/refund`, { method: 'POST' });
-      // Actually let's create a proper flow - update via the reservation
-    }
-
-    // Create new payment if needed
-    if (!idealPayId && res) {
-      await fetch('/api/betalingen', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          reservering_id: res.id,
-          gast_naam: res.gast_naam,
-          bedrag: res.totaal,
-          methode: 'iDEAL',
-          bank: selectedBank,
-          status: 'voltooid',
-          beschrijving: `Betaling ${res.pand_naam} - ${res.nachten} nachten`
-        })
-      });
-    }
-
-    // Update reservation status
-    if (res) {
-      await fetch(`/api/reserveringen/${res.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ betaalstatus: 'betaald', betaal_methode: 'iDEAL', status: 'bevestigd' })
-      });
-    }
-
-    document.getElementById('idealModalBody').innerHTML = `
-      <div class="ideal-progress ideal-success">
-        <span class="material-icons-outlined" style="font-size:64px;color:var(--success)">check_circle</span>
-        <div style="font-weight:700;font-size:1.2rem;margin-top:1rem;color:var(--success)">Betaling geslaagd!</div>
-        <div style="font-size:.85rem;color:var(--text-secondary);margin-top:.5rem">De betaling is succesvol verwerkt via ${selectedBank}</div>
-      </div>
-    `;
-    document.getElementById('idealModalFooter').innerHTML = `
-      <button class="btn btn-primary" onclick="closeIdealModal();loadAllData()">Sluiten</button>
-    `;
+    await fetch(API + '/api/betalingen/' + id + '/refund', { method: 'POST' });
+    toast('Betaling terugbetaald', 'success');
+    loadBetalingen();
   } catch (e) {
-    document.getElementById('idealModalBody').innerHTML = `
-      <div class="ideal-progress">
-        <span class="material-icons-outlined" style="font-size:64px;color:var(--danger)">error</span>
-        <div style="font-weight:700;font-size:1.2rem;margin-top:1rem;color:var(--danger)">Betaling mislukt</div>
-        <div style="font-size:.85rem;color:var(--text-secondary);margin-top:.5rem">Er is een fout opgetreden. Probeer het opnieuw.</div>
-      </div>
-    `;
-    document.getElementById('idealModalFooter').innerHTML = `
-      <button class="btn btn-secondary" onclick="closeIdealModal()">Sluiten</button>
-      <button class="btn btn-primary" onclick="startIdealPayment('${idealResId}')">Opnieuw proberen</button>
-    `;
+    toast('Fout bij terugbetaling', 'error');
   }
 }
 
-function closeIdealModal() {
-  document.getElementById('idealModal').classList.remove('active');
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  KALENDER
-// ═══════════════════════════════════════════════════════════════
-async function renderCalendar() {
-  const monthNames = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
-  document.getElementById('calendarTitle').textContent = `${monthNames[calendarMonth - 1]} ${calendarYear}`;
-
+// ── Contracten ──
+async function loadContracten() {
   try {
-    const res = await fetch(`/api/kalender?maand=${calendarMonth}&jaar=${calendarYear}`);
-    const data = await res.json();
-    renderCalendarGrid(data);
+    const resp = await fetch(API + '/api/contracten');
+    const data = await resp.json();
+    const items = Array.isArray(data) ? data : [];
+
+    document.getElementById('contractenTable').innerHTML = items.length ? items.map(c => `
+      <tr>
+        <td><strong>${c.contract_nr || '-'}</strong></td>
+        <td>${c.reservering_id || '-'}</td>
+        <td>${c.ondertekend ? '<span class="badge badge-success">Ja</span>' : '<span class="badge badge-warning">Nee</span>'}</td>
+        <td>${c.ondertekend_datum ? fmtDate(c.ondertekend_datum) : '-'}</td>
+        <td>${fmtDate(c.created_at)}</td>
+        <td>
+          <button class="btn btn-secondary btn-sm" onclick="window.open('/api/contract/${c.id}','_blank')">Bekijken</button>
+          ${!c.ondertekend ? `<button class="btn btn-success btn-sm" onclick="signContract(${c.id})">Ondertekenen</button>` : ''}
+        </td>
+      </tr>
+    `).join('') : '<tr class="empty-row"><td colspan="6">Geen contracten gevonden</td></tr>';
   } catch (e) {
-    document.getElementById('calendarContent').innerHTML = '<div class="empty-state"><span class="material-icons-outlined">error</span><p>Fout bij laden kalender</p></div>';
+    document.getElementById('contractenTable').innerHTML =
+      '<tr class="empty-row"><td colspan="6">Contracten tabel nog niet aangemaakt. Voer de SQL migratie uit.</td></tr>';
   }
 }
 
-function renderCalendarGrid(data) {
-  const firstDay = new Date(calendarYear, calendarMonth - 1, 1);
-  const lastDay = new Date(calendarYear, calendarMonth, 0);
-  const startDow = (firstDay.getDay() + 6) % 7;
-  const today = new Date().toISOString().slice(0, 10);
+async function signContract(id) {
+  try {
+    await fetch(API + '/api/contracten/' + id + '/sign', { method: 'PUT' });
+    toast('Contract ondertekend', 'success');
+    loadContracten();
+  } catch (e) {
+    toast('Fout bij ondertekenen', 'error');
+  }
+}
 
-  // Build a map of date -> list of {pand, status, gast}
-  const dateMap = {};
-  const kalender = data.kalender || {};
-  for (const [pandId, info] of Object.entries(kalender)) {
-    (info.boekingen || []).forEach(bk => {
-      (bk.dates || []).forEach(d => {
-        if (!dateMap[d]) dateMap[d] = [];
-        dateMap[d].push({
-          pand: info.naam,
-          gast: bk.gast,
-          status: bk.status
-        });
-      });
+// ── Facturen ──
+async function loadFacturen() {
+  try {
+    const resp = await fetch(API + '/api/facturen');
+    const data = await resp.json();
+    const items = Array.isArray(data) ? data : [];
+
+    document.getElementById('facturenTable').innerHTML = items.length ? items.map(f => `
+      <tr>
+        <td><strong>${f.factuur_nr || '-'}</strong></td>
+        <td>${f.reservering_extern_id || '-'}</td>
+        <td>${fmt(f.bedrag_excl_btw)}</td>
+        <td>${fmt(f.btw_bedrag)}</td>
+        <td><strong>${fmt(f.totaal)}</strong></td>
+        <td>${statusBadge(f.status)}</td>
+        <td>${fmtDate(f.vervaldatum)}</td>
+        <td>
+          <button class="btn btn-secondary btn-sm" onclick="window.open('/api/factuur/${f.id}','_blank')">Bekijken</button>
+          ${f.status === 'openstaand' ? `<button class="btn btn-success btn-sm" onclick="updateFactuurStatus(${f.id},'betaald')">Betaald</button>` : ''}
+          ${f.status === 'openstaand' ? `<button class="btn btn-danger btn-sm" onclick="updateFactuurStatus(${f.id},'verlopen')">Verlopen</button>` : ''}
+        </td>
+      </tr>
+    `).join('') : '<tr class="empty-row"><td colspan="8">Geen facturen gevonden</td></tr>';
+  } catch (e) {
+    document.getElementById('facturenTable').innerHTML =
+      '<tr class="empty-row"><td colspan="8">Facturen tabel nog niet aangemaakt. Voer de SQL migratie uit.</td></tr>';
+  }
+}
+
+async function updateFactuurStatus(id, status) {
+  try {
+    await fetch(API + '/api/facturen/' + id + '/status', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
     });
+    toast(`Factuur bijgewerkt naar ${status}`, 'success');
+    loadFacturen();
+  } catch (e) {
+    toast('Fout bij bijwerken factuur', 'error');
   }
-
-  const days = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
-  let html = '<div class="calendar-grid">';
-  html += days.map(d => `<div class="calendar-day-header">${d}</div>`).join('');
-
-  // Empty cells before first day
-  for (let i = 0; i < startDow; i++) {
-    html += '<div class="calendar-day other-month"></div>';
-  }
-
-  for (let d = 1; d <= lastDay.getDate(); d++) {
-    const dateStr = `${calendarYear}-${String(calendarMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-    const isToday = dateStr === today;
-    const bookings = dateMap[dateStr] || [];
-
-    html += `<div class="calendar-day ${isToday ? 'today' : ''}" onclick="calendarDayClick('${dateStr}')">
-      <div class="day-number">${d}</div>
-      ${bookings.slice(0, 3).map(b => `
-        <div class="calendar-booking ${b.status === 'bevestigd' ? 'booked' : 'pending'}">${b.pand}</div>
-      `).join('')}
-      ${bookings.length > 3 ? `<div style="font-size:.6rem;color:var(--text-muted)">+${bookings.length - 3} meer</div>` : ''}
-    </div>`;
-  }
-
-  html += '</div>';
-  document.getElementById('calendarContent').innerHTML = html;
 }
 
-function calendarDayClick(dateStr) {
-  const dateMap = {};
-  reserveringen.forEach(r => {
-    if (r.status === 'geannuleerd') return;
-    const ci = new Date(r.check_in);
-    const co = new Date(r.check_out);
-    let d = new Date(ci);
-    while (d < co) {
-      const ds = d.toISOString().slice(0, 10);
-      if (!dateMap[ds]) dateMap[ds] = [];
-      dateMap[ds].push(r);
-      d.setDate(d.getDate() + 1);
+// ── Kalender ──
+async function loadKalender() {
+  const months = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
+  document.getElementById('kalenderTitle').textContent = `${months[kalenderMaand-1]} ${kalenderJaar}`;
+
+  try {
+    const resp = await fetch(API + `/api/kalender?maand=${kalenderMaand}&jaar=${kalenderJaar}`);
+    const data = await resp.json();
+    const kal = data.kalender || {};
+
+    const daysInMonth = new Date(kalenderJaar, kalenderMaand, 0).getDate();
+    let html = '<table class="data-table"><thead><tr><th>Residence</th>';
+    for (let d = 1; d <= daysInMonth; d++) {
+      html += `<th style="text-align:center;min-width:30px;padding:0.3rem;">${d}</th>`;
     }
-  });
+    html += '</tr></thead><tbody>';
 
-  const bookings = dateMap[dateStr] || [];
-  document.getElementById('slidePanelTitle').textContent = `Boekingen op ${formatDate(dateStr)}`;
-  document.getElementById('slidePanelBody').innerHTML = bookings.length ? `
-    <div class="alert-list">
-      ${bookings.map(r => `
-        <div class="alert-item" style="cursor:pointer">
-          <div class="alert-dot ${r.status === 'bevestigd' ? 'green' : 'yellow'}"></div>
-          <div style="flex:1">
-            <div class="alert-text" style="font-weight:600">${r.gast_naam}</div>
-            <div style="font-size:.75rem;color:var(--text-muted)">${r.pand_naam}</div>
-            <div style="font-size:.75rem;color:var(--text-muted)">${formatDate(r.check_in)} - ${formatDate(r.check_out)}</div>
-          </div>
-          <div style="text-align:right">
-            <div style="font-weight:600">${formatCurrency(r.totaal)}</div>
-            <div>${statusBadge(r.status)}</div>
-          </div>
-        </div>
-      `).join('')}
-    </div>
-  ` : `
-    <div class="empty-state"><span class="material-icons-outlined">event_available</span><p>Geen boekingen op deze datum</p></div>
-    <div style="text-align:center;margin-top:1rem">
-      <button class="btn btn-primary" onclick="closeSlidePanel();openNewReservation()">
-        <span class="material-icons-outlined" style="font-size:16px">add</span> Nieuwe reservering
-      </button>
-    </div>
-  `;
-  document.getElementById('slidePanelFooter').innerHTML = `<button class="btn btn-secondary" onclick="closeSlidePanel()">Sluiten</button>`;
-  openSlidePanel();
-}
+    for (const [id, info] of Object.entries(kal)) {
+      html += `<tr><td style="white-space:nowrap;font-weight:bold;font-size:0.75rem;">${info.naam}</td>`;
+      const bookedDates = new Set();
+      (info.boekingen || []).forEach(b => {
+        (b.dates || []).forEach(d => bookedDates.add(d));
+      });
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${kalenderJaar}-${String(kalenderMaand).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const booked = bookedDates.has(dateStr);
+        html += `<td style="text-align:center;padding:0.3rem;background:${booked ? 'var(--gold-bg2)' : 'transparent'};color:${booked ? 'var(--gold-dark)' : 'var(--text-muted)'};font-size:0.65rem;">${booked ? '&#9632;' : '&middot;'}</td>`;
+      }
+      html += '</tr>';
+    }
 
-function calendarPrev() {
-  calendarMonth--;
-  if (calendarMonth < 1) { calendarMonth = 12; calendarYear--; }
-  renderCalendar();
-}
-
-function calendarNext() {
-  calendarMonth++;
-  if (calendarMonth > 12) { calendarMonth = 1; calendarYear++; }
-  renderCalendar();
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  SLIDE PANEL HELPERS
-// ═══════════════════════════════════════════════════════════════
-function openSlidePanel() {
-  document.getElementById('slidePanelOverlay').classList.add('active');
-  document.getElementById('slidePanel').style.display = 'flex';
-}
-
-function closeSlidePanel() {
-  document.getElementById('slidePanelOverlay').classList.remove('active');
-  document.getElementById('slidePanel').style.display = 'none';
-}
-
-// Close on escape
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    closeSlidePanel();
-    closeIdealModal();
+    html += '</tbody></table>';
+    document.getElementById('kalenderContent').innerHTML = html;
+  } catch (e) {
+    document.getElementById('kalenderContent').innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:2rem;">Kan kalender niet laden</p>';
   }
+}
+
+function changeMonth(delta) {
+  kalenderMaand += delta;
+  if (kalenderMaand > 12) { kalenderMaand = 1; kalenderJaar++; }
+  if (kalenderMaand < 1) { kalenderMaand = 12; kalenderJaar--; }
+  loadKalender();
+}
+
+// ── Init ──
+document.getElementById('pageMeta').textContent = new Date().toLocaleDateString('nl-NL', {
+  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
 });
 </script>
 </body>
