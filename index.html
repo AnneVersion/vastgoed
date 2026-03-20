@@ -1380,9 +1380,22 @@ function goToStep(step) {
     if (!validateStep(state.step)) return;
   }
 
-  // If going to step 2, load apartments
+  // If going to step 2, load apartments and check availability (including blokkades)
   if (step === 2) {
-    renderApartments();
+    if (state.checkin && state.checkout) {
+      fetch(`/api/beschikbaarheid?checkin=${state.checkin}&checkout=${state.checkout}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.beschikbaar) {
+            const availIds = new Set(data.beschikbaar.map(a => a.id));
+            state.apartments.forEach(a => { a._available = availIds.has(a.id); });
+          }
+          renderApartments();
+        })
+        .catch(() => renderApartments());
+    } else {
+      renderApartments();
+    }
   }
 
   // If going to step 3, render rates
@@ -1457,6 +1470,8 @@ function renderApartments() {
   const filtered = state.apartments.filter(a => {
     if (state.filter !== 'alle' && a.type !== state.filter) return false;
     if (a.max_gasten < totalGuests) return false;
+    // Filter out apartments blocked by reserveringen or iCal blokkades
+    if (a._available === false) return false;
     return true;
   });
 

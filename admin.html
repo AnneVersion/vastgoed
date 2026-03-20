@@ -1226,6 +1226,26 @@ function getPropertyFormHTML(p = {}) {
     <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Kenmerken</h4>
     <div class="form-group"><label>Kenmerken (kommagescheiden)</label><input type="text" id="propKenmerken" value="${(p.kenmerken||[]).join(', ')}" placeholder="bijv. rustige buurt, nabij centrum, balkon op zuiden"></div>
     <div class="form-group"><label>Notities</label><textarea id="propNotities" placeholder="Interne notities over deze woning...">${p.notities || ''}</textarea></div>
+    <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">
+      <span class="material-icons-outlined" style="font-size:16px;vertical-align:middle;margin-right:4px">sync</span>
+      iCal Synchronisatie
+    </h4>
+    <div class="form-group">
+      <label>Airbnb iCal URL</label>
+      <input type="text" id="propIcalUrl" value="${p.ical_url || ''}" placeholder="https://www.airbnb.nl/calendar/ical/...">
+    </div>
+    ${p.ical_last_sync ? `<div style="font-size:.75rem;color:var(--text-muted);margin-bottom:.5rem">Laatst gesynchroniseerd: ${formatDateTime(p.ical_last_sync)}</div>` : ''}
+    ${p.id ? `
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem">
+      <button class="btn btn-secondary btn-sm" onclick="syncIcal('${p.id}')" id="btnSyncIcal">
+        <span class="material-icons-outlined" style="font-size:16px">sync</span> Synchroniseer
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="copyIcalExportUrl('${p.id}')">
+        <span class="material-icons-outlined" style="font-size:16px">content_copy</span> Exporteer iCal URL
+      </button>
+    </div>
+    <div id="icalBlokkades"></div>
+    ` : '<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Sla de woning eerst op om iCal te synchroniseren.</div>'}
   `;
 }
 
@@ -1257,6 +1277,7 @@ function collectPropertyData() {
     amenities: [...document.querySelectorAll('.amenity-cb:checked')].map(cb => cb.value),
     kenmerken: kenmerken,
     notities: document.getElementById('propNotities').value,
+    ical_url: document.getElementById('propIcalUrl') ? document.getElementById('propIcalUrl').value : '',
     huurprijs: parseFloat(document.getElementById('propNachtprijs').value) * 30 || 0,
     foto_urls: [],
     huurder: null,
@@ -1288,6 +1309,8 @@ function openEditProperty(id) {
     </button>
   `;
   openSlidePanel();
+  // Load existing blokkades
+  if (p.ical_url) loadIcalBlokkades(id);
 }
 
 async function saveNewProperty() {
@@ -1323,6 +1346,91 @@ async function deleteProperty(id) {
     if (res.ok) { showToast('Woning verwijderd'); await loadAllData(); }
     else { showToast('Fout bij verwijderen', 'error'); }
   } catch (e) { showToast('Netwerkfout', 'error'); }
+}
+
+// ── iCAL SYNC FUNCTIONS ──
+async function syncIcal(id) {
+  const icalUrl = document.getElementById('propIcalUrl')?.value?.trim();
+  if (!icalUrl) {
+    showToast('Voer eerst een iCal URL in', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('btnSyncIcal');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="material-icons-outlined" style="font-size:16px;animation:spin 1s linear infinite">sync</span> Bezig...'; }
+
+  try {
+    // First save the ical_url if changed
+    const p = panden.find(x => x.id === id);
+    if (p && p.ical_url !== icalUrl) {
+      await fetch(`/api/woningen/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ical_url: icalUrl })
+      });
+    }
+
+    // Import or sync
+    const endpoint = p?.ical_url ? `/api/woningen/${id}/ical-sync` : `/api/woningen/${id}/ical-import`;
+    const body = p?.ical_url ? {} : { ical_url: icalUrl };
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showToast(`iCal gesynchroniseerd: ${data.imported} blokkades geimporteerd`);
+      await loadAllData();
+      loadIcalBlokkades(id);
+    } else {
+      showToast(data.error || 'Synchronisatie mislukt', 'error');
+    }
+  } catch (e) {
+    showToast('Netwerkfout bij synchronisatie', 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span class="material-icons-outlined" style="font-size:16px">sync</span> Synchroniseer'; }
+  }
+}
+
+function copyIcalExportUrl(id) {
+  const url = `${window.location.origin}/api/woningen/${id}/ical`;
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('iCal export URL gekopieerd naar klembord');
+  }).catch(() => {
+    // Fallback
+    prompt('Kopieer deze URL:', url);
+  });
+}
+
+async function loadIcalBlokkades(id) {
+  const container = document.getElementById('icalBlokkades');
+  if (!container) return;
+  try {
+    const res = await fetch(`/api/woningen/${id}/blokkades`);
+    const blokkades = await res.json();
+    const airbnbBlokkades = blokkades.filter(b => (b.reden || '').startsWith('Airbnb:'));
+    if (airbnbBlokkades.length === 0) {
+      container.innerHTML = '<div style="font-size:.8rem;color:var(--text-muted)">Geen Airbnb blokkades gevonden.</div>';
+      return;
+    }
+    container.innerHTML = `
+      <div style="font-size:.8rem;font-weight:600;color:var(--text-secondary);margin-bottom:.5rem">Airbnb blokkades (${airbnbBlokkades.length})</div>
+      <div class="alert-list" style="max-height:200px;overflow-y:auto">
+        ${airbnbBlokkades.map(b => `
+          <div class="alert-item">
+            <div class="alert-dot red"></div>
+            <div style="flex:1">
+              <div class="alert-text">${b.reden || 'Geblokkeerd'}</div>
+              <div style="font-size:.7rem;color:var(--text-muted)">${formatDate(b.datum_start)} - ${formatDate(b.datum_einde)}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } catch (e) {
+    container.innerHTML = '<div style="font-size:.8rem;color:var(--danger)">Kan blokkades niet laden.</div>';
+  }
 }
 
 function openPropertyDetail(id) {
@@ -1365,6 +1473,25 @@ function openPropertyDetail(id) {
       <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Notities</h4>
       <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:1rem">${p.notities}</p>
     ` : ''}
+    ${p.ical_url ? `
+      <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">
+        <span class="material-icons-outlined" style="font-size:16px;vertical-align:middle;margin-right:4px">sync</span>
+        iCal Sync
+      </h4>
+      <div style="font-size:.8rem;color:var(--text-secondary);margin-bottom:.5rem">
+        <span class="badge badge-info" style="font-size:.7rem">Airbnb</span>
+        ${p.ical_last_sync ? `Laatst gesynchroniseerd: ${formatDateTime(p.ical_last_sync)}` : 'Nog niet gesynchroniseerd'}
+      </div>
+      <div style="display:flex;gap:.5rem;margin-bottom:1rem">
+        <button class="btn btn-secondary btn-sm" onclick="syncIcalFromDetail('${id}')">
+          <span class="material-icons-outlined" style="font-size:14px">sync</span> Sync nu
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="copyIcalExportUrl('${id}')">
+          <span class="material-icons-outlined" style="font-size:14px">content_copy</span> Export URL
+        </button>
+      </div>
+      <div id="detailIcalBlokkades"></div>
+    ` : ''}
     <h4 style="font-size:.85rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text-secondary)">Beschikbaarheid deze maand</h4>
     ${renderMiniCalendar(id)}
     ${propRes.length ? `
@@ -1387,6 +1514,58 @@ function openPropertyDetail(id) {
     </button>
   `;
   openSlidePanel();
+
+  // Load iCal blokkades for detail view
+  if (p.ical_url) {
+    loadIcalBlokkadesDetail(id);
+  }
+}
+
+async function syncIcalFromDetail(id) {
+  const p = panden.find(x => x.id === id);
+  if (!p || !p.ical_url) { showToast('Geen iCal URL geconfigureerd', 'error'); return; }
+  try {
+    const res = await fetch(`/api/woningen/${id}/ical-sync`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}'
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showToast(`iCal gesynchroniseerd: ${data.imported} blokkades`);
+      await loadAllData();
+      loadIcalBlokkadesDetail(id);
+    } else {
+      showToast(data.error || 'Sync mislukt', 'error');
+    }
+  } catch (e) { showToast('Netwerkfout', 'error'); }
+}
+
+async function loadIcalBlokkadesDetail(id) {
+  const container = document.getElementById('detailIcalBlokkades');
+  if (!container) return;
+  try {
+    const res = await fetch(`/api/woningen/${id}/blokkades`);
+    const blokkades = await res.json();
+    const airbnbBlokkades = blokkades.filter(b => (b.reden || '').startsWith('Airbnb:'));
+    if (airbnbBlokkades.length === 0) {
+      container.innerHTML = '<div style="font-size:.8rem;color:var(--text-muted)">Geen Airbnb blokkades.</div>';
+      return;
+    }
+    container.innerHTML = `
+      <div class="alert-list" style="max-height:160px;overflow-y:auto">
+        ${airbnbBlokkades.map(b => `
+          <div class="alert-item">
+            <div class="alert-dot red"></div>
+            <div style="flex:1">
+              <div class="alert-text" style="font-size:.8rem">${b.reden}</div>
+              <div style="font-size:.7rem;color:var(--text-muted)">${formatDate(b.datum_start)} - ${formatDate(b.datum_einde)}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } catch (e) { container.innerHTML = ''; }
 }
 
 function renderMiniCalendar(pandId) {
@@ -1398,6 +1577,7 @@ function renderMiniCalendar(pandId) {
   const startDow = (firstDay.getDay() + 6) % 7; // Monday=0
 
   const bookedDates = new Set();
+  const blockedDates = new Set();
   reserveringen.filter(r => r.pand_id === pandId && r.status !== 'geannuleerd').forEach(r => {
     const ci = new Date(r.check_in);
     const co = new Date(r.check_out);
@@ -1409,8 +1589,11 @@ function renderMiniCalendar(pandId) {
     }
   });
 
+  // Also load blokkades async and update calendar
+  const calId = `miniCal_${pandId.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
   const days = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
-  let html = '<div class="mini-calendar"><div class="mini-cal-grid">';
+  let html = `<div class="mini-calendar"><div class="mini-cal-grid" id="${calId}">`;
   html += days.map(d => `<div class="mini-cal-header">${d}</div>`).join('');
 
   for (let i = 0; i < startDow; i++) html += '<div class="mini-cal-day empty"></div>';
@@ -1418,9 +1601,33 @@ function renderMiniCalendar(pandId) {
   for (let d = 1; d <= lastDay.getDate(); d++) {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
     const isBooked = bookedDates.has(dateStr);
-    html += `<div class="mini-cal-day ${isBooked ? 'booked' : 'available'}">${d}</div>`;
+    html += `<div class="mini-cal-day ${isBooked ? 'booked' : 'available'}" data-date="${dateStr}">${d}</div>`;
   }
   html += '</div></div>';
+
+  // Async: fetch blokkades and mark them
+  setTimeout(() => {
+    fetch(`/api/woningen/${pandId}/blokkades`)
+      .then(r => r.json())
+      .then(blokkades => {
+        const grid = document.getElementById(calId);
+        if (!grid) return;
+        blokkades.forEach(b => {
+          let d = new Date(b.datum_start);
+          const end = new Date(b.datum_einde);
+          while (d < end) {
+            const ds = d.toISOString().slice(0, 10);
+            const cell = grid.querySelector(`[data-date="${ds}"]`);
+            if (cell && !cell.classList.contains('booked')) {
+              cell.className = 'mini-cal-day blocked';
+            }
+            d.setDate(d.getDate() + 1);
+          }
+        });
+      })
+      .catch(() => {});
+  }, 100);
+
   return html;
 }
 

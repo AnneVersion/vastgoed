@@ -37,6 +37,8 @@ CREATE TABLE IF NOT EXISTS woningen (
     beschikbaar_vanaf DATE,
     actief BOOLEAN DEFAULT true,
     airbnb_url VARCHAR(500),
+    ical_url TEXT,
+    ical_last_sync TIMESTAMP,
     rating DECIMAL(3,2),
     recensies INTEGER DEFAULT 0,
     huurder JSONB,

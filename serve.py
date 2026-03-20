@@ -8,6 +8,7 @@ import logging
 import os
 import re
 import uuid
+import urllib.request
 from datetime import datetime, timedelta
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
@@ -244,6 +245,33 @@ def _paginated_response(rows, total, page, per_page):
     }
 
 
+# ── iCal parsing ─────────────────────────────────────────────
+
+def _parse_ical(ical_text):
+    """Parse iCal text into a list of event dicts with start, end, summary."""
+    events = []
+    in_event = False
+    event = {}
+    for line in ical_text.splitlines():
+        line = line.strip()
+        if line == "BEGIN:VEVENT":
+            in_event = True
+            event = {}
+        elif line == "END:VEVENT":
+            in_event = False
+            events.append(event)
+        elif in_event:
+            if line.startswith("DTSTART"):
+                event["start"] = line.split(":")[-1][:8]  # YYYYMMDD
+            elif line.startswith("DTEND"):
+                event["end"] = line.split(":")[-1][:8]
+            elif line.startswith("SUMMARY"):
+                event["summary"] = line.split(":", 1)[-1]
+            elif line.startswith("UID"):
+                event["uid"] = line.split(":", 1)[-1]
+    return events
+
+
 # ── HTTP Handler ─────────────────────────────────────────────
 
 class VastgoedHandler(SimpleHTTPRequestHandler):
@@ -438,7 +466,7 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
                 "energielabel": "energielabel", "notities": "notities",
                 "beschikbaar": "beschikbaar", "beschikbaar_vanaf": "beschikbaar_vanaf",
                 "airbnb_url": "airbnb_url", "rating": "rating", "recensies": "recensies",
-                "actief": "actief",
+                "actief": "actief", "ical_url": "ical_url",
             }
 
             for json_key, db_col in field_mapping.items():
@@ -886,6 +914,16 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
             """, (checkout, checkin, checkout, checkin))
             blocked_eids = {r["pand_extern_id"] for r in conflicting_pand_ids}
 
+            # Also check beschikbaarheid_blokkades
+            blocked_by_blokkade = db_query("""
+                SELECT DISTINCT w.extern_id FROM beschikbaarheid_blokkades b
+                JOIN woningen w ON w.id = b.woning_id
+                WHERE b.datum_start < %s AND b.datum_einde > %s
+            """, (checkout, checkin))
+            for row in blocked_by_blokkade:
+                if row.get("extern_id"):
+                    blocked_eids.add(row["extern_id"])
+
             beschikbaar = []
             for pand in panden:
                 eid = pand["extern_id"] or str(pand["id"])
@@ -940,7 +978,7 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
             if not body.get("status"):
                 body["status"] = "bevestigd"
 
-            # Check availability
+            # Check availability (reserveringen)
             conflicts = db_query("""
                 SELECT id FROM reserveringen
                 WHERE status != 'geannuleerd'
@@ -956,6 +994,18 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
             """, (body["appartement_id"], body["appartement_id"],
                   body["checkout"], body["checkin"],
                   body["checkout"], body["checkin"]))
+
+            # Also check blokkades
+            if not conflicts:
+                blokkade_conflicts = db_query("""
+                    SELECT b.id FROM beschikbaarheid_blokkades b
+                    JOIN woningen w ON w.id = b.woning_id
+                    WHERE (w.extern_id = %s)
+                      AND b.datum_start < %s AND b.datum_einde > %s
+                    LIMIT 1
+                """, (body["appartement_id"], body["checkout"], body["checkin"]))
+                if blokkade_conflicts:
+                    conflicts = blokkade_conflicts
 
             if conflicts:
                 self._send_json({
@@ -1003,6 +1053,332 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
             except Exception as e:
                 logger.error(f"Fout bij aanmaken boeking: {e}")
                 self._send_json({"error": f"Database fout: {e}"}, 500)
+            return True
+
+        return False
+
+    # ── iCAL ROUTES ────────────────────────────────────────────
+
+    def _route_ical(self, path):
+        # GET /api/woningen/<id>/ical  - Export iCal
+        m_export = re.match(r"^/api/woningen/([a-zA-Z0-9\-]+)/ical$", path)
+        if m_export and self.command == "GET":
+            pand_id = m_export.group(1)
+            pand = db_query(
+                "SELECT * FROM woningen WHERE extern_id = %s", (pand_id,), fetchone=True
+            )
+            if not pand:
+                # Try by numeric id
+                try:
+                    pand = db_query(
+                        "SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True
+                    )
+                except (ValueError, TypeError):
+                    pass
+            if not pand:
+                self._send_json({"error": "Pand niet gevonden"}, 404)
+                return True
+
+            reserveringen = db_query("""
+                SELECT * FROM reserveringen
+                WHERE (pand_extern_id = %s OR pand_id = %s)
+                  AND status != 'geannuleerd'
+                ORDER BY check_in
+            """, (pand.get("extern_id", ""), pand["id"]))
+
+            cal_lines = [
+                "BEGIN:VCALENDAR",
+                "VERSION:2.0",
+                "PRODID:-//Data Consultants Stays//Vastgoed//NL",
+                f"X-WR-CALNAME:{pand['naam']}",
+            ]
+            for res in reserveringen:
+                ci = res.get("check_in")
+                co = res.get("check_out")
+                if not ci or not co:
+                    continue
+                dtstart = ci.strftime("%Y%m%d") if hasattr(ci, 'strftime') else str(ci).replace("-", "")
+                dtend = co.strftime("%Y%m%d") if hasattr(co, 'strftime') else str(co).replace("-", "")
+                uid = res.get("extern_id") or str(res["id"])
+                summary = res.get("gast_naam") or "Geboekt"
+                cal_lines.extend([
+                    "BEGIN:VEVENT",
+                    f"DTSTART;VALUE=DATE:{dtstart}",
+                    f"DTEND;VALUE=DATE:{dtend}",
+                    f"SUMMARY:{summary}",
+                    f"UID:{uid}@dataconsultantsstays.nl",
+                    f"DESCRIPTION:Boeking {uid}",
+                    "STATUS:CONFIRMED",
+                    "END:VEVENT",
+                ])
+
+            # Also include blokkades
+            blokkades = db_query("""
+                SELECT * FROM beschikbaarheid_blokkades WHERE woning_id = %s
+            """, (pand["id"],))
+            for blok in blokkades:
+                ds = blok["datum_start"]
+                de = blok["datum_einde"]
+                dtstart = ds.strftime("%Y%m%d") if hasattr(ds, 'strftime') else str(ds).replace("-", "")
+                dtend = de.strftime("%Y%m%d") if hasattr(de, 'strftime') else str(de).replace("-", "")
+                cal_lines.extend([
+                    "BEGIN:VEVENT",
+                    f"DTSTART;VALUE=DATE:{dtstart}",
+                    f"DTEND;VALUE=DATE:{dtend}",
+                    f"SUMMARY:{blok.get('reden') or 'Geblokkeerd'}",
+                    f"UID:blokkade-{blok['id']}@dataconsultantsstays.nl",
+                    "STATUS:CONFIRMED",
+                    "END:VEVENT",
+                ])
+
+            cal_lines.append("END:VCALENDAR")
+            ical_text = "\r\n".join(cal_lines) + "\r\n"
+
+            body = ical_text.encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "text/calendar; charset=utf-8")
+            self.send_header("Content-Disposition",
+                             f'attachment; filename="{pand["naam"].replace(" ", "_")}.ics"')
+            self.end_headers()
+            self.wfile.write(body)
+            return True
+
+        # POST /api/woningen/<id>/ical-import  - Import external iCal URL
+        m_import = re.match(r"^/api/woningen/([a-zA-Z0-9\-]+)/ical-import$", path)
+        if m_import and self.command == "POST":
+            pand_id = m_import.group(1)
+            body = self._read_body()
+            ical_url = body.get("ical_url", "").strip()
+
+            if not ical_url:
+                self._send_json({"error": "ical_url is verplicht"}, 400)
+                return True
+
+            pand = db_query(
+                "SELECT * FROM woningen WHERE extern_id = %s", (pand_id,), fetchone=True
+            )
+            if not pand:
+                try:
+                    pand = db_query(
+                        "SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True
+                    )
+                except (ValueError, TypeError):
+                    pass
+            if not pand:
+                self._send_json({"error": "Pand niet gevonden"}, 404)
+                return True
+
+            try:
+                req = urllib.request.Request(ical_url, headers={"User-Agent": "DataConsultantsStays/1.0"})
+                with urllib.request.urlopen(req, timeout=15) as resp:
+                    ical_text = resp.read().decode("utf-8", errors="replace")
+            except Exception as e:
+                logger.error(f"iCal fetch failed for {pand_id}: {e}")
+                self._send_json({"error": f"Kan iCal URL niet ophalen: {e}"}, 502)
+                return True
+
+            events = _parse_ical(ical_text)
+
+            # Store the iCal URL
+            db_execute(
+                "UPDATE woningen SET ical_url = %s, ical_last_sync = NOW() WHERE id = %s",
+                (ical_url, pand["id"])
+            )
+
+            # Remove old airbnb blokkades for this property, then insert new ones
+            db_execute(
+                "DELETE FROM beschikbaarheid_blokkades WHERE woning_id = %s AND reden LIKE %s",
+                (pand["id"], "Airbnb:%")
+            )
+
+            imported = 0
+            for ev in events:
+                start = ev.get("start")
+                end = ev.get("end")
+                summary = ev.get("summary", "Airbnb boeking")
+                if not start or not end:
+                    continue
+                try:
+                    ds = datetime.strptime(start, "%Y%m%d").date()
+                    de = datetime.strptime(end, "%Y%m%d").date()
+                except ValueError:
+                    continue
+                db_execute("""
+                    INSERT INTO beschikbaarheid_blokkades (woning_id, datum_start, datum_einde, reden)
+                    VALUES (%s, %s, %s, %s)
+                """, (pand["id"], ds, de, f"Airbnb: {summary}"))
+                imported += 1
+
+            logger.info(f"iCal import voor woning {pand_id}: {imported} blokkades")
+            self._send_json({
+                "success": True,
+                "imported": imported,
+                "ical_url": ical_url,
+                "last_sync": datetime.now().isoformat()
+            })
+            return True
+
+        # POST /api/woningen/<id>/ical-sync  - Re-sync from stored iCal URL
+        m_sync = re.match(r"^/api/woningen/([a-zA-Z0-9\-]+)/ical-sync$", path)
+        if m_sync and self.command == "POST":
+            pand_id = m_sync.group(1)
+            pand = db_query(
+                "SELECT * FROM woningen WHERE extern_id = %s", (pand_id,), fetchone=True
+            )
+            if not pand:
+                try:
+                    pand = db_query(
+                        "SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True
+                    )
+                except (ValueError, TypeError):
+                    pass
+            if not pand:
+                self._send_json({"error": "Pand niet gevonden"}, 404)
+                return True
+
+            ical_url = pand.get("ical_url")
+            if not ical_url:
+                self._send_json({"error": "Geen iCal URL geconfigureerd voor dit pand"}, 400)
+                return True
+
+            try:
+                req = urllib.request.Request(ical_url, headers={"User-Agent": "DataConsultantsStays/1.0"})
+                with urllib.request.urlopen(req, timeout=15) as resp:
+                    ical_text = resp.read().decode("utf-8", errors="replace")
+            except Exception as e:
+                logger.error(f"iCal sync failed for {pand_id}: {e}")
+                self._send_json({"error": f"Kan iCal URL niet ophalen: {e}"}, 502)
+                return True
+
+            events = _parse_ical(ical_text)
+
+            # Remove old airbnb blokkades, insert fresh
+            db_execute(
+                "DELETE FROM beschikbaarheid_blokkades WHERE woning_id = %s AND reden LIKE %s",
+                (pand["id"], "Airbnb:%")
+            )
+
+            imported = 0
+            for ev in events:
+                start = ev.get("start")
+                end = ev.get("end")
+                summary = ev.get("summary", "Airbnb boeking")
+                if not start or not end:
+                    continue
+                try:
+                    ds = datetime.strptime(start, "%Y%m%d").date()
+                    de = datetime.strptime(end, "%Y%m%d").date()
+                except ValueError:
+                    continue
+                db_execute("""
+                    INSERT INTO beschikbaarheid_blokkades (woning_id, datum_start, datum_einde, reden)
+                    VALUES (%s, %s, %s, %s)
+                """, (pand["id"], ds, de, f"Airbnb: {summary}"))
+                imported += 1
+
+            db_execute(
+                "UPDATE woningen SET ical_last_sync = NOW() WHERE id = %s",
+                (pand["id"],)
+            )
+
+            logger.info(f"iCal sync voor woning {pand_id}: {imported} blokkades")
+            self._send_json({
+                "success": True,
+                "imported": imported,
+                "last_sync": datetime.now().isoformat()
+            })
+            return True
+
+        # GET /api/woningen/<id>/beschikbaarheid  - Check availability
+        m_besch = re.match(r"^/api/woningen/([a-zA-Z0-9\-]+)/beschikbaarheid$", path)
+        if m_besch and self.command == "GET":
+            pand_id = m_besch.group(1)
+            parsed = urlparse(self.path)
+            qs = parse_qs(parsed.query)
+
+            pand = db_query(
+                "SELECT * FROM woningen WHERE extern_id = %s", (pand_id,), fetchone=True
+            )
+            if not pand:
+                try:
+                    pand = db_query(
+                        "SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True
+                    )
+                except (ValueError, TypeError):
+                    pass
+            if not pand:
+                self._send_json({"error": "Pand niet gevonden"}, 404)
+                return True
+
+            # Get all reserveringen for this property
+            res_blocks = db_query("""
+                SELECT check_in, check_out, gast_naam, extern_id, status
+                FROM reserveringen
+                WHERE (pand_extern_id = %s OR pand_id = %s)
+                  AND status != 'geannuleerd'
+                ORDER BY check_in
+            """, (pand.get("extern_id", ""), pand["id"]))
+
+            # Get all blokkades
+            blokkades = db_query("""
+                SELECT datum_start, datum_einde, reden, id
+                FROM beschikbaarheid_blokkades
+                WHERE woning_id = %s
+                ORDER BY datum_start
+            """, (pand["id"],))
+
+            blocked_dates = []
+            for res in res_blocks:
+                if res.get("check_in") and res.get("check_out"):
+                    blocked_dates.append({
+                        "start": str(res["check_in"]),
+                        "end": str(res["check_out"]),
+                        "type": "reservering",
+                        "label": res.get("gast_naam") or res.get("extern_id") or "Geboekt",
+                        "status": res.get("status", "")
+                    })
+            for blok in blokkades:
+                blocked_dates.append({
+                    "start": str(blok["datum_start"]),
+                    "end": str(blok["datum_einde"]),
+                    "type": "blokkade",
+                    "label": blok.get("reden") or "Geblokkeerd",
+                    "id": blok["id"]
+                })
+
+            self._send_json({
+                "pand_id": pand_id,
+                "pand_naam": pand["naam"],
+                "ical_url": pand.get("ical_url"),
+                "ical_last_sync": str(pand.get("ical_last_sync")) if pand.get("ical_last_sync") else None,
+                "blocked": blocked_dates
+            })
+            return True
+
+        # GET /api/woningen/<id>/blokkades  - List blokkades
+        m_blok = re.match(r"^/api/woningen/([a-zA-Z0-9\-]+)/blokkades$", path)
+        if m_blok and self.command == "GET":
+            pand_id = m_blok.group(1)
+            pand = db_query(
+                "SELECT * FROM woningen WHERE extern_id = %s", (pand_id,), fetchone=True
+            )
+            if not pand:
+                try:
+                    pand = db_query(
+                        "SELECT * FROM woningen WHERE id = %s", (int(pand_id),), fetchone=True
+                    )
+                except (ValueError, TypeError):
+                    pass
+            if not pand:
+                self._send_json({"error": "Pand niet gevonden"}, 404)
+                return True
+
+            blokkades = db_query("""
+                SELECT * FROM beschikbaarheid_blokkades
+                WHERE woning_id = %s ORDER BY datum_start
+            """, (pand["id"],))
+
+            self._send_json([_serialize(b) for b in blokkades])
             return True
 
         return False
@@ -1088,6 +1464,8 @@ class VastgoedHandler(SimpleHTTPRequestHandler):
         if self._route_reserveringen(path):
             return True
         if self._route_betalingen(path):
+            return True
+        if self._route_ical(path):
             return True
         if self._route_kalender(path):
             return True
